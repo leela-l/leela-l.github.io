@@ -99,4 +99,14 @@ footer {
   background: #0d47a1;
 }
 
+.feature h2 {
+  color: #1565c0;       
+}
+
+.feature p {
+  color: #333;          
+  max-width: 600px;      
+  margin: 10px auto;     
+  font-size: 1.1em;
+}
 
