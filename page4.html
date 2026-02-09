@@ -25,18 +25,26 @@
   <p>
     You may have heard the term radiation when talking about sunrays, microwaves, X-rays, or wireless networks, specifically 5G, Bluetooth and Wi-Fi, but what is actually radiation?
 Are all of these dangerous cancer causing rays?
-
+<br>
 Here, we are going to mythbust the rumours about radiation, but first let's test your knowledge.
   </p>
 </section>
 
 <section class="quiz">
-  <h2>Test your radiation kowledge with this quiz!</h2>
+  <h2>Test your knowledge on radiation with this quiz</h2>
 
-  <p>Which of these radiation-related activities do you think is harmful to humans?</p>
-  <input type="radio" name="q1" value="a"> A) Using a mobile device connected to Wi-Fi<br>
-  <input type="radio" name="q1" value="b"> B) Standing near a 5G cellular tower<br>
-  <input type="radio" name="q1" value="c"> C) Sleeping with your phone under your pillow<br>
+  <p>Which of these radiation-related activities do you think is harmful to humans? (Select all that apply)</p>
+  <input type="checkbox" id="q1a" value="a">
+  <label for="q1a">A) Using a mobile device connected to Wi-Fi</label><br>
+
+  <input type="checkbox" id="q1b" value="b">
+  <label for="q1b">B) Standing near a 5G cellular tower</label><br>
+
+  <input type="checkbox" id="q1c" value="c">
+  <label for="q1c">C) Sleeping with your phone under your pillow</label><br>
+
+  <input type="checkbox" id="q1d" value="d">
+  <label for="q1d">D) Object falls faster than gravity</label><br>
 
   <br>
   <button onclick="checkQuiz()">Submit Answers</button>
@@ -45,24 +53,32 @@ Here, we are going to mythbust the rumours about radiation, but first let's test
 </section>
 
 
+
 <footer>
   <p>© 2026 Misuse of Physics Project</p>
 </footer>
 
 <script>
 function checkQuiz() {
-  const q1 = document.querySelector('input[name="q1"]:checked');
-  let score = 0;
+  const correct = ["a","b","c","d"];
+  let selected = [];
 
-  if (!q1) {
-    alert("Please select an answer!");
+  document.querySelectorAll('input[type="checkbox"]:checked').forEach((checkbox) => {
+    selected.push(checkbox.value);
+  });
+
+  if (selected.length === 0) {
+    alert("Please select at least one answer!");
     return;
   }
 
-  if (q1.value === "b") score += 1;
+  let score = 0;
+  selected.forEach(ans => {
+    if (correct.includes(ans)) score++;
+  });
 
   const result = document.getElementById("quiz-result");
-  result.textContent = "You got " + score + " out of 1 correct!";
+  result.textContent = "You selected " + selected.length + " options. Correct selections: " + score;
   result.style.fontWeight = "bold";
   result.style.color = "#1565c0";
 }
