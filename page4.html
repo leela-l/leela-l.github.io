@@ -49,5 +49,25 @@ Here, we are going to mythbust the rumours about radiation, but first let's test
   <p>© 2026 Misuse of Physics Project</p>
 </footer>
 
+<script>
+function checkQuiz() {
+  const q1 = document.querySelector('input[name="q1"]:checked');
+  let score = 0;
+
+  if (!q1) {
+    alert("Please select an answer!");
+    return;
+  }
+
+  if (q1.value === "b") score += 1;
+
+  const result = document.getElementById("quiz-result");
+  result.textContent = "You got " + score + " out of 1 correct!";
+  result.style.fontWeight = "bold";
+  result.style.color = "#1565c0";
+}
+</script>
+
+  
 </body>
 </html>
