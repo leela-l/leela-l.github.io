@@ -2,14 +2,14 @@
 body {
   font-family: 'Inter', Arial, sans-serif;
   margin: 0;
-  background-color: #124a43;   /* slightly lighter dark teal */
-  color: #e6f2f0;              /* soft white text */
+  background-color: #0f172a;   /* dark navy */
+  color: #e5e7eb;              /* soft white */
   line-height: 1.6;
 }
 
 /* --- HEADER --- */
 header {
-  background: #0f3b35;         /* darker than body for contrast */
+  background: #6b5b95;         /* muted purple header */
   padding: 30px 20px;
   text-align: center;
   box-shadow: 0 4px 10px rgba(0,0,0,0.3);
@@ -28,14 +28,14 @@ header h1 {
 
 /* Header subtitle */
 header p {
-  color: #38d9a9;              /* bright turquoise accent */
+  color: #dcd6f7;              /* lighter purple accent */
   font-size: 1.2em;
   margin: 0;
 }
 
 /* --- NAVIGATION --- */
 header nav a {
-  color: #e6f2f0;
+  color: #e5e7eb;
   margin: 0 15px;
   text-decoration: none;
   font-weight: 600;
@@ -43,7 +43,7 @@ header nav a {
 }
 
 header nav a:hover {
-  color: #38d9a9;
+  color: #dcd6f7;              /* light purple hover */
   transform: translateY(-2px);
 }
 
@@ -51,7 +51,7 @@ header nav a:hover {
 .feature {
   text-align: center;
   padding: 50px 20px;
-  background: #17695f; /* lighter green/teal */
+  background: #111827;         /* dark section */
   border-radius: 15px;
   margin: 20px auto;
   max-width: 1000px;
@@ -59,13 +59,13 @@ header nav a:hover {
 }
 
 .feature h2 {
-  color: #a3ffeb;              /* bright turquoise/green for strong contrast */
+  color: #38bdf8;              /* bright turquoise titles */
   font-size: 2em;
   margin-bottom: 15px;
 }
 
 .feature p {
-  color: #e6f2f0;              /* soft text for readability */
+  color: #e5e7eb;              /* body text */
   max-width: 700px;
   margin: 0 auto;
   font-size: 1.1em;
@@ -88,7 +88,7 @@ header nav a:hover {
 }
 
 .stories article {
-  background: #1d7b69;          /* slightly lighter teal card */
+  background: #1f2937;          /* slightly lighter dark cards */
   padding: 20px;
   margin: 15px;
   width: 260px;
@@ -109,15 +109,15 @@ header nav a:hover {
 }
 
 .stories h3 {
-  color: #a3ffeb;               /* make titles more contrasting */
+  color: #38bdf8;              /* turquoise for titles */
   margin-top: 10px;
 }
 
 /* --- BUTTONS --- */
 .button {
   display: inline-block;
-  background: #38d9a9;
-  color: #0f3b35;
+  background: #38d9a9;          /* accent green */
+  color: #0f172a;
   padding: 12px 24px;
   border-radius: 10px;
   text-decoration: none;
@@ -132,16 +132,16 @@ header nav a:hover {
 
 /* --- FOOTER --- */
 footer {
-  background: #0f3b35;
+  background: #6b5b95;          /* same as header */
   text-align: center;
   padding: 25px 20px;
-  color: #e6f2f0;
+  color: #e5e7eb;
   margin-top: 30px;
 }
 
 /* --- QUIZ --- */
 .quiz {
-  background: #1d7b69;
+  background: #1f2937;          /* match cards */
   padding: 25px;
   margin: 30px auto;
   width: 90%;
@@ -152,7 +152,7 @@ footer {
 
 .quiz button {
   background: #38d9a9;
-  color: #0f3b35;
+  color: #0f172a;
   padding: 10px 20px;
   border: none;
   border-radius: 8px;
@@ -163,9 +163,4 @@ footer {
 .quiz button:hover {
   background: #2fb58b;
   transform: translateY(-2px);
-}
-
-/* --- OPTIONAL: small adjustments --- */
-p, li {
-  font-size: 1.1em;
 }
