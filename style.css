@@ -62,12 +62,18 @@ header nav a {
 /* Buttons / links */
 .button {
   display: inline-block;
-  padding: 8px 15px;
-  margin-top: 10px;
-  background: #1565c0;
+  background: #2e7d32;
   color: white;
+  padding: 12px 24px;
+  border-radius: 6px;
   text-decoration: none;
-  border-radius: 5px;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+.button:hover {
+  background: #1b5e20;
+  transform: translateY(-2px);
 }
 
 /* Footer */
