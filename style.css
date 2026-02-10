@@ -2,14 +2,14 @@
 body {
   font-family: 'Inter', Arial, sans-serif;
   margin: 0;
-  background-color: #0f172a;   /* dark navy */
+  background-color: #1c2230;   /* lighter dark navy */
   color: #e5e7eb;              /* soft white */
   line-height: 1.6;
 }
 
 /* --- HEADER --- */
 header {
-  background: #6b5b95;         /* muted purple header */
+  background: #563d7c;         /* slightly darker purple */
   padding: 30px 20px;
   text-align: center;
   box-shadow: 0 4px 10px rgba(0,0,0,0.3);
@@ -28,7 +28,7 @@ header h1 {
 
 /* Header subtitle */
 header p {
-  color: #dcd6f7;              /* lighter purple accent */
+  color: #dcd6f7;              /* light purple accent */
   font-size: 1.2em;
   margin: 0;
 }
@@ -43,7 +43,7 @@ header nav a {
 }
 
 header nav a:hover {
-  color: #dcd6f7;              /* light purple hover */
+  color: #dcd6f7;
   transform: translateY(-2px);
 }
 
@@ -51,7 +51,7 @@ header nav a:hover {
 .feature {
   text-align: center;
   padding: 50px 20px;
-  background: #111827;         /* dark section */
+  background: #2a3246;         /* lighter than body */
   border-radius: 15px;
   margin: 20px auto;
   max-width: 1000px;
@@ -65,7 +65,7 @@ header nav a:hover {
 }
 
 .feature p {
-  color: #e5e7eb;              /* body text */
+  color: #e5e7eb;              /* soft body text */
   max-width: 700px;
   margin: 0 auto;
   font-size: 1.1em;
@@ -88,7 +88,7 @@ header nav a:hover {
 }
 
 .stories article {
-  background: #1f2937;          /* slightly lighter dark cards */
+  background: #3b475c;          /* lighter than body but darker than feature */
   padding: 20px;
   margin: 15px;
   width: 260px;
@@ -117,7 +117,7 @@ header nav a:hover {
 .button {
   display: inline-block;
   background: #38d9a9;          /* accent green */
-  color: #0f172a;
+  color: #1c2230;               /* dark text for contrast */
   padding: 12px 24px;
   border-radius: 10px;
   text-decoration: none;
@@ -132,7 +132,7 @@ header nav a:hover {
 
 /* --- FOOTER --- */
 footer {
-  background: #6b5b95;          /* same as header */
+  background: #563d7c;          /* same as header */
   text-align: center;
   padding: 25px 20px;
   color: #e5e7eb;
@@ -141,7 +141,7 @@ footer {
 
 /* --- QUIZ --- */
 .quiz {
-  background: #1f2937;          /* match cards */
+  background: #3b475c;          /* match story cards */
   padding: 25px;
   margin: 30px auto;
   width: 90%;
@@ -152,7 +152,7 @@ footer {
 
 .quiz button {
   background: #38d9a9;
-  color: #0f172a;
+  color: #1c2230;
   padding: 10px 20px;
   border: none;
   border-radius: 8px;
@@ -164,3 +164,9 @@ footer {
   background: #2fb58b;
   transform: translateY(-2px);
 }
+
+/* --- TEXT --- */
+p, li {
+  font-size: 1.1em;
+}
+
