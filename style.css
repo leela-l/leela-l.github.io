@@ -1,44 +1,85 @@
+/* --- BODY --- */
 body {
   font-family: 'Inter', Arial, sans-serif;
   margin: 0;
-  background-color: #235c4f;
-  color: #ffffff;
+  background-color: #0b1f2b;  /* deep navy blue */
+  color: #e6f2f8;             /* soft white text */
+  line-height: 1.6;
 }
 
-
-/* Header */
+/* --- HEADER --- */
 header {
-  background: #c8e6c9; /* slightly darker green */
-  padding: 20px;
+  background: #061421;       /* darker than body */
+  padding: 30px 20px;
   text-align: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
-/* Titles */
-h1, h2, h3 {
-  color: #1565c0; /* blue titles */
+/* Header title */
+header h1 {
+  font-family: 'Poppins', sans-serif; /* slightly playful */
+  color: #ffffff;
+  font-size: 2.5em;
+  margin-bottom: 10px;
 }
 
-/* Navigation */
+/* Header subtitle */
+header p {
+  color: #38d9a9;  /* bright turquoise for fun */
+  font-size: 1.2em;
+  margin: 0;
+}
+
+/* --- NAVIGATION --- */
 header nav a {
-  color: #1565c0;
+  color: #e6f2f8;
   margin: 0 15px;
   text-decoration: none;
-  font-weight: bold;
+  font-weight: 600;
+  transition: 0.3s;
 }
 
-/* Main feature section */
+header nav a:hover {
+  color: #38d9a9;
+  transform: translateY(-2px);
+}
+
+/* --- FEATURE SECTION --- */
 .feature {
   text-align: center;
-  padding: 30px;
-  background: #dcedc8;
+  padding: 50px 20px;
+  background: #102c3b; /* slightly lighter dark blue */
+  border-radius: 15px;
+  margin: 20px auto;
+  max-width: 1000px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
 }
 
+.feature h2 {
+  color: #ffffff; /* title in white */
+  font-size: 2em;
+  margin-bottom: 15px;
+}
+
+.feature p {
+  color: #cce7f0;  /* soft white-blue text */
+  max-width: 700px;
+  margin: 0 auto;
+  font-size: 1.1em;
+}
+
+/* Feature image */
 .feature img {
   width: 80%;
   max-width: 600px;
+  border-radius: 10px;
+  margin-top: 20px;
 }
 
-/* Stories grid */
+/* --- STORIES GRID --- */
 .stories {
   display: flex;
   justify-content: space-around;
@@ -47,73 +88,84 @@ header nav a {
 }
 
 .stories article {
-  background: #ffffff;
-  padding: 15px;
-  margin: 10px;
-  width: 250px;
-  box-shadow: 0 0 5px #aaa;
+  background: #12303f;
+  padding: 20px;
+  margin: 15px;
+  width: 260px;
+  border-radius: 15px;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+  transition: 0.3s;
+}
+
+.stories article:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 25px rgba(0,0,0,0.5);
 }
 
 .stories img {
   width: 100%;
   height: auto;
+  border-radius: 10px;
 }
 
-/* Buttons / links */
+.stories h3 {
+  color: #38d9a9; /* bright turquoise headings */
+  margin-top: 10px;
+}
+
+/* --- BUTTONS --- */
 .button {
   display: inline-block;
-  background: #2e7d32;
-  color: white;
+  background: #38d9a9;
+  color: #061421;
   padding: 12px 24px;
-  border-radius: 6px;
+  border-radius: 10px;
   text-decoration: none;
   font-weight: 600;
-  transition: 0.2s;
+  transition: 0.3s;
 }
 
 .button:hover {
-  background: #1b5e20;
+  background: #2fb58b;
   transform: translateY(-2px);
 }
 
-/* Footer */
+/* --- FOOTER --- */
 footer {
-  background: #c8e6c9;
+  background: #061421;
   text-align: center;
-  padding: 15px;
+  padding: 25px 20px;
+  color: #e6f2f8;
+  margin-top: 30px;
 }
 
+/* --- QUIZ --- */
 .quiz {
-  background: #ffffff;
-  padding: 20px;
-  margin: 20px auto;
+  background: #12303f;
+  padding: 25px;
+  margin: 30px auto;
   width: 90%;
   max-width: 600px;
-  box-shadow: 0 0 5px #aaa;
-  border-radius: 5px;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+  border-radius: 15px;
 }
 
 .quiz button {
-  background: #1565c0;
-  color: white;
-  padding: 8px 15px;
+  background: #38d9a9;
+  color: #061421;
+  padding: 10px 20px;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
+  transition: 0.3s;
 }
 
 .quiz button:hover {
-  background: #0d47a1;
+  background: #2fb58b;
+  transform: translateY(-2px);
 }
 
-.feature h2 {
-  color: #1565c0;       
-}
-
-.feature p {
-  color: #333;          
-  max-width: 600px;      
-  margin: 10px auto;     
+/* --- OPTIONAL: small adjustments --- */
+p, li {
   font-size: 1.1em;
 }
-
