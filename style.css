@@ -2,14 +2,14 @@
 body {
   font-family: 'Inter', Arial, sans-serif;
   margin: 0;
-  background-color: #0b1f2b;  /* deep navy blue */
-  color: #e6f2f8;             /* soft white text */
+  background-color: #124a43;   /* slightly lighter dark teal */
+  color: #e6f2f0;              /* soft white text */
   line-height: 1.6;
 }
 
 /* --- HEADER --- */
 header {
-  background: #061421;       /* darker than body */
+  background: #0f3b35;         /* darker than body for contrast */
   padding: 30px 20px;
   text-align: center;
   box-shadow: 0 4px 10px rgba(0,0,0,0.3);
@@ -20,22 +20,22 @@ header {
 
 /* Header title */
 header h1 {
-  font-family: 'Poppins', sans-serif; /* slightly playful */
-  color: #ffffff;
+  font-family: 'Poppins', sans-serif;
+  color: #ffffff;              /* white title */
   font-size: 2.5em;
   margin-bottom: 10px;
 }
 
 /* Header subtitle */
 header p {
-  color: #38d9a9;  /* bright turquoise for fun */
+  color: #38d9a9;              /* bright turquoise accent */
   font-size: 1.2em;
   margin: 0;
 }
 
 /* --- NAVIGATION --- */
 header nav a {
-  color: #e6f2f8;
+  color: #e6f2f0;
   margin: 0 15px;
   text-decoration: none;
   font-weight: 600;
@@ -51,7 +51,7 @@ header nav a:hover {
 .feature {
   text-align: center;
   padding: 50px 20px;
-  background: #102c3b; /* slightly lighter dark blue */
+  background: #17695f; /* lighter green/teal */
   border-radius: 15px;
   margin: 20px auto;
   max-width: 1000px;
@@ -59,13 +59,13 @@ header nav a:hover {
 }
 
 .feature h2 {
-  color: #ffffff; /* title in white */
+  color: #a3ffeb;              /* bright turquoise/green for strong contrast */
   font-size: 2em;
   margin-bottom: 15px;
 }
 
 .feature p {
-  color: #cce7f0;  /* soft white-blue text */
+  color: #e6f2f0;              /* soft text for readability */
   max-width: 700px;
   margin: 0 auto;
   font-size: 1.1em;
@@ -88,7 +88,7 @@ header nav a:hover {
 }
 
 .stories article {
-  background: #12303f;
+  background: #1d7b69;          /* slightly lighter teal card */
   padding: 20px;
   margin: 15px;
   width: 260px;
@@ -109,7 +109,7 @@ header nav a:hover {
 }
 
 .stories h3 {
-  color: #38d9a9; /* bright turquoise headings */
+  color: #a3ffeb;               /* make titles more contrasting */
   margin-top: 10px;
 }
 
@@ -117,7 +117,7 @@ header nav a:hover {
 .button {
   display: inline-block;
   background: #38d9a9;
-  color: #061421;
+  color: #0f3b35;
   padding: 12px 24px;
   border-radius: 10px;
   text-decoration: none;
@@ -132,16 +132,16 @@ header nav a:hover {
 
 /* --- FOOTER --- */
 footer {
-  background: #061421;
+  background: #0f3b35;
   text-align: center;
   padding: 25px 20px;
-  color: #e6f2f8;
+  color: #e6f2f0;
   margin-top: 30px;
 }
 
 /* --- QUIZ --- */
 .quiz {
-  background: #12303f;
+  background: #1d7b69;
   padding: 25px;
   margin: 30px auto;
   width: 90%;
@@ -152,7 +152,7 @@ footer {
 
 .quiz button {
   background: #38d9a9;
-  color: #061421;
+  color: #0f3b35;
   padding: 10px 20px;
   border: none;
   border-radius: 8px;
