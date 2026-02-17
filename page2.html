@@ -4,9 +4,54 @@
   <meta charset="UTF-8">
   <title>Physics Mythbusters</title>
   <link rel="stylesheet" href="style.css">
+
+<style>
+  .container {
+    width: 400px;
+    font-family: Arial, sans-serif;
+    margin-top: 20px;
+  }
+
+  .question {
+    padding: 15px;
+    background: #e0e0e0;
+    cursor: pointer;
+    border-radius: 6px;
+    font-weight: bold;
+  }
+
+  .answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+    background: #f9f9f9;
+    border-radius: 0 0 6px 6px;
+    padding: 0 15px;
+  }
+
+  .answer.open {
+    max-height: 500px;
+    padding: 15px;
+  }
+
+  .answer p {
+    margin-bottom: 12px;
+  }
+</style>
+
+
+
+
 </head>
 <body>
 
+
+
+
+
+
+
+  
 <header>
   <h1>Physics Mythbusters</h1>
   <nav>
@@ -20,7 +65,7 @@
 </header>
 
 <section class="feature">
-  <h2>Nuclear Energy</h2></h2>
+  <h2>Nuclear Energy: introduction</h2></h2>
   <img src="images/placeholder.png" alt="Topic image">
   <p>
     Civil nuclear energy production has been on the decline throughout Europe, with countries like Germany completely phasing out their nuclear reactors in 2023. However, recently in the UK, the government has started to look into building new, smaller nuclear reactors across the country. In addition, France has scrapped their previous aim to reduce nuclear energy reliance from 70% of their energy production to 50% in 2023. So the question is, why are European countries so divided over nuclear energy? </p>
@@ -30,16 +75,29 @@
     
   </p>
 </section>
-<section class="feature">
-  <h2>Can a nuclear reactor explode like a nuclear bomb?</h2>
-  <p>
-      No. A nuclear reactor does not have the right density of fissionable materials within the core for it to explode like a nuclear weapon. Nuclear weapons typically has a nuclear warhead consisting of above 90% fissile material, meaning a chain reaction happens a lot faster due to the high density of fissile material in comparison to a nuclear reactor. 
-      In addition, new nuclear weapons use nuclear fusion to create a much larger explosion, which would never be possible with just nuclear fission. Nuclear fusion is a different kind of nuclear reactions, which produces copious amounts of energy and is the same reaction which goes on in the sun. We will discuss nuclear fusion later on. 
 
-
-    
-  </p>
   
+
+    <!-- DROPDOWN GOES HERE -->
+    <div class="container">
+      <div class="question" onclick="toggle()">
+        Can a nuclear reactor explode like a nuclear bomb?
+      </div>
+
+      <div class="answer" id="answer">
+        <p>No. A nuclear reactor does not have the right density of fissionable materials within the core for it to explode like a nuclear weapon. Nuclear weapons typically has a nuclear warhead consisting of above 90% fissile material, meaning a chain reaction happens a lot faster due to the high density of fissile material in comparison to a nuclear reactor. </p>
+        <p>In addition, new nuclear weapons use nuclear fusion to create a much larger explosion, which would never be possible with just nuclear fission. Nuclear fusion is a different kind of nuclear reactions, which produces copious amounts of energy and is the same reaction which goes on in the sun. We will discuss nuclear fusion later on. </p>
+    
+      </div>
+    </div>
+
+  </section>
+
+  <script>
+    function toggle() {
+      document.getElementById("answer").classList.toggle("open");
+    }
+  </script>
 
 <footer>
   <p>© 2026 Misuse of Physics Project</p>
