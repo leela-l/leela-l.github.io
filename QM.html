@@ -173,22 +173,6 @@
   </p>
     <img src="images/image_2026-02-12_095111223.png" alt="Quantum field illustration placeholder">
 
-<style>
-  body { background-color:#1f2235; color:#fff; font-family:sans-serif; }
-  #qft-container { position: relative; width: 100%; height: 450px; margin-top:20px; background:#1f2235; }
-  #overlay {
-    position: absolute; top: 10px; right: 10px; z-index:10;
-    background: rgba(0,0,0,0.6); padding:10px; border-radius:8px; color:#fff;
-    display:flex; flex-direction: column; align-items:center;
-  }
-  #overlay button { margin: 2px; font-size:0.85rem; width:140px; }
-  #energy-meter { display:flex; flex-direction: column-reverse; align-items:center; margin-top:10px; }
-  .level { width: 20px; height: 30px; margin:2px; border:1px solid #fff; display:flex; align-items:center; justify-content:center; font-size:0.7rem; color:#fff; }
-  .active { background: #ffcc00; color:#111; font-weight:bold; }
-</style>
-</head>
-<body>
-
 <section class="feature">
   <h2>Quantum Fields Interactive Demo</h2>
   <p>Visualize a quantum field plane with energy levels, ladder operators, and virtual particle fluctuations.</p>
@@ -197,12 +181,90 @@
     <div id="overlay">
       <button id="addEnergy">Increase Energy</button>
       <button id="removeEnergy">Decrease Energy</button>
-      <button id="createVirtual">Create Virtual Particle</button>
+      <button id="createVirtual">Create Particle Pair</button>
 
       <div id="energy-meter"></div>
     </div>
   </div>
 </section>
+
+<style>
+  body { background-color:#1f2235; color:#fff; font-family:sans-serif; }
+
+  #qft-container {
+    position: relative; 
+    width: 80%; 
+    max-width: 900px; 
+    height: 450px; 
+    margin: 30px auto; 
+    background:#1f2235; 
+    border-radius:12px;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0,0,0,0.6);
+  }
+
+  #overlay {
+    position: absolute; 
+    top: 10px; 
+    left: 10px; /* moved ladder to the left */
+    z-index:10;
+    background: rgba(20,20,35,0.8); 
+    padding:12px; 
+    border-radius:12px; 
+    color:#fff;
+    display:flex; 
+    flex-direction: column; 
+    align-items:center;
+    font-family: sans-serif;
+    box-shadow: 0 0 10px rgba(0,0,0,0.7);
+  }
+
+  #overlay button { 
+    margin: 5px; 
+    font-size:0.85rem; 
+    width:160px; 
+    background:#2b2f4a; 
+    color:#fff;
+    border:none; 
+    border-radius:6px; 
+    cursor:pointer;
+    transition: 0.2s;
+  }
+
+  #overlay button:hover {
+    background:#ffcc00; 
+    color:#111;
+  }
+
+  #energy-meter { 
+    display:flex; 
+    flex-direction: column-reverse; 
+    align-items:center; 
+    margin-top:15px; 
+  }
+
+  .level { 
+    width: 40px; 
+    height: 35px; 
+    margin:2px; 
+    border:1px solid #fff; 
+    display:flex; 
+    align-items:center; 
+    justify-content:center; 
+    font-size:0.7rem; 
+    color:#fff;
+    background: rgba(0,0,0,0.2);
+    border-radius:4px;
+    text-align:center;
+  }
+
+  .active { 
+    background: #ffcc00; 
+    color:#111; 
+    font-weight:bold; 
+    box-shadow: 0 0 5px #ffcc00;
+  }
+</style>
   
   <p>
     But some particles would naturally arise out of this framework, never having been seen before in experimental settings. For example, the negative energy solutions found by Dirac, predicted the notion of Anti-Electrons or Positrons.
@@ -266,27 +328,21 @@
   scene.add(plane);
 
   // -----------------------------
-  // Virtual fuzzy particles
+  // Virtual particles / pair production
   // -----------------------------
-  const particleGeometry = new THREE.BufferGeometry();
-  const particleCount = 100;
-  const positions = new Float32Array(particleCount*3);
-  particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions,3));
-
-  const particleMaterial = new THREE.PointsMaterial({
-    color:0xffdd00,
-    size:0.5,
-    transparent:true,
-    opacity:0.8,
-    map: new THREE.TextureLoader().load('https://threejs.org/examples/textures/sprites/disc.png'),
-    blending: THREE.AdditiveBlending,
-    depthWrite:false
-  });
-
-  const particles = new THREE.Points(particleGeometry, particleMaterial);
-  scene.add(particles);
-
   let virtualParticles = [];
+
+  function createParticlePair() {
+    const colors = [0xffdd00, 0xff55aa]; // normal and anti-particle colors
+    for(let i=0;i<2;i++){
+      const vpGeo = new THREE.SphereGeometry(0.4,16,16);
+      const vpMat = new THREE.MeshBasicMaterial({color:colors[i], transparent:true, opacity:0.8});
+      const vpMesh = new THREE.Mesh(vpGeo,vpMat);
+      vpMesh.position.set((Math.random()-0.5)*planeSize,0.5,(Math.random()-0.5)*planeSize);
+      scene.add(vpMesh);
+      virtualParticles.push({mesh: vpMesh, life:1});
+    }
+  }
 
   // -----------------------------
   // Energy levels / ladder operators
@@ -329,7 +385,8 @@
     geometry.computeVertexNormals();
 
     // Virtual particles animation
-    virtualParticles.forEach((vp,i)=>{
+    for(let i=virtualParticles.length-1; i>=0; i--){
+      const vp = virtualParticles[i];
       vp.life -= 0.02;
       vp.mesh.position.y += 0.02;
       vp.mesh.material.opacity = vp.life;
@@ -337,7 +394,7 @@
         scene.remove(vp.mesh);
         virtualParticles.splice(i,1);
       }
-    });
+    }
 
     renderer.render(scene,camera);
   }
@@ -354,14 +411,7 @@
     if(energyLevel > 0) energyLevel--;
     updateMeter();
   });
-  document.getElementById('createVirtual').addEventListener('click',()=>{
-    const vpGeo = new THREE.SphereGeometry(0.4,16,16);
-    const vpMat = new THREE.MeshBasicMaterial({color:0xffdd00, transparent:true, opacity:0.8});
-    const vpMesh = new THREE.Mesh(vpGeo,vpMat);
-    vpMesh.position.set((Math.random()-0.5)*planeSize,0.5,(Math.random()-0.5)*planeSize);
-    scene.add(vpMesh);
-    virtualParticles.push({mesh: vpMesh, life:1});
-  });
+  document.getElementById('createVirtual').addEventListener('click',createParticlePair);
 
   // -----------------------------
   // Resize
@@ -371,4 +421,4 @@
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth,450);
   });
-</script>      
+</script>
