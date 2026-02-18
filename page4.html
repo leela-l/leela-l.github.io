@@ -1,140 +1,54 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Physics Mythbusters</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-
-<header>
-  <h1>Physics Mythbusters</h1>
-  <nav>
-    <a href="index.html">Home</a>
-    <a href="page1.html">Climate Change</a>
-    <a href="page2.html">Nuclear Energy</a>
-    <a href="page3.html">The Quantum World</a>
-    <a href="page4.html">Cellular Technology</a>
-    <a href="page5.html">Astronomy</a>
-  </nav>
-</header>
-
-<section class="feature">
-  <h2>Cellular Technology</h2>
-  <img src="images/placeholder.png" alt="Topic image">
-  <p>
-    You may have heard the term radiation when talking about sunrays, microwaves, X-rays, or wireless networks, specifically 5G, Bluetooth and Wi-Fi, but what is actually radiation?
-Are all of these dangerous cancer causing rays?
-<br>
-<br>
-Here, we are going to mythbust the rumours about radiation, but first let's test your knowledge.
-  </p>
-</section>
-
-<section class="quiz">
-  <h2>Test your knowledge on radiation with this quiz</h2>
-
-  <p>Which of these radiation-related activities do you think is harmful to humans? (Select all that apply)</p>
-  <input type="checkbox" id="q1a" value="a">
-  <label for="q1a">A) Using a mobile device connected to Wi-Fi</label><br>
-
-  <input type="checkbox" id="q1b" value="b">
-  <label for="q1b">B) Standing near a 5G cellular tower</label><br>
-
-  <input type="checkbox" id="q1c" value="c">
-  <label for="q1c">C) Sleeping with your phone under your pillow</label><br>
-
-  <input type="checkbox" id="q1d" value="d">
-  <label for="q1d">D) Object falls faster than gravity</label><br>
-
-  <br>
-  <button onclick="checkQuiz()">Submit Answers</button>
-
-  <p id="quiz-result"></p>
-</section>
-
-
-<script>
-function checkQuiz() {
-  const correct = ["a","b","c","d"];
-  let selected = [];
-
-  document.querySelectorAll('input[type="checkbox"]:checked').forEach((checkbox) => {
-    selected.push(checkbox.value);
-  });
-
-  if (selected.length === 0) {
-    alert("Please select at least one answer!");
-    return;
-  }
-
-  let score = 0;
-  selected.forEach(ans => {
-    if (correct.includes(ans)) score++;
-  });
-
-  const result = document.getElementById("quiz-result");
-  result.textContent = "You selected " + selected.length + " options. Correct selections: " + score;
-  result.style.fontWeight = "bold";
-  result.style.color = "#1565c0";
-}
-</script>
-
-<section class="feature">
-  <p>By the end of this section, see if you have changed your mind on any of these answers. The answers and explanations are shown here.</p>
-  <a href="page1.html" class="button">Read More</a>
-</section>
-
-<!-- ===== PAGE 4: Radiation & 5G Hub Section ===== -->
+<!-- ===== PAGE 4: Radiation & 5G Section (Dark Theme Match) ===== -->
 
 <style>
-/* Page styling */
+
+/* Section wrapper – blends with dark site */
 .page4-section {
-    background-color: #f6f4fb;
     padding: 40px 20px;
-    font-family: Arial, sans-serif;
-    color: #222;
+    background: transparent; /* uses your site's main background */
+    color: #f5f5f5;
 }
 
 /* Title bar */
 .page4-title {
-    background-color: #4b2e83;
+    background: #5a3fa3; /* darker purple */
     color: white;
     padding: 18px;
     font-size: 28px;
     text-align: center;
-    border-radius: 8px;
-    margin-bottom: 25px;
+    border-radius: 10px;
+    margin-bottom: 30px;
 }
 
-/* General section spacing */
+/* Content width */
 .section-block {
     max-width: 1000px;
     margin: 0 auto 35px auto;
-    line-height: 1.6;
+    line-height: 1.7;
 }
 
-/* Highlight strip */
-.highlight-strip {
-    background-color: #e8e2f7;
-    padding: 18px;
-    border-radius: 8px;
+/* Subtle dark panel (instead of white boxes) */
+.soft-panel {
+    background: rgba(255,255,255,0.06);
+    padding: 20px;
+    border-radius: 10px;
+    backdrop-filter: blur(4px);
 }
 
-/* Diagram/video placeholder */
+/* Media placeholder */
 .media-placeholder {
-    background-color: #ddd;
+    background: rgba(255,255,255,0.08);
     height: 220px;
-    border-radius: 8px;
+    border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: bold;
-    color: #555;
+    color: #ddd;
     margin-top: 15px;
 }
 
-/* Card layout */
+/* Cards */
 .card-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -144,22 +58,28 @@ function checkQuiz() {
 }
 
 .info-card {
-    background-color: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    background: rgba(255,255,255,0.05);
+    padding: 22px;
+    border-radius: 12px;
+    transition: 0.25s;
+}
+
+.info-card:hover {
+    transform: translateY(-4px);
+    background: rgba(255,255,255,0.09);
 }
 
 .info-card h3 {
     margin-top: 0;
-    color: #4b2e83;
+    color: #b9a7ff; /* lighter purple heading */
 }
 
+/* Buttons */
 .card-button {
     display: inline-block;
     margin-top: 12px;
     padding: 8px 14px;
-    background-color: #4b2e83;
+    background: #5a3fa3;
     color: white;
     text-decoration: none;
     border-radius: 6px;
@@ -167,16 +87,23 @@ function checkQuiz() {
 }
 
 .card-button:hover {
-    background-color: #3a2366;
+    background: #472f86;
 }
 
-/* Footer text */
+/* Section headings */
+.page4-section h2 {
+    color: #d6ccff;
+}
+
+/* Closing text */
 .page4-footer {
     max-width: 1000px;
     margin: 40px auto 0 auto;
-    font-weight: bold;
     text-align: center;
+    font-weight: bold;
+    color: #e0e0e0;
 }
+
 </style>
 
 <div class="page4-section">
@@ -191,23 +118,25 @@ function checkQuiz() {
 <div class="section-block">
     <h2>What is radiation?</h2>
 
-    <p>
-    ‘Moving energy’<br>
-    Spreads out<br>
-    Like invisible ripples<br>
-    Can’t see it but it affects what it passes through<br>
-    When you connect your phone to your headphones, you know its connected but you cant see it<br>
-    EM vs other forms
-    </p>
+    <div class="soft-panel">
+        <p>
+        ‘Moving energy’<br>
+        Spreads out<br>
+        Like invisible ripples<br>
+        Can’t see it but it affects what it passes through<br>
+        When you connect your phone to your headphones, you know its connected but you cant see it<br>
+        EM vs other forms
+        </p>
 
-    <div class="media-placeholder">
-        MAKE VIDEO / DIAGRAM
+        <div class="media-placeholder">
+            MAKE VIDEO / DIAGRAM
+        </div>
     </div>
 </div>
 
 
-<!-- Misinformation introduction -->
-<div class="section-block highlight-strip">
+<!-- Misinformation intro -->
+<div class="section-block soft-panel">
     <p>
     Many people find the use of radiation controversial, particularly in relation to wireless networks. The most significant example is 5G, which we will discuss and debunk below. There is a large misspread of information about the harm radiation can cause and this is due the general public’s lack of understanding of this topic. This had led to widespread panic about its health risks over social media, news, and even influencing politics. Posts on social media can lead users down ‘rabbit holes’, feeding them an endless supply of the same misinformation, making users believe it is indeed true. News articles and posts quote scientific papers without properly understanding it, showing only snapshots of scientific knowledge, portraying the health risks to be much greater than in reality.
     </p>
@@ -218,14 +147,13 @@ function checkQuiz() {
 </div>
 
 
-<!-- Exploration Cards -->
+<!-- Navigation Cards -->
 <div class="section-block">
     <h2 style="text-align:center;">Explore the 5G Debate</h2>
 </div>
 
 <div class="card-grid">
 
-    <!-- Card 1 -->
     <div class="info-card">
         <h3>What is 5G?</h3>
         <p>
@@ -237,7 +165,6 @@ function checkQuiz() {
         <a href="Page5.html" class="card-button">Learn more →</a>
     </div>
 
-    <!-- Card 2 -->
     <div class="info-card">
         <h3>5G Towers</h3>
         <p>
@@ -246,7 +173,6 @@ function checkQuiz() {
         <a href="Page6.html" class="card-button">See the science →</a>
     </div>
 
-    <!-- Card 3 -->
     <div class="info-card">
         <h3>Case Studies</h3>
         <p>
@@ -258,7 +184,6 @@ function checkQuiz() {
         <a href="Page7.html" class="card-button">Break down misinformation →</a>
     </div>
 
-    <!-- Card 4 -->
     <div class="info-card">
         <h3>Why this matters</h3>
         <p>
@@ -274,7 +199,6 @@ function checkQuiz() {
 </div>
 
 
-<!-- Closing section -->
 <div class="page4-footer">
     Why do people promote this misinformation?<br>
     Why does this misuse of physics matter?
@@ -282,4 +206,5 @@ function checkQuiz() {
 ```
 
 </div>
+
 
