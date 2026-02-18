@@ -300,7 +300,7 @@ font-weight: bold;
 }
 
 /* Dropdown summary styling for answers section */
-.dropdown-section summary {
+.dropdown-section-small summary {
     font-size: 1.4rem;       /* slightly smaller than default */
     color: #ffb86c;          /* light orangey tone */
     cursor: pointer;
@@ -311,7 +311,7 @@ font-weight: bold;
     transition: all 0.3s ease;
 }
 
-.dropdown-section summary:hover {
+.dropdown-section-small summary:hover {
     background-color: rgba(90, 63, 163, 0.2);
 }
 
