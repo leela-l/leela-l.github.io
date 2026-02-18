@@ -34,24 +34,27 @@
   </p>
 </section>
 
-<!-- Answers / Explanation Dropdown (after quiz) -->
-<section class="content-section">
-  <div class="dropdown-section">
-    <details>
-      <summary>By the end of this section: Check the answers!</summary>
-      <div class="dropdown-content">
-        <ul>
-          <li><strong>A) Using a mobile device connected to Wi-Fi:</strong> Safe. Wi-Fi radiation is non-ionising and does not cause DNA damage.</li>
-          <li><strong>B) Standing near a 5G cellular tower:</strong> Safe. 5G towers use low-power, non-ionising frequencies.</li>
-          <li><strong>C) Sleeping with your phone under your pillow:</strong> Generally safe from radiation, though keeping devices away from your head is a good habit.</li>
-          <li><strong>D) Object falls faster than gravity:</strong> Not related to radiation; this is just physics!</li>
-        </ul>
-        <p>These answers debunk common myths and clarify misconceptions about radiation.</p>
-      </div>
-    </details>
-  </div>
-</section>
+<section class="quiz">
+  <h2>Test your knowledge on radiation with this quiz</h2>
 
+  <p>Which of these radiation-related activities do you think is harmful to humans? (Select all that apply)</p>
+  <input type="checkbox" id="q1a" value="a">
+  <label for="q1a">A) Using a mobile device connected to Wi-Fi</label><br>
+
+  <input type="checkbox" id="q1b" value="b">
+  <label for="q1b">B) Standing near a 5G cellular tower</label><br>
+
+  <input type="checkbox" id="q1c" value="c">
+  <label for="q1c">C) Sleeping with your phone under your pillow</label><br>
+
+  <input type="checkbox" id="q1d" value="d">
+  <label for="q1d">D) Object falls faster than gravity</label><br>
+
+  <br>
+  <button onclick="checkQuiz()">Submit Answers</button>
+
+  <p id="quiz-result"></p>
+</section>
 
 
 <script>
@@ -80,10 +83,29 @@ function checkQuiz() {
 }
 </script>
 
-<section class="feature">
-  <p>By the end of this section, see if you have changed your mind on any of these answers. The answers and explanations are shown here.</p>
+<p style="font-size:1.2em; line-height:1.7; max-width:900px; margin:auto;">
+  By the end of this section, see if you have changed your mind on any of these answers. The answers and explanations are shown here.</p>
   <a href="page1.html" class="button">Read More</a>
+</p>
+
+<!-- Answers / Explanation Dropdown (after quiz) -->
+<section class="content-section">
+  <div class="dropdown-section">
+    <details>
+      <summary>By the end of this section: Check the answers!</summary>
+      <div class="dropdown-content">
+        <ul>
+          <li><strong>A) Using a mobile device connected to Wi-Fi:</strong> Safe. Wi-Fi radiation is non-ionising and does not cause DNA damage.</li>
+          <li><strong>B) Standing near a 5G cellular tower:</strong> Safe. 5G towers use low-power, non-ionising frequencies.</li>
+          <li><strong>C) Sleeping with your phone under your pillow:</strong> Generally safe from radiation, though keeping devices away from your head is a good habit.</li>
+          <li><strong>D) Object falls faster than gravity:</strong> Not related to radiation; this is just physics!</li>
+        </ul>
+        <p>These answers debunk common myths and clarify misconceptions about radiation.</p>
+      </div>
+    </details>
+  </div>
 </section>
+
 
 <section class="feature dropdown-section">
    <details>
