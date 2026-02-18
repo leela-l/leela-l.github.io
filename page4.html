@@ -85,96 +85,201 @@ function checkQuiz() {
   <a href="page1.html" class="button">Read More</a>
 </section>
 
-<section class="feature">
-  <h2>What is Radiation?</h2>
-  <p>MAKE VIDEO/DIAGRAM</p>
-  <p>‘Moving energy’</p>
-  <p>Spreads out</p>
-  <p>Like invisible ripples</p>
-  <p>Can’t see it but it affects what it passes through</p>
-  <p>When you connect your phone to your headphones, you know its connected but you cant see it</p>
-  <p>EM vs other forms</p>
-</section>
+<!-- ===== PAGE 4: Radiation & 5G Hub Section ===== -->
 
-<section class="feature">
-  <h2>Public Misunderstanding</h2>
-  <p>Many people find the use of radiation controversial, particularly in relation to wireless networks. The most significant example is 5G, which we will discuss and debunk below. There is a large misspread of information about the harm radiation can cause and this is due the general public’s lack of understanding of this topic. This had led to widespread panic about its health risks over social media, news, and even influencing politics. Posts on social media can lead users down ‘rabbit holes’, feeding them an endless supply of the same misinformation, making users believe it is indeed true. News articles and posts quote scientific papers without properly understanding it, showing only snapshots of scientific knowledge, portraying the health risks to be much greater than in reality.</p>
-  <p>Lets analyse and break down the facts from the fiction in some of these headlines and posts about radiation.</p>
-</section>
+<style>
+/* Page styling */
+.page4-section {
+    background-color: #f6f4fb;
+    padding: 40px 20px;
+    font-family: Arial, sans-serif;
+    color: #222;
+}
 
-<section class="feature">
-  <h2>5G</h2>
-  <h3>What actually is 5G?</h3>
-  <p>It is the newest generation of cellular network technology. Its primary purpose is data transmission over a network, with each generation having increasing speed of transmission, a higher capacity for the amount of data sent, smaller delay, and improved efficiency. It allows a huge number of devices to connect together to communicate over a network. You may have seen the 5G symbol on your mobile phone before, and this means your phone is connected to a nearby 5G base station and is using 5G radio waves to transmit and receive data. This could be for activities such as video streaming or web browsing.</p>
+/* Title bar */
+.page4-title {
+    background-color: #4b2e83;
+    color: white;
+    padding: 18px;
+    font-size: 28px;
+    text-align: center;
+    border-radius: 8px;
+    margin-bottom: 25px;
+}
 
-  <h3>Why do we need 5G?</h3>
-  <p>As the number of devices connected to the internet and the demand for data sharing increases, 5G is evermore important. With the recent advancements in the use of Artificial Intelligence, which rely on internet access, as well as the exponential growth of global data usage, the fast speeds and high capacities of 5G are vital for maintaining systems. Some new technologies such as remote surgeries, home security, and autonomous vehicles use 5G, and so the slower lag time (also known as latency) it provides in comparison with its predecessors is crucial in these circumstances to ensure safety.</p>
+/* General section spacing */
+.section-block {
+    max-width: 1000px;
+    margin: 0 auto 35px auto;
+    line-height: 1.6;
+}
 
-  <h3>How does 5G work?</h3>
-  <p>5G works by using radio frequencies ranging from 20KHz to 6GHz. The geographical map is split into different cells, each with a 5G base station (or 5G cellular tower). A 5G wireless device in that cell connects to the base station using radio waves.</p>
-  <div style="margin-top:20px; background:#2a3246; padding:20px; border-radius:10px; text-align:center; color:#38bdf8;">
-    VIDEO ABOUT HOW RADIO WAVES ARE USED TO TRANSMIT DATA
-  </div>
-  <p>This base station can then route data across the internet or to other devices.</p>
-  <p>5G uses many of the same radio frequencies as 3G and 4G technologies. However, it uses smaller, lower power transmitters than 4G so that they can be placed easily in many areas. This improves speed, capacity, and delay of a network.</p>
-</section>
+/* Highlight strip */
+.highlight-strip {
+    background-color: #e8e2f7;
+    padding: 18px;
+    border-radius: 8px;
+}
 
-<section class="feature">
-  <h2>5G Towers & Controversy</h2>
-  
-  <h3>Case 1</h3>
-  <p>This poster was shared widely on facebook and instagram. It displays a fake warning on a 5G tower, not an official one. It claims that the 5G tower is damaging to humans and animals, and can cause severe health issues. In reality there is no evidence that any 5G technology is harmful to humans. The frequencies 20KHz to 6GHz used by 5G cell towers are non-ionising, meaning they do not mutate or affect DNA. Some studies quote that 5G uses frequencies up to 300GHz, however this is the theoretical upper bound, used as a safety limit for future research. In reality the maximum frequencies 5G uses is no greater than in the 10s of GHz at its peak. See here for more information on the specific frequencies used by 5G.</p>
-  
-  <h3>Case 2</h3>
-  <div style="margin-top:20px; background:#2a3246; padding:20px; border-radius:10px; text-align:center; color:#38bdf8;">
-    VIDEO
-  </div>
-  <p>This video shows an RF meter, a device used to measure electromagnetic field strength, measuring the field next to a 5G tower. It appears to be increasing out of control, the video implying that the electromagnetic field here is at an extreme high. In reality, RF meters can be highly inaccurate. Consumer level meters will average out all nearby frequencies rather than showing ones explicitly produced by the 5G tower, thus producing a much higher record than expected. The man-made electromagnetic radiation is much less than usual naturally caused radiation. RF meters are also often miscalibrated, meaning that it is adjusted incorrectly to the environment, possibly leading to inaccurately high results. This reading is shown in the video without any comparison to a safety limit, so it is unclear by how much the radiation has truly increased.</p>
+/* Diagram/video placeholder */
+.media-placeholder {
+    background-color: #ddd;
+    height: 220px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: #555;
+    margin-top: 15px;
+}
 
-  <h3>Case 3</h3>
-  <div style="margin-top:20px; background:#2a3246; padding:20px; border-radius:10px; text-align:center; color:#38bdf8;">
-    VIDEO
-  </div>
-  <p>A large part of the problem of misinformation about 5G is people believing that an unusual illness implies a correlation between 5G and that health problem. Watch the video below.</p>
-  <p>It suggests that her eyes were affected by 5G. No scientific evidence links 5G to bad eyes, thus this is another example of hyper paranoia about radiation.</p>
+/* Card layout */
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+    max-width: 1000px;
+    margin: auto;
+}
 
-  <h3>Case 4</h3>
-  <p>Consider this website <a href="https://www.naturalnews.com/2024-01-11-4-ways-5g-technology-can-harm-humans.html?" style="color:#38d9a9;">Link</a></p>
-  <p>It claims that 5G has scientific links to premature ageing, early onset Alzheimer's, brain damage, and cancer. These claims made with scientific ‘facts’ are extreme extrapolations of the truth, with facts being taken completely out of context. Take their claim that millimetre waves alter DNA, for example. It is true that studies have shown that some high frequency millimetre waves do indeed mutate DNA, however these studies implement electromagnetic waves of a much higher frequency than is ever used for 5G, wifi and bluetooth. The papers that this article references are controversial, are not heavily peer reviewed, and disagree with scientific consensus across the globe, thus are showing a misrepresentation of the truth.</p>
-  <p>Though there is a lack of scientific evidence explicitly concluding that 5G frequencies are not harmful to humans, it does not automatically mean that it is a danger. Perfect studies on people cannot be done due to ethical limitations. Etc.</p>
-</section>
+.info-card {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
 
-<section class="feature">
-  <h2>Why People Promote Misinformation</h2>
-  <p>These conspiracies and twisted versions of the truth are told as they get more clicks on the internet, for promoting controversial and radical news.</p>
-  <p>It emphasises mistrust in government agencies as they are perceived to be hiding the truth about 5G and wireless technologies. It also puts mistrust in mainstream science and industry methods, framing modern technology as harmful.</p>
-</section>
+.info-card h3 {
+    margin-top: 0;
+    color: #4b2e83;
+}
 
-<section class="feature">
-  <h2>Why Misuse of Physics Matters</h2>
-  <p>The impacts of the misinformation surrounding 5G are vast, particularly in politics. People's fears continue to be surrounding health impacts, but also the conspiracy of 5G being used by government agencies for malicious purposes. It implies that 5G is used to ‘spy’ on the public. Particularly in the height of the pandemic, rumours circulated the globe that 5G was the cause of the spread of the Corona Virus.</p>
+.card-button {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 8px 14px;
+    background-color: #4b2e83;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 14px;
+}
 
-  <h3>Australia</h3>
-  <p>In 2020 the Australian government was pressured by the increase of misinformation surrounding 5G. A strong anti-5G movement powered by social media (examples can be found here) caused a nation-wide backlash against the roll out of 5G, since their small cells would be in a significant amount of places, making it difficult to avoid supposed exposure to the radiation. There was a large panic about the proposed higher frequencies used, but as debunked here, we know the truth is that these higher frequencies do not equate to higher health risks.</p>
+.card-button:hover {
+    background-color: #3a2366;
+}
 
-  <h3>Italy</h3>
-  <p>In 2022, a right wing electoral list called Vita had a strong anti-5G movement, involving a party called Alleanza Italiana Stop 5G. This appealed to voters who have distrust in government and science, and it formalises these fears and misinformation for political gain.</p>
+/* Footer text */
+.page4-footer {
+    max-width: 1000px;
+    margin: 40px auto 0 auto;
+    font-weight: bold;
+    text-align: center;
+}
+</style>
 
-  <h3>Belgium</h3>
-  <p>Politicians delayed 5G rollout citing radiation concerns and the precautionary principle. The issue later turned out to be mainly regulatory limits and political compromise, not new health evidence.</p>
+<div class="page4-section">
 
-  <h3>Switzerland</h3>
-  <p>Local councils passed symbolic “5G moratoriums” despite national regulators saying exposure limits are safe.</p>
-
-  <h3>Worldwide 5G Covid 19 Panic</h3>
-  <p>The global Covid 19 pandemic arriving around the same time as the 5G technology roll out caused global speculation that the two are related. Due to mistrust in these new technologies, people hypothesised that the 5G towers are for government surveillance, and that 5G was used to spread Corona viruses through microchips implanted during vacancies.</p>
-</section>
+```
+<div class="page4-title">
+    Radiation & 5G: Breaking Facts from Fiction
+</div>
 
 
+<!-- What is Radiation -->
+<div class="section-block">
+    <h2>What is radiation?</h2>
 
-<footer>
-  <p>© 2026 Misuse of Physics Project</p>
-</footer>
-  
-</body>
-</html>
+    <p>
+    ‘Moving energy’<br>
+    Spreads out<br>
+    Like invisible ripples<br>
+    Can’t see it but it affects what it passes through<br>
+    When you connect your phone to your headphones, you know its connected but you cant see it<br>
+    EM vs other forms
+    </p>
+
+    <div class="media-placeholder">
+        MAKE VIDEO / DIAGRAM
+    </div>
+</div>
+
+
+<!-- Misinformation introduction -->
+<div class="section-block highlight-strip">
+    <p>
+    Many people find the use of radiation controversial, particularly in relation to wireless networks. The most significant example is 5G, which we will discuss and debunk below. There is a large misspread of information about the harm radiation can cause and this is due the general public’s lack of understanding of this topic. This had led to widespread panic about its health risks over social media, news, and even influencing politics. Posts on social media can lead users down ‘rabbit holes’, feeding them an endless supply of the same misinformation, making users believe it is indeed true. News articles and posts quote scientific papers without properly understanding it, showing only snapshots of scientific knowledge, portraying the health risks to be much greater than in reality.
+    </p>
+
+    <p>
+    Lets analyse and break down the facts from the fiction in some of these headlines and posts about radiation.
+    </p>
+</div>
+
+
+<!-- Exploration Cards -->
+<div class="section-block">
+    <h2 style="text-align:center;">Explore the 5G Debate</h2>
+</div>
+
+<div class="card-grid">
+
+    <!-- Card 1 -->
+    <div class="info-card">
+        <h3>What is 5G?</h3>
+        <p>
+        What actually is 5G?<br>
+        Why do we need 5G?<br>
+        How does 5G work?<br><br>
+        VIDEO ABOUT HOW RADIO WAVES ARE USED TO TRANSMIT DATA
+        </p>
+        <a href="Page5.html" class="card-button">Learn more →</a>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="info-card">
+        <h3>5G Towers</h3>
+        <p>
+        The implementation of new 5G towers has caused large controversy and panic in society, in some cases even leading to government policy changes.
+        </p>
+        <a href="Page6.html" class="card-button">See the science →</a>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="info-card">
+        <h3>Case Studies</h3>
+        <p>
+        Case 1<br>
+        Case 2<br>
+        Case 3<br>
+        Case 4
+        </p>
+        <a href="Page7.html" class="card-button">Break down misinformation →</a>
+    </div>
+
+    <!-- Card 4 -->
+    <div class="info-card">
+        <h3>Why this matters</h3>
+        <p>
+        Australia<br>
+        Italy<br>
+        Belgium<br>
+        Switzerland<br>
+        Worldwide 5G Covid 19 Panic
+        </p>
+        <a href="Page8.html" class="card-button">Global impact →</a>
+    </div>
+
+</div>
+
+
+<!-- Closing section -->
+<div class="page4-footer">
+    Why do people promote this misinformation?<br>
+    Why does this misuse of physics matter?
+</div>
+```
+
+</div>
+
