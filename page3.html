@@ -6,89 +6,6 @@
   <link rel="stylesheet" href="style.css">
 </head>
 
-<script>
-const canvas = document.getElementById("qftCanvas");
-const ctx = canvas.getContext("2d");
-const text = document.getElementById("qftText");
-const energyDiv = document.getElementById("energyLevels");
-
-let energyLevel = 0;
-let packets = [];
-
-function drawEnergyLadder() {
-  energyDiv.innerHTML = "";
-  for (let i = 4; i >= 0; i--) {
-    let level = document.createElement("div");
-    level.style.height = "25px";
-    level.style.margin = "6px 0";
-    level.style.borderRadius = "6px";
-    level.style.background = i === energyLevel ? "#f97316" : "#475569";
-    energyDiv.appendChild(level);
-  }
-}
-
-drawEnergyLadder();
-
-function drawField() {
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-
-  // Perspective grid
-  for (let z = 0; z < 10; z++) {
-    ctx.beginPath();
-    for (let x = 0; x < canvas.width; x++) {
-      let depthScale = 1 - z * 0.07;
-      let y = 150 + 
-              Math.sin((x*0.02) + Date.now()*0.002) * 
-              (5 + energyLevel*5) * depthScale;
-      ctx.lineTo(x, y - z*8);
-    }
-    ctx.strokeStyle = "rgba(255,255,255," + (0.1 + z*0.05) + ")";
-    ctx.stroke();
-  }
-
-  // Draw wave packets (particles)
-  packets.forEach(p => {
-    let gradient = ctx.createRadialGradient(p.x, p.y, 5, p.x, p.y, 25);
-    gradient.addColorStop(0, "#fde047");
-    gradient.addColorStop(1, "rgba(253,224,71,0)");
-    ctx.fillStyle = gradient;
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, 20, 0, Math.PI*2);
-    ctx.fill();
-  });
-
-  requestAnimationFrame(drawField);
-}
-
-drawField();
-
-function addEnergy() {
-  if (energyLevel < 4) {
-    energyLevel++;
-    packets.push({
-      x: Math.random()*550 + 25,
-      y: 140
-    });
-
-    text.innerHTML = 
-    "Energy added. The field moves to a higher quantized excitation level. A particle (wave packet) appears.";
-
-    drawEnergyLadder();
-  }
-}
-
-function removeEnergy() {
-  if (energyLevel > 0) {
-    energyLevel--;
-    packets.pop();
-
-    text.innerHTML =
-    "Energy removed. A particle annihilates and the field returns to a lower energy state.";
-
-    drawEnergyLadder();
-  }
-}
-</script>
 
   
 <body>
@@ -353,3 +270,89 @@ Annihilate
   <section class="feature"> 
     <h2>Conclusion</h2> 
     <p> To conclude, despite the quirkiness of quantum physics, and as mystical as it sounds, the truth is, it’s just math that happens to make very good predictions based on well-constructed mathematical and philosophical arguments. Buy and large, there are no quantum fields to harness, nor negative energy to expel. The large brunt of any physics is pretty much like this: the truth of physical nature is always true regardless as apples always fall from trees, even if Newton was wrong and Einstein was right with General Relativity– in fact, even if his theory is not complete at explaining what happens inside of black holes. The mathematics in physics is likened to Platonic Ideals: it does not say exactly what the light is, but it is like its reflection on the walls of the cave or the river. Matter is always matter, but once it was Democritus cutting cheese and calling them atomos (atoms), right now it is Quantum Physics that explained what happens inside them. <\p>
+
+
+
+<script>
+const canvas = document.getElementById("qftCanvas");
+const ctx = canvas.getContext("2d");
+const text = document.getElementById("qftText");
+const energyDiv = document.getElementById("energyLevels");
+
+let energyLevel = 0;
+let packets = [];
+
+function drawEnergyLadder() {
+  energyDiv.innerHTML = "";
+  for (let i = 4; i >= 0; i--) {
+    let level = document.createElement("div");
+    level.style.height = "25px";
+    level.style.margin = "6px 0";
+    level.style.borderRadius = "6px";
+    level.style.background = i === energyLevel ? "#f97316" : "#475569";
+    energyDiv.appendChild(level);
+  }
+}
+
+drawEnergyLadder();
+
+function drawField() {
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  // Perspective grid
+  for (let z = 0; z < 10; z++) {
+    ctx.beginPath();
+    for (let x = 0; x < canvas.width; x++) {
+      let depthScale = 1 - z * 0.07;
+      let y = 150 + 
+              Math.sin((x*0.02) + Date.now()*0.002) * 
+              (5 + energyLevel*5) * depthScale;
+      ctx.lineTo(x, y - z*8);
+    }
+    ctx.strokeStyle = "rgba(255,255,255," + (0.1 + z*0.05) + ")";
+    ctx.stroke();
+  }
+
+  // Draw wave packets (particles)
+  packets.forEach(p => {
+    let gradient = ctx.createRadialGradient(p.x, p.y, 5, p.x, p.y, 25);
+    gradient.addColorStop(0, "#fde047");
+    gradient.addColorStop(1, "rgba(253,224,71,0)");
+    ctx.fillStyle = gradient;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, 20, 0, Math.PI*2);
+    ctx.fill();
+  });
+
+  requestAnimationFrame(drawField);
+}
+
+drawField();
+
+function addEnergy() {
+  if (energyLevel < 4) {
+    energyLevel++;
+    packets.push({
+      x: Math.random()*550 + 25,
+      y: 140
+    });
+
+    text.innerHTML = 
+    "Energy added. The field moves to a higher quantized excitation level. A particle (wave packet) appears.";
+
+    drawEnergyLadder();
+  }
+}
+
+function removeEnergy() {
+  if (energyLevel > 0) {
+    energyLevel--;
+    packets.pop();
+
+    text.innerHTML =
+    "Energy removed. A particle annihilates and the field returns to a lower energy state.";
+
+    drawEnergyLadder();
+  }
+}
+</script>
