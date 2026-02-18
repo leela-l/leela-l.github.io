@@ -218,6 +218,17 @@ p, li {
   animation: fadeIn 0.3s ease-in-out;
 }
 
+/* Hide dropdown text by default */
+.dropdown-section details .dropdown-content {
+  display: none;
+}
+
+/* Show when opened */
+.dropdown-section details[open] .dropdown-content {
+  display: block;
+}
+
+
 /* Smooth fade */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(-5px); }
