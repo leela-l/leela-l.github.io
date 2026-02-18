@@ -5,6 +5,92 @@
   <title>Physics Mythbusters | The Quantum World</title>
   <link rel="stylesheet" href="style.css">
 </head>
+
+<script>
+const canvas = document.getElementById("qftCanvas");
+const ctx = canvas.getContext("2d");
+const text = document.getElementById("qftText");
+const energyDiv = document.getElementById("energyLevels");
+
+let energyLevel = 0;
+let packets = [];
+
+function drawEnergyLadder() {
+  energyDiv.innerHTML = "";
+  for (let i = 4; i >= 0; i--) {
+    let level = document.createElement("div");
+    level.style.height = "25px";
+    level.style.margin = "6px 0";
+    level.style.borderRadius = "6px";
+    level.style.background = i === energyLevel ? "#f97316" : "#475569";
+    energyDiv.appendChild(level);
+  }
+}
+
+drawEnergyLadder();
+
+function drawField() {
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  // Perspective grid
+  for (let z = 0; z < 10; z++) {
+    ctx.beginPath();
+    for (let x = 0; x < canvas.width; x++) {
+      let depthScale = 1 - z * 0.07;
+      let y = 150 + 
+              Math.sin((x*0.02) + Date.now()*0.002) * 
+              (5 + energyLevel*5) * depthScale;
+      ctx.lineTo(x, y - z*8);
+    }
+    ctx.strokeStyle = "rgba(255,255,255," + (0.1 + z*0.05) + ")";
+    ctx.stroke();
+  }
+
+  // Draw wave packets (particles)
+  packets.forEach(p => {
+    let gradient = ctx.createRadialGradient(p.x, p.y, 5, p.x, p.y, 25);
+    gradient.addColorStop(0, "#fde047");
+    gradient.addColorStop(1, "rgba(253,224,71,0)");
+    ctx.fillStyle = gradient;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, 20, 0, Math.PI*2);
+    ctx.fill();
+  });
+
+  requestAnimationFrame(drawField);
+}
+
+drawField();
+
+function addEnergy() {
+  if (energyLevel < 4) {
+    energyLevel++;
+    packets.push({
+      x: Math.random()*550 + 25,
+      y: 140
+    });
+
+    text.innerHTML = 
+    "Energy added. The field moves to a higher quantized excitation level. A particle (wave packet) appears.";
+
+    drawEnergyLadder();
+  }
+}
+
+function removeEnergy() {
+  if (energyLevel > 0) {
+    energyLevel--;
+    packets.pop();
+
+    text.innerHTML =
+    "Energy removed. A particle annihilates and the field returns to a lower energy state.";
+
+    drawEnergyLadder();
+  }
+}
+</script>
+
+  
 <body>
 
 <header>
@@ -165,86 +251,80 @@
 
   <img src="images/image_2026-02-12_094235949.png" alt="Quantum field illustration placeholder">
 
+<div style="
+  margin: 70px auto;
+  max-width: 900px;
+  background: #334155;
+  padding: 35px;
+  border-radius: 20px;
+  box-shadow: 0 20px 45px rgba(0,0,0,0.5);
+  text-align: center;
+">
+
+<h2 style="color:#f97316; margin-bottom:20px;">
+3D Quantum Field Visualisation
+</h2>
+
+<p id="qftText" style="min-height:60px; line-height:1.6;">
+Each point in space contains a quantum field. Particles are localized energy packets (wave excitations).
+</p>
+
+<div style="display:flex; justify-content:center; gap:30px; flex-wrap:wrap;">
+
+<!-- FIELD -->
+<div style="position:relative;">
+<canvas id="qftCanvas" width="600" height="300"
+style="border-radius:15px; background:#0f172a;"></canvas>
+</div>
+
+<!-- ENERGY LADDER -->
+<div style="
+  width:150px;
+  background:#1e293b;
+  border-radius:15px;
+  padding:15px;
+  text-align:center;
+">
+
+<h4 style="color:#f97316;">Energy Levels</h4>
+<div id="energyLevels"></div>
+
+</div>
+
+</div>
+
+<div style="margin-top:25px;">
+<button onclick="addEnergy()" style="
+  margin:8px;
+  padding:10px 20px;
+  border:none;
+  border-radius:10px;
+  background:#f97316;
+  color:white;
+  cursor:pointer;">
+Add Energy
+</button>
+
+<button onclick="removeEnergy()" style="
+  margin:8px;
+  padding:10px 20px;
+  border:none;
+  border-radius:10px;
+  background:#ef4444;
+  color:white;
+  cursor:pointer;">
+Annihilate
+</button>
+</div>
+
+</div>
+
+
   
   <p>
     Instead fields are incorporated in the quantum framework, and instead are operators which work on something called the Fock Space which is a special mathematical set which contains “nice” functions which represent various quantum states. And what comes out, is that disturbances in these fields, manifest as real particles.
   </p>
     <img src="images/image_2026-02-12_095111223.png" alt="Quantum field illustration placeholder">
-
-<div style="
-  margin: 60px auto;
-  max-width: 750px;
-  background: #334155;
-  padding: 30px;
-  border-radius: 18px;
-  box-shadow: 0 15px 35px rgba(0,0,0,0.4);
-  text-align: center;
-">
-
-<h2 style="
-  color: #f97316;
-  margin-bottom: 20px;
-">
-Quantum Field Theory Visualisation
-</h2>
-
-<p id="qft-text" style="
-  min-height: 60px;
-  line-height: 1.6;
-">
-Fields exist everywhere in space. Particles are excitations (ripples) in those fields.
-</p>
-
-<div id="qft-field" style="
-  height: 160px;
-  margin: 25px 0;
-  border-radius: 12px;
-  position: relative;
-  overflow: hidden;
-  background: linear-gradient(180deg, #0ea5e9 0%, #1e293b 100%);
-">
-  <canvas id="waveCanvas" width="700" height="160"></canvas>
-</div>
-
-<button onclick="addEnergy()" style="
-  margin: 8px;
-  padding: 10px 18px;
-  border: none;
-  border-radius: 10px;
-  background: #f97316;
-  color: white;
-  cursor: pointer;
-">
-Add Energy
-</button>
-
-<button onclick="annihilate()" style="
-  margin: 8px;
-  padding: 10px 18px;
-  border: none;
-  border-radius: 10px;
-  background: #ef4444;
-  color: white;
-  cursor: pointer;
-">
-Annihilate
-</button>
-
-<button onclick="fluctuate()" style="
-  margin: 8px;
-  padding: 10px 18px;
-  border: none;
-  border-radius: 10px;
-  background: #22c55e;
-  color: white;
-  cursor: pointer;
-">
-Vacuum Fluctuation
-</button>
-
-</div>
-
-  
   <p>
     But some particles would naturally arise out of this framework, never having been seen before in experimental settings. For example, the negative energy solutions found by Dirac, predicted the notion of Anti-Electrons or Positrons.
   </p>
@@ -273,60 +353,3 @@ Vacuum Fluctuation
   <section class="feature"> 
     <h2>Conclusion</h2> 
     <p> To conclude, despite the quirkiness of quantum physics, and as mystical as it sounds, the truth is, it’s just math that happens to make very good predictions based on well-constructed mathematical and philosophical arguments. Buy and large, there are no quantum fields to harness, nor negative energy to expel. The large brunt of any physics is pretty much like this: the truth of physical nature is always true regardless as apples always fall from trees, even if Newton was wrong and Einstein was right with General Relativity– in fact, even if his theory is not complete at explaining what happens inside of black holes. The mathematics in physics is likened to Platonic Ideals: it does not say exactly what the light is, but it is like its reflection on the walls of the cave or the river. Matter is always matter, but once it was Democritus cutting cheese and calling them atomos (atoms), right now it is Quantum Physics that explained what happens inside them. <\p>
-
-      <script>
-const canvas = document.getElementById("waveCanvas");
-const ctx = canvas.getContext("2d");
-const text = document.getElementById("qft-text");
-
-let amplitude = 5;
-let particles = [];
-
-function drawWave() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.beginPath();
-
-  for (let x = 0; x < canvas.width; x++) {
-    let y = 80 + Math.sin(x * 0.02 + Date.now() * 0.002) * amplitude;
-    ctx.lineTo(x, y);
-  }
-
-  ctx.strokeStyle = "#ffffff";
-  ctx.lineWidth = 2;
-  ctx.stroke();
-
-  requestAnimationFrame(drawWave);
-}
-
-drawWave();
-
-function addEnergy() {
-  amplitude += 10;
-
-  particles.push({x: Math.random() * 650});
-
-  text.innerHTML = "Adding energy increases the field amplitude. A particle appears as a localized excitation.";
-
-  setTimeout(() => {
-    amplitude -= 10;
-  }, 2000);
-}
-
-function annihilate() {
-  if (particles.length >= 2) {
-    particles.splice(0, 2);
-    text.innerHTML = "Particle–antiparticle annihilation converts the excitation back into field energy.";
-  } else {
-    text.innerHTML = "Create at least two particles first.";
-  }
-}
-
-function fluctuate() {
-  amplitude += 4;
-  text.innerHTML = "Even vacuum has quantum fluctuations — temporary small excitations of the field.";
-
-  setTimeout(() => {
-    amplitude -= 4;
-  }, 800);
-}
-</script>
