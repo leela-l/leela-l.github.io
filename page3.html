@@ -102,6 +102,57 @@
     Specifically, he said that the frequency of a photon (light as particles) is proportional to its energy.
   </p>
 
+
+<div style="
+  margin: 80px auto;
+  max-width: 900px;
+  background: #334155;
+  padding: 35px;
+  border-radius: 20px;
+  box-shadow: 0 20px 45px rgba(0,0,0,0.5);
+  text-align: center;
+">
+
+<h2 style="color:#f97316; margin-bottom:20px;">
+Hydrogen Quantum States & Measurement
+</h2>
+
+<p id="hydrogenText" style="min-height:60px; line-height:1.6;">
+The electron exists in a superposition of quantum states:
+|ψ⟩ = a|1s⟩ + b|2p⟩
+</p>
+
+<canvas id="hydrogenCanvas" width="600" height="400"
+style="border-radius:15px; background:#0f172a;"></canvas>
+
+<div style="margin-top:25px;">
+<button onclick="emitPhoton()" style="
+  margin:8px;
+  padding:10px 20px;
+  border:none;
+  border-radius:10px;
+  background:#f97316;
+  color:white;
+  cursor:pointer;">
+Measure (Emit Photon)
+</button>
+
+<button onclick="resetState()" style="
+  margin:8px;
+  padding:10px 20px;
+  border:none;
+  border-radius:10px;
+  background:#22c55e;
+  color:white;
+  cursor:pointer;">
+Reset Superposition
+</button>
+</div>
+
+</div>
+
+    
+    
   <p>
     The resulting consequence would lay the foundation of quantum mechanics. This includes things like the uncertainty principle and the wavefunction, which arose out of the assumptions just mentioned, and were subsequently confirmed in laboratory environments.
   </p>
@@ -356,3 +407,113 @@ function removeEnergy() {
   }
 }
 </script>
+
+
+<script>
+const canvasH = document.getElementById("hydrogenCanvas");
+const ctxH = canvasH.getContext("2d");
+const textH = document.getElementById("hydrogenText");
+
+let state = "superposition";
+let photonX = -50;
+let collapsing = false;
+
+function drawHydrogen() {
+  ctxH.clearRect(0,0,canvasH.width,canvasH.height);
+
+  const centerX = 300;
+  const centerY = 200;
+
+  // Draw nucleus
+  ctxH.beginPath();
+  ctxH.arc(centerX, centerY, 10, 0, Math.PI*2);
+  ctxH.fillStyle = "#f97316";
+  ctxH.fill();
+
+  // SUPERPOSITION STATE
+  if (state === "superposition") {
+
+    // 1s spherical cloud
+    let grad1 = ctxH.createRadialGradient(centerX, centerY, 20, centerX, centerY, 80);
+    grad1.addColorStop(0, "rgba(59,130,246,0.6)");
+    grad1.addColorStop(1, "rgba(59,130,246,0)");
+    ctxH.fillStyle = grad1;
+    ctxH.beginPath();
+    ctxH.arc(centerX, centerY, 80, 0, Math.PI*2);
+    ctxH.fill();
+
+    // 2p lobes
+    ctxH.fillStyle = "rgba(168,85,247,0.5)";
+    ctxH.beginPath();
+    ctxH.ellipse(centerX, centerY - 90, 40, 60, 0, 0, Math.PI*2);
+    ctxH.fill();
+
+    ctxH.beginPath();
+    ctxH.ellipse(centerX, centerY + 90, 40, 60, 0, 0, Math.PI*2);
+    ctxH.fill();
+  }
+
+  // COLLAPSED TO 1s
+  if (state === "1s") {
+    let grad = ctxH.createRadialGradient(centerX, centerY, 20, centerX, centerY, 80);
+    grad.addColorStop(0, "rgba(59,130,246,0.8)");
+    grad.addColorStop(1, "rgba(59,130,246,0)");
+    ctxH.fillStyle = grad;
+    ctxH.beginPath();
+    ctxH.arc(centerX, centerY, 80, 0, Math.PI*2);
+    ctxH.fill();
+  }
+
+  // COLLAPSED TO 2p
+  if (state === "2p") {
+    ctxH.fillStyle = "rgba(168,85,247,0.7)";
+    ctxH.beginPath();
+    ctxH.ellipse(centerX, centerY - 90, 40, 60, 0, 0, Math.PI*2);
+    ctxH.fill();
+
+    ctxH.beginPath();
+    ctxH.ellipse(centerX, centerY + 90, 40, 60, 0, 0, Math.PI*2);
+    ctxH.fill();
+  }
+
+  // Draw photon if measuring
+  if (collapsing) {
+    ctxH.beginPath();
+    ctxH.arc(photonX, centerY, 8, 0, Math.PI*2);
+    ctxH.fillStyle = "#fde047";
+    ctxH.fill();
+
+    photonX += 4;
+
+    if (photonX > centerX - 20) {
+      collapsing = false;
+      photonX = -50;
+
+      // Random collapse outcome
+      state = Math.random() < 0.5 ? "1s" : "2p";
+
+      textH.innerHTML =
+      "Measurement occurred. The wavefunction collapsed to |" + state + "⟩.";
+    }
+  }
+
+  requestAnimationFrame(drawHydrogen);
+}
+
+drawHydrogen();
+
+function emitPhoton() {
+  if (state === "superposition") {
+    collapsing = true;
+    textH.innerHTML =
+    "A photon interacts with the atom. Measurement forces the system into an eigenstate.";
+  }
+}
+
+function resetState() {
+  state = "superposition";
+  textH.innerHTML =
+  "The electron exists in a superposition of states: |ψ⟩ = a|1s⟩ + b|2p⟩";
+}
+</script>
+
