@@ -102,56 +102,28 @@
     Specifically, he said that the frequency of a photon (light as particles) is proportional to its energy.
   </p>
 
+<section class="feature">
+  <h2>Classical EM Waves vs Photons: Solving the Ultraviolet Catastrophe</h2>
+  
+  <p>
+    Classical physics predicted that a blackbody would emit infinite energy at high frequencies (the ultraviolet catastrophe). Quantum theory resolved this by introducing discrete energy packets, called photons.
+  </p>
 
-<div style="
-  margin: 80px auto;
-  max-width: 900px;
-  background: #334155;
-  padding: 35px;
-  border-radius: 20px;
-  box-shadow: 0 20px 45px rgba(0,0,0,0.5);
-  text-align: center;
-">
+  <canvas id="emCanvas" width="700" height="300" 
+          style="border-radius:15px; background:#0f172a; display:block; margin:auto;"></canvas>
 
-<h2 style="color:#f97316; margin-bottom:20px;">
-Hydrogen Quantum States & Measurement
-</h2>
+  <p id="emText" style="text-align:center; font-weight:bold; margin-top:15px; color:#f97316;">
+    Classical view: smooth waves lead to infinite energy at high frequencies
+  </p>
 
-<p id="hydrogenText" style="min-height:60px; line-height:1.6;">
-The electron exists in a superposition of quantum states:
-|ψ⟩ = a|1s⟩ + b|2p⟩
-</p>
+  <button onclick="togglePhoton()" style="
+    display:block; margin:20px auto; padding:10px 20px; border:none; border-radius:10px;
+    background:#f97316; color:white; cursor:pointer;">
+    Toggle Photons
+  </button>
+</section>
 
-<canvas id="hydrogenCanvas" width="600" height="400"
-style="border-radius:15px; background:#0f172a;"></canvas>
 
-<div style="margin-top:25px;">
-<button onclick="emitPhoton()" style="
-  margin:8px;
-  padding:10px 20px;
-  border:none;
-  border-radius:10px;
-  background:#f97316;
-  color:white;
-  cursor:pointer;">
-Measure (Emit Photon)
-</button>
-
-<button onclick="resetState()" style="
-  margin:8px;
-  padding:10px 20px;
-  border:none;
-  border-radius:10px;
-  background:#22c55e;
-  color:white;
-  cursor:pointer;">
-Reset Superposition
-</button>
-</div>
-
-</div>
-
-    
     
   <p>
     The resulting consequence would lay the foundation of quantum mechanics. This includes things like the uncertainty principle and the wavefunction, which arose out of the assumptions just mentioned, and were subsequently confirmed in laboratory environments.
@@ -410,110 +382,71 @@ function removeEnergy() {
 
 
 <script>
-const canvasH = document.getElementById("hydrogenCanvas");
-const ctxH = canvasH.getContext("2d");
-const textH = document.getElementById("hydrogenText");
+  // Canvas for EM Waves vs Photons
+const emCanvas = document.getElementById("emCanvas");
+const emCtx = emCanvas.getContext("2d");
+const emText = document.getElementById("emText");
 
-let state = "superposition";
-let photonX = -50;
-let collapsing = false;
+let isPhoton = false;
+let photonPackets = [];
 
-function drawHydrogen() {
-  ctxH.clearRect(0,0,canvasH.width,canvasH.height);
-
-  const centerX = 300;
-  const centerY = 200;
-
-  // Draw nucleus
-  ctxH.beginPath();
-  ctxH.arc(centerX, centerY, 10, 0, Math.PI*2);
-  ctxH.fillStyle = "#f97316";
-  ctxH.fill();
-
-  // SUPERPOSITION STATE
-  if (state === "superposition") {
-
-    // 1s spherical cloud
-    let grad1 = ctxH.createRadialGradient(centerX, centerY, 20, centerX, centerY, 80);
-    grad1.addColorStop(0, "rgba(59,130,246,0.6)");
-    grad1.addColorStop(1, "rgba(59,130,246,0)");
-    ctxH.fillStyle = grad1;
-    ctxH.beginPath();
-    ctxH.arc(centerX, centerY, 80, 0, Math.PI*2);
-    ctxH.fill();
-
-    // 2p lobes
-    ctxH.fillStyle = "rgba(168,85,247,0.5)";
-    ctxH.beginPath();
-    ctxH.ellipse(centerX, centerY - 90, 40, 60, 0, 0, Math.PI*2);
-    ctxH.fill();
-
-    ctxH.beginPath();
-    ctxH.ellipse(centerX, centerY + 90, 40, 60, 0, 0, Math.PI*2);
-    ctxH.fill();
+// Generate photons at random positions
+function generatePhotons() {
+  photonPackets = [];
+  for (let i = 0; i < 20; i++) {
+    photonPackets.push({
+      x: Math.random() * emCanvas.width,
+      y: 150 + Math.sin(Math.random() * 10) * 10,
+      radius: 8 + Math.random() * 5,
+      speed: 1 + Math.random() * 2
+    });
   }
+}
 
-  // COLLAPSED TO 1s
-  if (state === "1s") {
-    let grad = ctxH.createRadialGradient(centerX, centerY, 20, centerX, centerY, 80);
-    grad.addColorStop(0, "rgba(59,130,246,0.8)");
-    grad.addColorStop(1, "rgba(59,130,246,0)");
-    ctxH.fillStyle = grad;
-    ctxH.beginPath();
-    ctxH.arc(centerX, centerY, 80, 0, Math.PI*2);
-    ctxH.fill();
-  }
+function drawEM() {
+  emCtx.clearRect(0,0,emCanvas.width,emCanvas.height);
 
-  // COLLAPSED TO 2p
-  if (state === "2p") {
-    ctxH.fillStyle = "rgba(168,85,247,0.7)";
-    ctxH.beginPath();
-    ctxH.ellipse(centerX, centerY - 90, 40, 60, 0, 0, Math.PI*2);
-    ctxH.fill();
-
-    ctxH.beginPath();
-    ctxH.ellipse(centerX, centerY + 90, 40, 60, 0, 0, Math.PI*2);
-    ctxH.fill();
-  }
-
-  // Draw photon if measuring
-  if (collapsing) {
-    ctxH.beginPath();
-    ctxH.arc(photonX, centerY, 8, 0, Math.PI*2);
-    ctxH.fillStyle = "#fde047";
-    ctxH.fill();
-
-    photonX += 4;
-
-    if (photonX > centerX - 20) {
-      collapsing = false;
-      photonX = -50;
-
-      // Random collapse outcome
-      state = Math.random() < 0.5 ? "1s" : "2p";
-
-      textH.innerHTML =
-      "Measurement occurred. The wavefunction collapsed to |" + state + "⟩.";
+  if (!isPhoton) {
+    // Draw classical EM waves
+    emCtx.beginPath();
+    for (let x = 0; x < emCanvas.width; x++) {
+      let y = 150 + Math.sin((x*0.05) + Date.now()*0.005)*50;
+      emCtx.lineTo(x, y);
     }
+    emCtx.strokeStyle = "#3b82f6"; // Blue wave
+    emCtx.lineWidth = 2;
+    emCtx.stroke();
+  } else {
+    // Draw photons as discrete packets
+    photonPackets.forEach(p => {
+      // Move photon to simulate energy flow
+      p.x += p.speed;
+      if (p.x > emCanvas.width) p.x = 0;
+
+      let gradient = emCtx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.radius);
+      gradient.addColorStop(0, "#facc15");
+      gradient.addColorStop(1, "rgba(250,204,21,0)");
+      emCtx.fillStyle = gradient;
+      emCtx.beginPath();
+      emCtx.arc(p.x, p.y, p.radius, 0, Math.PI*2);
+      emCtx.fill();
+    });
   }
 
-  requestAnimationFrame(drawHydrogen);
+  requestAnimationFrame(drawEM);
 }
 
-drawHydrogen();
-
-function emitPhoton() {
-  if (state === "superposition") {
-    collapsing = true;
-    textH.innerHTML =
-    "A photon interacts with the atom. Measurement forces the system into an eigenstate.";
+// Toggle between classical wave and photon view
+function togglePhoton() {
+  isPhoton = !isPhoton;
+  if (isPhoton) {
+    generatePhotons();
+    emText.innerHTML = "Quantum view: light consists of discrete photons, preventing infinite energy!";
+  } else {
+    emText.innerHTML = "Classical view: smooth waves lead to infinite energy at high frequencies";
   }
 }
 
-function resetState() {
-  state = "superposition";
-  textH.innerHTML =
-  "The electron exists in a superposition of states: |ψ⟩ = a|1s⟩ + b|2p⟩";
-}
+drawEM();
+
 </script>
-
