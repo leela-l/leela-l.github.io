@@ -299,4 +299,19 @@ justify-content: center;
 font-weight: bold;
 }
 
+/* Dropdown summary styling for answers section */
+.dropdown-section summary {
+    font-size: 1.4rem;       /* slightly smaller than default */
+    color: #ffb86c;          /* light orangey tone */
+    cursor: pointer;
+    font-weight: 700;
+    padding: 8px 12px;
+    border-radius: 6px;
+    background-color: rgba(90, 63, 163, 0.1); /* subtle purple background */
+    transition: all 0.3s ease;
+}
+
+.dropdown-section summary:hover {
+    background-color: rgba(90, 63, 163, 0.2);
+}
 
