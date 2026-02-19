@@ -76,6 +76,41 @@ header nav a:hover::after {
   width: 100%;
 }
 
+/* Dropdown container */
+.nav-dropdown {
+  position: relative;
+}
+
+/* Hidden menu */
+.nav-dropdown-content {
+  display: none;
+  position: absolute;
+  top: 30px;
+  left: 0;
+  background: #2f3a4f;
+  border-radius: 8px;
+  padding: 0.5rem 0;
+  min-width: 180px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+}
+
+/* Dropdown links */
+.nav-dropdown-content a {
+  display: block;
+  padding: 0.5rem 1rem;
+  color: #e0e6ed;
+}
+
+.nav-dropdown-content a:hover {
+  background: rgba(79,195,247,0.15);
+  color: #4fc3f7;
+}
+
+/* Show on hover */
+.nav-dropdown:hover .nav-dropdown-content {
+  display: block;
+}
+
 /* --- FEATURE SECTION --- */
 .feature {
   text-align: center;
