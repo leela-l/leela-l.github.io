@@ -22,38 +22,7 @@
   
 
 
-<head>
-<meta charset="UTF-8">
-<title>Nuclear Fission – Full Collision Physics</title>
-<style>
-body{
-    background:#0b0f1a;
-    color:white;
-    font-family:Arial;
-    text-align:center;
-}
-canvas{
-    background:#111827;
-    border:2px solid #555;
-    margin-top:10px;
-}
-.controls label{
-    display:block;
-    margin-top:6px;
-}
-.legend{
-    margin-top:15px;
-    background:#1f2937;
-    padding:10px;
-    display:inline-block;
-    text-align:left;
-    border-radius:8px;
-}
-.color-box{
-    width:15px;height:15px;display:inline-block;margin-right:6px;
-}
-</style>
-</head>
+
 
 <section class="feature">
   <h2>Basics of nuclear reactors</h2></h2>
@@ -73,25 +42,94 @@ canvas{
 
 <h2>Nuclear Fission Simulation – Full Particle Collisions</h2>
 
-<div class="controls">
-<label>Total Uranium:
-<span id="uraniumVal">120</span>
+<div class="fission-sim-container">
+
+<style>
+.fission-sim-container{
+    position:relative;
+    width:100%;
+    max-width:950px;
+    height:550px;
+    background:#0b0f1a;
+    font-family:Arial, sans-serif;
+    color:white;
+    overflow:hidden;
+    border:2px solid #555;
+}
+
+/* Canvas fills container */
+.fission-sim-container canvas{
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:#111827;
+}
+
+/* Legend – top left */
+.fission-legend{
+    position:absolute;
+    top:10px;
+    left:10px;
+    background:#1f2937;
+    padding:10px;
+    border-radius:8px;
+    font-size:13px;
+}
+
+.color-box{
+    width:12px;
+    height:12px;
+    display:inline-block;
+    margin-right:6px;
+}
+
+/* Controls – bottom right */
+.fission-controls{
+    position:absolute;
+    bottom:10px;
+    right:10px;
+    background:#1f2937;
+    padding:10px;
+    border-radius:8px;
+    font-size:12px;
+}
+
+.fission-controls label{
+    display:block;
+    margin-bottom:6px;
+}
+.fission-controls input, .fission-controls button{
+    width:100%;
+    margin-top:3px;
+}
+</style>
+
+<canvas id="fissionCanvas"></canvas>
+
+<div class="fission-legend">
+<strong>Legend</strong><br>
+<div><span class="color-box" style="background:#22c55e"></span>Uranium-235 (Fissile)</div>
+<div><span class="color-box" style="background:#a855f7"></span>Uranium-238 (Non-fissile)</div>
+<div><span class="color-box" style="background:#3b82f6"></span>Neutron</div>
+<div><span class="color-box" style="background:#ef4444"></span>Fission Fragment</div>
+</div>
+
+<div class="fission-controls">
+<label>Total Uranium
 <input type="range" id="uraniumSlider" min="20" max="300" value="120">
 </label>
 
-<label>Initial Neutrons:
-<span id="neutronVal">2</span>
+<label>Initial Neutrons
 <input type="range" id="neutronSlider" min="1" max="50" value="2">
 </label>
 
-<label>Uranium-238 %:
-<span id="u238Val">95</span>% 
-(U-235 = <span id="u235Val">5</span>%)
+<label>U-238 %
 <input type="range" id="u238Slider" min="0" max="100" value="95">
 </label>
 
-<label>Temperature:
-<span id="tempVal">1</span>
+<label>Temperature
 <input type="range" id="tempSlider" min="0.5" max="3" step="0.1" value="1">
 </label>
 
@@ -99,43 +137,33 @@ canvas{
 <button onclick="resetSimulation()">Reset</button>
 </div>
 
-<canvas id="canvas" width="950" height="520"></canvas>
-
-<div class="legend">
-<strong>Legend</strong><br>
-<div><span class="color-box" style="background:#22c55e"></span>Uranium-235 (Fissile)</div>
-<div><span class="color-box" style="background:#a855f7"></span>Uranium-238 (Non-fissile)</div>
-<div><span class="color-box" style="background:#3b82f6"></span>Neutron</div>
-<div><span class="color-box" style="background:#ef4444"></span>Fission Fragments</div>
-<div><span class="color-box" style="background:yellow"></span>Energy</div>
-</div>
-
 <script>
-const canvas=document.getElementById("canvas");
+const container=document.querySelector(".fission-sim-container");
+const canvas=document.getElementById("fissionCanvas");
 const ctx=canvas.getContext("2d");
+
+function resizeCanvas(){
+    canvas.width=container.clientWidth;
+    canvas.height=container.clientHeight;
+}
+resizeCanvas();
+window.addEventListener("resize",resizeCanvas);
 
 let particles=[];
 let animationId;
 let temperature=1;
-const MAX_PARTICLES = 600;
-const MAX_NEUTRONS = 200;
-const MAX_FRAGMENTS = 300;
+
+// Particle limits for stability
+const MAX_PARTICLES=600;
+const MAX_NEUTRONS=200;
+const MAX_FRAGMENTS=300;
 
 const uraniumSlider=document.getElementById("uraniumSlider");
 const neutronSlider=document.getElementById("neutronSlider");
 const u238Slider=document.getElementById("u238Slider");
 const tempSlider=document.getElementById("tempSlider");
 
-uraniumSlider.oninput=()=>document.getElementById("uraniumVal").innerText=uraniumSlider.value;
-neutronSlider.oninput=()=>document.getElementById("neutronVal").innerText=neutronSlider.value;
-u238Slider.oninput=()=>{
-    document.getElementById("u238Val").innerText=u238Slider.value;
-    document.getElementById("u235Val").innerText=100-u238Slider.value;
-};
-tempSlider.oninput=()=>{
-    temperature=parseFloat(tempSlider.value);
-    document.getElementById("tempVal").innerText=tempSlider.value;
-};
+tempSlider.oninput=()=>temperature=parseFloat(tempSlider.value);
 
 class Particle{
     constructor(x,y,radius,type){
@@ -178,11 +206,10 @@ function resolveCollision(p1, p2){
     const dy = p2.y - p1.y;
     const dist = Math.sqrt(dx*dx + dy*dy);
 
-    if(dist === 0) return; // prevent divide-by-zero
+    if(dist===0) return;
 
     if(dist < p1.radius + p2.radius){
-
-        // Neutron absorption by U-235 only
+        // Neutron absorbed by U-235
         if(p1.type==="neutron" && p2.type==="u235"){
             fission(p2);
             p1.active=false;
@@ -194,38 +221,34 @@ function resolveCollision(p1, p2){
             return;
         }
 
-        // Everything else bounces elastically
-        const angle = Math.atan2(dy, dx);
-        const overlap = (p1.radius + p2.radius) - dist;
-        const ax = Math.cos(angle) * overlap / 2;
-        const ay = Math.sin(angle) * overlap / 2;
+        // Bounce everything else elastically
+        const angle=Math.atan2(dy,dx);
+        const overlap=(p1.radius+p2.radius)-dist;
+        const ax=Math.cos(angle)*overlap/2;
+        const ay=Math.sin(angle)*overlap/2;
 
-        // Separate overlapping particles
-        p1.x -= ax;
-        p1.y -= ay;
-        p2.x += ax;
-        p2.y += ay;
+        p1.x-=ax; p1.y-=ay;
+        p2.x+=ax; p2.y+=ay;
 
-        // Simple velocity swap for elastic collision
-        let tempVx = p1.vx;
-        let tempVy = p1.vy;
-        p1.vx = p2.vx;
-        p1.vy = p2.vy;
-        p2.vx = tempVx;
-        p2.vy = tempVy;
+        let tempVx=p1.vx;
+        let tempVy=p1.vy;
+        p1.vx=p2.vx;
+        p1.vy=p2.vy;
+        p2.vx=tempVx;
+        p2.vy=tempVy;
     }
 }
 
-
 function fission(uAtom){
     if(!uAtom.active) return;
+
     uAtom.active=false;
 
     // Count current neutrons/fragments
     let neutronCount = particles.filter(p=>p.type==="neutron").length;
     let fragmentCount = particles.filter(p=>p.type==="fragment").length;
 
-    // Create fragments (max limited)
+    // Fragments
     if(fragmentCount < MAX_FRAGMENTS){
         for(let i=0;i<2;i++){
             let frag=new Particle(uAtom.x,uAtom.y,6,"fragment");
@@ -235,8 +258,8 @@ function fission(uAtom){
         }
     }
 
-    // Create neutrons (reduced spawn)
-    let newN=2; // fixed 2 for stability
+    // Neutrons
+    let newN=2;
     for(let i=0;i<newN;i++){
         if(neutronCount < MAX_NEUTRONS){
             let n=new Particle(uAtom.x,uAtom.y,4,"neutron");
@@ -248,23 +271,23 @@ function fission(uAtom){
     }
 }
 
-
 function startSimulation(){
     resetSimulation();
 
     let total=parseInt(uraniumSlider.value);
     let u238Percent=parseInt(u238Slider.value);
+
     let u235Count=Math.round(total*(100-u238Percent)/100);
     let u238Count=total-u235Count;
 
     for(let i=0;i<u235Count;i++)
-        particles.push(new Particle(Math.random()*900,Math.random()*500,12,"u235"));
+        particles.push(new Particle(Math.random()*canvas.width, Math.random()*canvas.height, 12,"u235"));
 
     for(let i=0;i<u238Count;i++)
-        particles.push(new Particle(Math.random()*900,Math.random()*500,12,"u238"));
+        particles.push(new Particle(Math.random()*canvas.width, Math.random()*canvas.height, 12,"u238"));
 
     for(let i=0;i<neutronSlider.value;i++)
-        particles.push(new Particle(Math.random()*900,Math.random()*500,4,"neutron"));
+        particles.push(new Particle(Math.random()*canvas.width, Math.random()*canvas.height,4,"neutron"));
 
     animate();
 }
@@ -278,26 +301,18 @@ function resetSimulation(){
 function animate(){
     ctx.clearRect(0,0,canvas.width,canvas.height);
 
-    // Keep only active particles
-    particles = particles.filter(p => p.active);
+    particles = particles.filter(p=>p.active);
 
-    // Collision between all particles
-    for(let i = 0; i < particles.length; i++){
-        for(let j = i + 1; j < particles.length; j++){
-            resolveCollision(particles[i], particles[j]);
-        }
+    // Safety cap
+    if(particles.length > MAX_PARTICLES){
+        particles.splice(MAX_PARTICLES);
     }
 
-    // Move and draw
-    particles.forEach(p => {
-        p.move();
-        p.draw();
-    });
-
-    animationId = requestAnimationFrame(animate);
-}
-
-
+    for(let i=0;i<particles.length;i++){
+        for(let j=i+1;j<particles.length;j++){
+            resolveCollision(particles[i],particles[j]);
+        }
+    }
 
     particles.forEach(p=>{
         p.move();
@@ -307,8 +322,7 @@ function animate(){
     animationId=requestAnimationFrame(animate);
 }
 </script>
-
-</body>
+</div>
 
 <p>
  Usually, nuclear fission inside a nuclear reactor will use nuclear fuel consisting of the element Uranium-235, which is an isotope of the element uranium-238. An isotope describes an atom’s nucleus, which has a different number of neutrons than its more common elemental form. In this case, Uranium-235 has 3 fewer neutrons than the element Uranium, making the atom unstable, wanting to split apart. 
