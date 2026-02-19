@@ -117,6 +117,9 @@ const ctx=canvas.getContext("2d");
 let particles=[];
 let animationId;
 let temperature=1;
+const MAX_PARTICLES = 600;
+const MAX_NEUTRONS = 200;
+const MAX_FRAGMENTS = 300;
 
 const uraniumSlider=document.getElementById("uraniumSlider");
 const neutronSlider=document.getElementById("neutronSlider");
@@ -206,23 +209,36 @@ function resolveCollision(p1,p2){
 }
 
 function fission(uAtom){
+    if(!uAtom.active) return;
     uAtom.active=false;
 
-    for(let i=0;i<2;i++){
-        let frag=new Particle(uAtom.x,uAtom.y,6,"fragment");
-        frag.vx=(Math.random()-0.5)*3;
-        frag.vy=(Math.random()-0.5)*3;
-        particles.push(frag);
+    // Count current neutrons/fragments
+    let neutronCount = particles.filter(p=>p.type==="neutron").length;
+    let fragmentCount = particles.filter(p=>p.type==="fragment").length;
+
+    // Create fragments (max limited)
+    if(fragmentCount < MAX_FRAGMENTS){
+        for(let i=0;i<2;i++){
+            let frag=new Particle(uAtom.x,uAtom.y,6,"fragment");
+            frag.vx=(Math.random()-0.5)*3;
+            frag.vy=(Math.random()-0.5)*3;
+            particles.push(frag);
+        }
     }
 
-    let newN=2+Math.floor(Math.random()*2);
+    // Create neutrons (reduced spawn)
+    let newN=2; // fixed 2 for stability
     for(let i=0;i<newN;i++){
-        let n=new Particle(uAtom.x,uAtom.y,4,"neutron");
-        n.vx=(Math.random()-0.5)*4;
-        n.vy=(Math.random()-0.5)*4;
-        particles.push(n);
+        if(neutronCount < MAX_NEUTRONS){
+            let n=new Particle(uAtom.x,uAtom.y,4,"neutron");
+            n.vx=(Math.random()-0.5)*4;
+            n.vy=(Math.random()-0.5)*4;
+            particles.push(n);
+            neutronCount++;
+        }
     }
 }
+
 
 function startSimulation(){
     resetSimulation();
