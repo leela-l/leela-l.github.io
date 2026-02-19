@@ -236,15 +236,79 @@ function spawnPair(){
 function interaction(){
   if(particles.length < 1) return;
 
-  const g = new THREE.CylinderGeometry(0.05,0.05,1.2,8);
-  const m = new THREE.MeshBasicMaterial({color:0xffff00});
-  const exchange = new THREE.Mesh(g,m);
-  exchange.rotation.z = Math.PI/2;
-  exchange.position.y = 0.25;
-  scene.add(exchange);
+  const pair = particles[Math.floor(Math.random()*particles.length)];
 
-  setTimeout(()=>scene.remove(exchange),700);
+  const start = pair.particle.position.clone();
+  const end   = pair.antiparticle.position.clone();
+
+  // Virtual particle (glowing wave packet)
+  const g = new THREE.SphereGeometry(0.18, 16, 16);
+  const m = new THREE.MeshBasicMaterial({
+    color: 0xffd166,
+    transparent: true,
+    opacity: 0.9
+  });
+
+  const virtual = new THREE.Mesh(g, m);
+  virtual.position.copy(start);
+  scene.add(virtual);
+
+  let t = 0;
+
+  function propagate(){
+    t += 0.04;
+
+    // Move virtual particle
+    virtual.position.lerpVectors(start, end, t);
+
+    // Disturb field along path
+    const verts = field.geometry.attributes.position;
+    for(let i=0;i<verts.count;i++){
+      const vx = verts.getX(i);
+      const vy = verts.getY(i);
+
+      const dx = vx - virtual.position.x;
+      const dy = vy - virtual.position.z;
+
+      const r = Math.sqrt(dx*dx + dy*dy);
+
+      verts.setZ(i,
+        verts.getZ(i) +
+        Math.exp(-r*r*4) * 0.15 * Math.sin(Date.now()*0.02)
+      );
+    }
+    verts.needsUpdate = true;
+
+    if(t < 1){
+      requestAnimationFrame(propagate);
+    } else {
+
+      // Impact flash
+      const flash = new THREE.Mesh(
+        new THREE.SphereGeometry(0.35,16,16),
+        new THREE.MeshBasicMaterial({
+          color: 0xffffff,
+          transparent: true,
+          opacity: 0.9
+        })
+      );
+
+      flash.position.copy(end);
+      scene.add(flash);
+
+      setTimeout(()=>scene.remove(flash), 180);
+
+      // Recoil motion
+      pair.particle.position.x -= 0.25;
+      pair.antiparticle.position.x += 0.25;
+
+      scene.remove(virtual);
+    }
+  }
+
+  propagate();
 }
+
 
 /* Animation loop */
 
