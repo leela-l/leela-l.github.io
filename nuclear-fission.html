@@ -31,13 +31,6 @@
     All current commercial nuclear power plants use a process called nuclear fission to produce large amounts of energy.  Nuclear fission is a process where large, unstable atoms split into two or more smaller atoms. Below is a simulation of nuclear fission.
   </p>
 
-  
-   
-  
-  
-  
-  
-  
 <body>
 
 
@@ -159,6 +152,7 @@ window.addEventListener("resize",resizeCanvas);
 let particles=[];
 let animationId;
 let temperature=1;
+const speedFactor = 0.25; // Slow down all particle movement
 
 const MAX_PARTICLES=600;
 const MAX_NEUTRONS=200;
@@ -193,14 +187,14 @@ class Particle{
         this.radius=radius;
         this.type=type;
         this.active=true;
-        // Assign relative mass
+        // Masses for realistic collision
         if(type==="u235") this.mass=235;
         else if(type==="u238") this.mass=238;
         else if(type==="fragment") this.mass=100;
         else if(type==="neutron") this.mass=1;
 
-        this.vx=(Math.random()-0.5)*2;
-        this.vy=(Math.random()-0.5)*2;
+        this.vx=(Math.random()-0.5)*2*speedFactor;
+        this.vy=(Math.random()-0.5)*2*speedFactor;
     }
 
     move(){
@@ -238,7 +232,6 @@ function resolveCollision(p1,p2){
         if(p1.type==="neutron" && p2.type==="u235"){ fission(p2); p1.active=false; return; }
         if(p2.type==="neutron" && p1.type==="u235"){ fission(p1); p2.active=false; return; }
 
-        // Separate overlapping
         const angle=Math.atan2(dy,dx);
         const overlap=(p1.radius+p2.radius)-dist;
         const ax=Math.cos(angle)*overlap/2;
@@ -246,14 +239,13 @@ function resolveCollision(p1,p2){
         p1.x-=ax; p1.y-=ay;
         p2.x+=ax; p2.y+=ay;
 
-        // Mass-based elastic collision
         const m1=p1.mass;
         const m2=p2.mass;
 
-        const vx1 = p1.vx;
-        const vy1 = p1.vy;
-        const vx2 = p2.vx;
-        const vy2 = p2.vy;
+        const vx1=p1.vx;
+        const vy1=p1.vy;
+        const vx2=p2.vx;
+        const vy2=p2.vy;
 
         p1.vx = (vx1*(m1-m2) + 2*m2*vx2)/(m1+m2);
         p1.vy = (vy1*(m1-m2) + 2*m2*vy2)/(m1+m2);
@@ -273,8 +265,8 @@ function fission(uAtom){
     if(fragmentCount < MAX_FRAGMENTS){
         for(let i=0;i<2;i++){
             let frag=new Particle(uAtom.x,uAtom.y,6,"fragment");
-            frag.vx=(Math.random()-0.5)*3;
-            frag.vy=(Math.random()-0.5)*3;
+            frag.vx=(Math.random()-0.5)*3*speedFactor;
+            frag.vy=(Math.random()-0.5)*3*speedFactor;
             particles.push(frag);
         }
     }
@@ -283,8 +275,8 @@ function fission(uAtom){
     for(let i=0;i<newN;i++){
         if(neutronCount<MAX_NEUTRONS){
             let n=new Particle(uAtom.x,uAtom.y,4,"neutron");
-            n.vx=(Math.random()-0.5)*4;
-            n.vy=(Math.random()-0.5)*4;
+            n.vx=(Math.random()-0.5)*4*speedFactor;
+            n.vy=(Math.random()-0.5)*4*speedFactor;
             particles.push(n);
             neutronCount++;
         }
