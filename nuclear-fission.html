@@ -171,15 +171,18 @@ class Particle{
     }
 }
 
-function resolveCollision(p1,p2){
-    const dx=p2.x-p1.x;
-    const dy=p2.y-p1.y;
-    const dist=Math.sqrt(dx*dx+dy*dy);
+function resolveCollision(p1, p2){
+    if(!p1.active || !p2.active) return;
 
-  if(dist === 0) return;
-  if(dist < p1.radius+p2.radius){
+    const dx = p2.x - p1.x;
+    const dy = p2.y - p1.y;
+    const dist = Math.sqrt(dx*dx + dy*dy);
 
-        // Neutron absorbed by U235
+    if(dist === 0) return; // prevent divide-by-zero
+
+    if(dist < p1.radius + p2.radius){
+
+        // Neutron absorption by U-235 only
         if(p1.type==="neutron" && p2.type==="u235"){
             fission(p2);
             p1.active=false;
@@ -191,24 +194,28 @@ function resolveCollision(p1,p2){
             return;
         }
 
-        // Elastic bounce
-        const angle=Math.atan2(dy,dx);
-        const overlap=(p1.radius+p2.radius)-dist;
-        const ax=Math.cos(angle)*overlap/2;
-        const ay=Math.sin(angle)*overlap/2;
+        // Everything else bounces elastically
+        const angle = Math.atan2(dy, dx);
+        const overlap = (p1.radius + p2.radius) - dist;
+        const ax = Math.cos(angle) * overlap / 2;
+        const ay = Math.sin(angle) * overlap / 2;
 
-        p1.x-=ax; p1.y-=ay;
-        p2.x+=ax; p2.y+=ay;
+        // Separate overlapping particles
+        p1.x -= ax;
+        p1.y -= ay;
+        p2.x += ax;
+        p2.y += ay;
 
-        const vxTotal=p1.vx-p2.vx;
-        const vyTotal=p1.vy-p2.vy;
-
-        p1.vx-=vxTotal;
-        p1.vy-=vyTotal;
-        p2.vx+=vxTotal;
-        p2.vy+=vyTotal;
+        // Simple velocity swap for elastic collision
+        let tempVx = p1.vx;
+        let tempVy = p1.vy;
+        p1.vx = p2.vx;
+        p1.vy = p2.vy;
+        p2.vx = tempVx;
+        p2.vy = tempVy;
     }
 }
+
 
 function fission(uAtom){
     if(!uAtom.active) return;
@@ -271,12 +278,25 @@ function resetSimulation(){
 function animate(){
     ctx.clearRect(0,0,canvas.width,canvas.height);
 
-    particles=particles.filter(p=>p.active);
+    // Keep only active particles
+    particles = particles.filter(p => p.active);
 
-// Hard safety cap
-    if(particles.length > MAX_PARTICLES){
-        particles.splice(MAX_PARTICLES);
+    // Collision between all particles
+    for(let i = 0; i < particles.length; i++){
+        for(let j = i + 1; j < particles.length; j++){
+            resolveCollision(particles[i], particles[j]);
+        }
     }
+
+    // Move and draw
+    particles.forEach(p => {
+        p.move();
+        p.draw();
+    });
+
+    animationId = requestAnimationFrame(animate);
+}
+
 
 
     particles.forEach(p=>{
