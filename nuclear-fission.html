@@ -91,6 +91,7 @@
     padding:10px;
     border-radius:8px;
     font-size:12px;
+    width:180px;
 }
 
 .fission-controls label{
@@ -131,8 +132,8 @@
 <label>U-238 %
 <span id="u238Val" class="slider-value">95</span>% 
 (<span id="u235Val" class="slider-value">5</span>%)
-</label>
 <input type="range" id="u238Slider" min="0" max="100" value="95">
+</label>
 
 <label>Temperature
 <span id="tempVal" class="slider-value">1</span>
@@ -174,7 +175,6 @@ const u238Val=document.getElementById("u238Val");
 const u235Val=document.getElementById("u235Val");
 const tempVal=document.getElementById("tempVal");
 
-// Update slider labels
 uraniumSlider.oninput=()=>uraniumVal.innerText=uraniumSlider.value;
 neutronSlider.oninput=()=>neutronVal.innerText=neutronSlider.value;
 u238Slider.oninput=()=>{
@@ -192,9 +192,15 @@ class Particle{
         this.y=y;
         this.radius=radius;
         this.type=type;
+        this.active=true;
+        // Assign relative mass
+        if(type==="u235") this.mass=235;
+        else if(type==="u238") this.mass=238;
+        else if(type==="fragment") this.mass=100;
+        else if(type==="neutron") this.mass=1;
+
         this.vx=(Math.random()-0.5)*2;
         this.vy=(Math.random()-0.5)*2;
-        this.active=true;
     }
 
     move(){
@@ -220,7 +226,7 @@ class Particle{
     }
 }
 
-function resolveCollision(p1, p2){
+function resolveCollision(p1,p2){
     if(!p1.active || !p2.active) return;
     const dx=p2.x-p1.x;
     const dy=p2.y-p1.y;
@@ -228,20 +234,32 @@ function resolveCollision(p1, p2){
     if(dist===0) return;
 
     if(dist < p1.radius + p2.radius){
+        // Neutron absorbed by U-235
         if(p1.type==="neutron" && p2.type==="u235"){ fission(p2); p1.active=false; return; }
         if(p2.type==="neutron" && p1.type==="u235"){ fission(p1); p2.active=false; return; }
 
+        // Separate overlapping
         const angle=Math.atan2(dy,dx);
         const overlap=(p1.radius+p2.radius)-dist;
         const ax=Math.cos(angle)*overlap/2;
         const ay=Math.sin(angle)*overlap/2;
-
         p1.x-=ax; p1.y-=ay;
         p2.x+=ax; p2.y+=ay;
 
-        let tempVx=p1.vx; let tempVy=p1.vy;
-        p1.vx=p2.vx; p1.vy=p2.vy;
-        p2.vx=tempVx; p2.vy=tempVy;
+        // Mass-based elastic collision
+        const m1=p1.mass;
+        const m2=p2.mass;
+
+        const vx1 = p1.vx;
+        const vy1 = p1.vy;
+        const vx2 = p2.vx;
+        const vy2 = p2.vy;
+
+        p1.vx = (vx1*(m1-m2) + 2*m2*vx2)/(m1+m2);
+        p1.vy = (vy1*(m1-m2) + 2*m2*vy2)/(m1+m2);
+
+        p2.vx = (vx2*(m2-m1) + 2*m1*vx1)/(m1+m2);
+        p2.vy = (vy2*(m2-m1) + 2*m1*vy1)/(m1+m2);
     }
 }
 
@@ -275,7 +293,6 @@ function fission(uAtom){
 
 function startSimulation(){
     resetSimulation();
-
     let total=parseInt(uraniumSlider.value);
     let u238Percent=parseInt(u238Slider.value);
     let u235Count=Math.round(total*(100-u238Percent)/100);
@@ -283,10 +300,8 @@ function startSimulation(){
 
     for(let i=0;i<u235Count;i++)
         particles.push(new Particle(Math.random()*canvas.width,Math.random()*canvas.height,12,"u235"));
-
     for(let i=0;i<u238Count;i++)
         particles.push(new Particle(Math.random()*canvas.width,Math.random()*canvas.height,12,"u238"));
-
     for(let i=0;i<parseInt(neutronSlider.value);i++)
         particles.push(new Particle(Math.random()*canvas.width,Math.random()*canvas.height,4,"neutron"));
 
@@ -301,7 +316,6 @@ function resetSimulation(){
 
 function animate(){
     ctx.clearRect(0,0,canvas.width,canvas.height);
-
     particles = particles.filter(p=>p.active);
     if(particles.length>MAX_PARTICLES) particles.splice(MAX_PARTICLES);
 
@@ -312,11 +326,11 @@ function animate(){
     }
 
     particles.forEach(p=>{p.move();p.draw();});
-
     animationId=requestAnimationFrame(animate);
 }
 </script>
 </div>
+
 
 <h2>Description of fission</h2>
 <p>
