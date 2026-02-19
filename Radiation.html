@@ -245,8 +245,17 @@ function drawWave(freq) {
   let minCycles = 1;
   let maxCycles = 40;
 
-  let cycles = minCycles + 
-      (logFreq - minLog) / (maxLog - minLog) * (maxCycles - minCycles);
+  // Normalise 0 → 1
+  let t = (logFreq - minLog) / (maxLog - minLog);
+
+// Clamp just in case
+  t = Math.max(0, Math.min(1, t));
+
+// Ease the growth (slower at first, faster later)
+  t = Math.pow(t, 1.6);   // increase number = slower early growth
+
+  let cycles = minCycles + t * (maxCycles - minCycles);
+
 
   ctx.beginPath();
   ctx.strokeStyle = "#4fc3f7";
