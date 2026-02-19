@@ -5,61 +5,64 @@
   <title>Physics Mythbusters | The Quantum World</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    /* Interactive Quantum Field Styles */
-    #quantum-field-container {
-      width: 100%;
-      height: 500px;
-      margin: 30px auto;
-      border: 1px solid #ccc;
-      border-radius: 12px;
-      overflow: hidden;
-      position: relative;
-      background-color: #0a0a0a;
-    }
+/* ---- INTERACTIVE STYLING ---- */
 
-    #quantum-controls {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      background: rgba(255, 255, 255, 0.1);
-      padding: 10px;
-      border-radius: 8px;
-    }
+.quantum-wrapper {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 20px;
+  background: #1f2a44;
+  border-radius: 14px;
+  box-shadow: 0 0 25px rgba(0,0,0,0.6);
+  color: white;
+  font-family: Arial, sans-serif;
+}
 
-    #quantum-controls button {
-      background-color: #e68e73;
-      border: none;
-      padding: 6px 10px;
-      border-radius: 4px;
-      color: #fff;
-      cursor: pointer;
-      font-size: 0.9rem;
-    }
+#quantum-field-container {
+  width: 100%;
+  height: 420px;   /* ⭐ CRITICAL FIX */
+  border-radius: 12px;
+  overflow: hidden;
+  background: black;
+  margin-bottom: 15px;
+}
 
-    #energy-level {
-      position: absolute;
-      left: 10px;
-      top: 10px;
-      width: 20px;
-      height: 100%;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      background: linear-gradient(to top, #ff4d4d 0%, #ffe066 25%, #6bc5ff 50%, #ffffff 100%);
-      display: flex;
-      flex-direction: column-reverse;
-      overflow: hidden;
-    }
+.controls {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
 
-    #energy-fill {
-      width: 100%;
-      height: 0%;
-      background-color: #6bc5ff;
-      transition: height 0.3s;
-    }
-  </style>
+.controls button {
+  background: #e68e73;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.controls button:hover {
+  background: #f2a089;
+}
+
+.energy-bar {
+  width: 18px;
+  height: 120px;
+  background: #333;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-right: 12px;
+}
+
+.energy-fill {
+  width: 100%;
+  height: 0%;
+  background: linear-gradient(to top, #ff4d4d, #ffd966);
+  transition: height 0.3s;
+}
+</style>
 </head>
 <body>
 
@@ -216,14 +219,18 @@
   </p>
 
   <!-- Quantum Field 3D Interactive -->
+  <div class="quantum-wrapper">
+
   <div id="quantum-field-container"></div>
-  <div id="quantum-controls">
+
+  <div class="controls">
+    <div class="energy-bar">
+      <div id="energy-fill" class="energy-fill"></div>
+    </div>
+
     <button onclick="addEnergy()">Raise Energy (a†)</button>
     <button onclick="removeEnergy()">Lower Energy (a)</button>
-    <button onclick="createInteraction()">Cause Interaction</button>
-  </div>
-  <div id="energy-level">
-    <div id="energy-fill"></div>
+    <button onclick="interact()">Exchange Interaction</button>
   </div>
 
   <p>
@@ -256,13 +263,13 @@
     <p> To conclude, despite the quirkiness of quantum physics, and as mystical as it sounds, the truth is, it’s just math that happens to make very good predictions based on well-constructed mathematical and philosophical arguments. Buy and large, there are no quantum fields to harness, nor negative energy to expel. The large brunt of any physics is pretty much like this: the truth of physical nature is always true regardless as apples always fall from trees, even if Newton was wrong and Einstein was right with General Relativity– in fact, even if his theory is not complete at explaining what happens inside of black holes. The mathematics in physics is likened to Platonic Ideals: it does not say exactly what the light is, but it is like its reflection on the walls of the cave or the river. Matter is always matter, but once it was Democritus cutting cheese and calling them atomos (atoms), right now it is Quantum Physics that explained what happens inside them. </p>
     
 
-<!-- THREE.JS (non-module build — works in normal HTML files) -->
+<!-- THREE.JS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r152/three.min.js"></script>
 
 <script>
-const container = document.getElementById('quantum-field-container');
+const container = document.getElementById("quantum-field-container");
 
-/* ---------- SCENE ---------- */
+/* SCENE */
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x000000);
 
@@ -273,7 +280,6 @@ const camera = new THREE.PerspectiveCamera(
   1000
 );
 
-// Fixed orbit-style view
 camera.position.set(0, 8, 14);
 camera.lookAt(0, 0, 0);
 
@@ -281,44 +287,44 @@ const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(container.clientWidth, container.clientHeight);
 container.appendChild(renderer.domElement);
 
-/* ---------- LIGHTING ---------- */
+/* LIGHT */
 scene.add(new THREE.AmbientLight(0x666666));
 
-const light = new THREE.PointLight(0xffe066, 1.2, 100);
+const light = new THREE.PointLight(0xffe066, 1.2);
 light.position.set(0, 10, 8);
 scene.add(light);
 
-/* ---------- SOFT GRID FIELD ---------- */
+/* GRID */
 const grid = new THREE.GridHelper(20, 20, 0x555555, 0x222222);
 scene.add(grid);
 
-/* ---------- WAVING FIELD SURFACE ---------- */
+/* FIELD SURFACE */
 const geo = new THREE.PlaneGeometry(20, 20, 60, 60);
 const mat = new THREE.MeshPhongMaterial({
   color: 0x111122,
-  side: THREE.DoubleSide,
-  flatShading: true
+  side: THREE.DoubleSide
 });
 const field = new THREE.Mesh(geo, mat);
 field.rotation.x = -Math.PI / 2;
 scene.add(field);
 
-/* ---------- PARTICLES ---------- */
-const pGeo = new THREE.SphereGeometry(0.25, 16, 16);
+/* PARTICLES */
+const pGeo = new THREE.SphereGeometry(0.3, 16, 16);
 const particleMat = new THREE.MeshStandardMaterial({ color: 0x6bc5ff });
 const antiMat = new THREE.MeshStandardMaterial({ color: 0xff4d4d });
 
 let pairs = [];
-let energyLevel = 0;
+let energy = 0;
 
+/* CREATE PAIR */
 function spawnPair() {
   const x = (Math.random() - 0.5) * 8;
   const z = (Math.random() - 0.5) * 8;
 
   const p = new THREE.Mesh(pGeo, particleMat.clone());
-  p.position.set(x, 1, z);
-
   const a = new THREE.Mesh(pGeo, antiMat.clone());
+
+  p.position.set(x, 1, z);
   a.position.set(x, 1.8, z);
 
   scene.add(p);
@@ -327,25 +333,25 @@ function spawnPair() {
   pairs.push({ p, a, t: 0 });
 }
 
-/* ---------- ENERGY CONTROLS ---------- */
+/* ENERGY FUNCTIONS */
 function addEnergy() {
-  if (energyLevel < 4) energyLevel++;
+  if (energy < 4) energy++;
   updateBar();
   spawnPair();
 }
 
 function removeEnergy() {
-  if (energyLevel > 0) energyLevel--;
+  if (energy > 0) energy--;
   updateBar();
 }
 
 function updateBar() {
-  document.getElementById('energy-fill').style.height =
-    (energyLevel / 4) * 100 + '%';
+  document.getElementById("energy-fill").style.height =
+    (energy / 4) * 100 + "%";
 }
 
-/* ---------- INTERACTION ---------- */
-function createInteraction() {
+/* INTERACTION */
+function interact() {
   if (pairs.length < 2) return;
 
   const p1 = pairs[0].p.position;
@@ -361,18 +367,18 @@ function createInteraction() {
   setTimeout(() => scene.remove(line), 600);
 }
 
-/* ---------- ANIMATION ---------- */
+/* ANIMATION */
 function animate() {
   requestAnimationFrame(animate);
 
-  // Field reverberation
+  // Field ripples
   const pos = field.geometry.attributes.position;
   const t = Date.now() * 0.002;
 
   for (let i = 0; i < pos.count; i++) {
     const x = pos.getX(i);
     const y = pos.getY(i);
-    pos.setZ(i, Math.sin(x * 0.7 + t) * 0.2 + Math.cos(y * 0.7 + t) * 0.2);
+    pos.setZ(i, Math.sin(x + t) * 0.2 + Math.cos(y + t) * 0.2);
   }
   pos.needsUpdate = true;
 
@@ -392,17 +398,15 @@ function animate() {
 
   renderer.render(scene, camera);
 }
-
 animate();
 
-/* ---------- RESIZE ---------- */
-window.addEventListener('resize', () => {
+/* RESIZE */
+window.addEventListener("resize", () => {
   camera.aspect = container.clientWidth / container.clientHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(container.clientWidth, container.clientHeight);
 });
 </script>
-
 
 
 </body>
