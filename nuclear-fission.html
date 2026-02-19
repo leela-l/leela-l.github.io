@@ -176,7 +176,9 @@ function resolveCollision(p1,p2){
     const dy=p2.y-p1.y;
     const dist=Math.sqrt(dx*dx+dy*dy);
 
-    if(dist < p1.radius+p2.radius){
+  if(dist === 0) return;
+  if(dist < p1.radius+p2.radius){
+
         // Neutron absorbed by U235
         if(p1.type==="neutron" && p2.type==="u235"){
             fission(p2);
@@ -271,11 +273,11 @@ function animate(){
 
     particles=particles.filter(p=>p.active);
 
-    for(let i=0;i<particles.length;i++){
-        for(let j=i+1;j<particles.length;j++){
-            resolveCollision(particles[i],particles[j]);
-        }
+// Hard safety cap
+    if(particles.length > MAX_PARTICLES){
+        particles.splice(MAX_PARTICLES);
     }
+
 
     particles.forEach(p=>{
         p.move();
