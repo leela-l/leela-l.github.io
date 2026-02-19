@@ -9,7 +9,7 @@ body {
 
 /* --- HEADER --- */
 header {
-  background: *#5a3fa3;         /* slightly darker purple */
+  background: #5a3fa3;         /* slightly darker purple */
   padding: 30px 20px;
   text-align: center;
   box-shadow: 0 4px 10px rgba(0,0,0,0.3);
