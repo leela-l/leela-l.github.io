@@ -35,17 +35,43 @@ header p {
 }
 
 /* --- NAVIGATION --- */
-header nav a {
-  color: #e5e7eb;
-  margin: 0 15px;
-  text-decoration: none;
-  font-weight: 600;
-  transition: 0.3s;
+header nav {
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
+  gap: 25px;
 }
 
+/* Links */
+header nav a {
+  position: relative;
+  color: #e5e7eb;
+  text-decoration: none;
+  font-weight: 600;
+  padding: 6px 4px;
+  transition: all 0.3s ease;
+}
+
+/* Animated underline */
+header nav a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 0;
+  height: 2px;
+  background: #dcd6f7;
+  transition: width 0.3s ease;
+}
+
+/* Hover effect */
 header nav a:hover {
-  color: #dcd6f7;
+  color: #ffffff;
   transform: translateY(-2px);
+}
+
+header nav a:hover::after {
+  width: 100%;
 }
 
 /* --- FEATURE SECTION --- */
