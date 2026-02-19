@@ -116,10 +116,23 @@ function checkQuiz() {
   <h2 style="color:#63bdf9; font-size:2em; font-weight:600; margin-bottom:10px;">
     What is radiation?
   </h2>
-  
-  <div class="feature" style="background:#3b475c; height:220px; display:flex; align-items:center; justify-content:center; font-weight:600; border-radius:10px; margin-bottom:15px;">
-    MAKE VIDEO / DIAGRAM
+  <div class="em-container">
+
+  <h3>Explore the Electromagnetic Spectrum</h3>
+
+  <canvas id="waveCanvas" width="600" height="200"></canvas>
+
+  <input type="range" id="frequencySlider" min="0" max="6" value="0">
+
+  <div class="em-info">
+    <p><strong>Type:</strong> <span id="waveType">Radio Waves</span></p>
+    <p><strong>Ionising:</strong> <span id="ionisingStatus">No</span></p>
+    <p><strong>Common Uses:</strong> <span id="waveUse">TV, radio broadcasting</span></p>
   </div>
+
+</div>
+
+  
 
   
   <p style="color:#e5e7eb; max-width:800px; margin-bottom:15px;">
@@ -185,6 +198,67 @@ function checkQuiz() {
     <p>© 2026 Physics Mythbusters</p>
 </footer>
 
+<script>
+const canvas = document.getElementById("waveCanvas");
+const ctx = canvas.getContext("2d");
+const slider = document.getElementById("frequencySlider");
+
+const waveType = document.getElementById("waveType");
+const ionisingStatus = document.getElementById("ionisingStatus");
+const waveUse = document.getElementById("waveUse");
+
+const types = [
+  {name:"Radio Waves", ionising:false, use:"TV, radio broadcasting"},
+  {name:"Microwaves", ionising:false, use:"WiFi, cooking"},
+  {name:"Infrared", ionising:false, use:"Remote controls, thermal imaging"},
+  {name:"Visible Light", ionising:false, use:"Human vision, light bulbs"},
+  {name:"Ultraviolet", ionising:true, use:"Sterilisation, tanning"},
+  {name:"X-Rays", ionising:true, use:"Medical imaging"},
+  {name:"Gamma Rays", ionising:true, use:"Cancer treatment"}
+];
+
+function drawWave(frequencyLevel) {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  ctx.beginPath();
+  ctx.strokeStyle = "#4fc3f7";
+  ctx.lineWidth = 2;
+
+  let amplitude = 40;
+  let frequency = 0.02 + frequencyLevel * 0.02;
+
+  for (let x = 0; x < canvas.width; x++) {
+    let y = canvas.height / 2 + amplitude * Math.sin(x * frequency);
+    ctx.lineTo(x, y);
+  }
+
+  ctx.stroke();
+}
+
+function updateWave() {
+  let value = slider.value;
+  let data = types[value];
+
+  waveType.textContent = data.name;
+  waveUse.textContent = data.use;
+
+  if (data.ionising) {
+    ionisingStatus.textContent = "Yes";
+    ionisingStatus.className = "ionising-yes";
+  } else {
+    ionisingStatus.textContent = "No";
+    ionisingStatus.className = "ionising-no";
+  }
+
+  drawWave(value);
+}
+
+slider.addEventListener("input", updateWave);
+
+updateWave();
+</script>
+
+  
 </body>
 </html>
 
