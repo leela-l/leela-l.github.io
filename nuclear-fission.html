@@ -20,9 +20,11 @@
     </nav>
   </header>
   
+<!DOCTYPE html>
+<html>
 <head>
 <meta charset="UTF-8">
-<title>Nuclear Fission Chain Reaction Simulation</title>
+<title>Nuclear Fission Interactive Simulation</title>
 <style>
     body {
         background: #0b0f1a;
@@ -32,19 +34,29 @@
     }
     canvas {
         background: #111827;
-        border: 2px solid #444;
+        border: 2px solid #555;
         margin-top: 10px;
     }
     .controls {
+        margin: 15px;
+    }
+    label {
+        display: block;
+        margin-top: 8px;
+    }
+    .legend {
         margin-top: 15px;
+        background: #1f2937;
+        padding: 10px;
+        display: inline-block;
+        text-align: left;
+        border-radius: 8px;
     }
-    input {
-        width: 60px;
-    }
-    button {
-        padding: 5px 12px;
-        margin-left: 5px;
-        cursor: pointer;
+    .color-box {
+        display: inline-block;
+        width: 15px;
+        height: 15px;
+        margin-right: 6px;
     }
 </style>
 </head>
@@ -53,20 +65,40 @@
 <h1>Nuclear Fission Chain Reaction</h1>
 
 <div class="controls">
-    Uranium Atoms:
-    <input type="number" id="uraniumInput" value="15" min="1" max="200">
+    <label>
+        Initial Uranium Atoms: 
+        <span id="uraniumValue">20</span>
+        <input type="range" id="uraniumSlider" min="1" max="150" value="20">
+    </label>
 
-    Initial Neutrons:
-    <input type="number" id="neutronInput" value="1" min="1" max="50">
+    <label>
+        Initial Neutrons: 
+        <span id="neutronValue">2</span>
+        <input type="range" id="neutronSlider" min="1" max="50" value="2">
+    </label>
+
+    <label>
+        Temperature (Particle Speed):
+        <span id="tempValue">1</span>
+        <input type="range" id="tempSlider" min="0.5" max="3" step="0.1" value="1">
+    </label>
 
     <button onclick="startSimulation()">Start</button>
     <button onclick="resetSimulation()">Reset</button>
 </div>
 
-<canvas id="simulationCanvas" width="900" height="500"></canvas>
+<canvas id="canvas" width="900" height="500"></canvas>
+
+<div class="legend">
+    <strong>Legend:</strong><br>
+    <div><span class="color-box" style="background:#22c55e"></span>Uranium Atom (U-235)</div>
+    <div><span class="color-box" style="background:#3b82f6"></span>Neutron</div>
+    <div><span class="color-box" style="background:#ef4444"></span>Fission Fragments (Smaller Atoms)</div>
+    <div><span class="color-box" style="background:yellow"></span>Energy Released</div>
+</div>
 
 <script>
-const canvas = document.getElementById("simulationCanvas");
+const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
 let uraniumAtoms = [];
@@ -74,15 +106,49 @@ let neutrons = [];
 let fragments = [];
 let energyBursts = [];
 let animationId;
+let temperature = 1;
 
-class Uranium {
-    constructor(x, y) {
+const uraniumSlider = document.getElementById("uraniumSlider");
+const neutronSlider = document.getElementById("neutronSlider");
+const tempSlider = document.getElementById("tempSlider");
+
+uraniumSlider.oninput = () => {
+    document.getElementById("uraniumValue").innerText = uraniumSlider.value;
+};
+
+neutronSlider.oninput = () => {
+    document.getElementById("neutronValue").innerText = neutronSlider.value;
+};
+
+tempSlider.oninput = () => {
+    temperature = parseFloat(tempSlider.value);
+    document.getElementById("tempValue").innerText = tempSlider.value;
+};
+
+class Particle {
+    constructor(x, y, radius, speedMultiplier) {
         this.x = x;
         this.y = y;
-        this.radius = 12;
-        this.split = false;
+        this.radius = radius;
+        this.speedMultiplier = speedMultiplier;
+        this.vx = (Math.random() - 0.5) * speedMultiplier;
+        this.vy = (Math.random() - 0.5) * speedMultiplier;
     }
 
+    move() {
+        this.x += this.vx * temperature;
+        this.y += this.vy * temperature;
+
+        if (this.x < this.radius || this.x > canvas.width - this.radius) this.vx *= -1;
+        if (this.y < this.radius || this.y > canvas.height - this.radius) this.vy *= -1;
+    }
+}
+
+class Uranium extends Particle {
+    constructor(x, y) {
+        super(x, y, 12, 1);
+        this.split = false;
+    }
     draw() {
         if (!this.split) {
             ctx.fillStyle = "#22c55e";
@@ -93,23 +159,10 @@ class Uranium {
     }
 }
 
-class Neutron {
+class Neutron extends Particle {
     constructor(x, y) {
-        this.x = x;
-        this.y = y;
-        this.radius = 4;
-        this.vx = (Math.random() - 0.5) * 3;
-        this.vy = (Math.random() - 0.5) * 3;
+        super(x, y, 4, 3);
     }
-
-    move() {
-        this.x += this.vx;
-        this.y += this.vy;
-
-        if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
-        if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
-    }
-
     draw() {
         ctx.fillStyle = "#3b82f6";
         ctx.beginPath();
@@ -118,25 +171,14 @@ class Neutron {
     }
 }
 
-class Fragment {
+class Fragment extends Particle {
     constructor(x, y) {
-        this.x = x;
-        this.y = y;
-        this.life = 50;
-        this.vx = (Math.random() - 0.5) * 4;
-        this.vy = (Math.random() - 0.5) * 4;
+        super(x, y, 6, 2);
     }
-
-    update() {
-        this.x += this.vx;
-        this.y += this.vy;
-        this.life--;
-    }
-
     draw() {
         ctx.fillStyle = "#ef4444";
         ctx.beginPath();
-        ctx.arc(this.x, this.y, 6, 0, Math.PI * 2);
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
         ctx.fill();
     }
 }
@@ -146,14 +188,12 @@ class Energy {
         this.x = x;
         this.y = y;
         this.radius = 5;
-        this.life = 30;
+        this.life = 25;
     }
-
     update() {
-        this.radius += 1;
+        this.radius += 1.5;
         this.life--;
     }
-
     draw() {
         ctx.strokeStyle = "yellow";
         ctx.beginPath();
@@ -165,17 +205,14 @@ class Energy {
 function startSimulation() {
     resetSimulation();
 
-    let uraniumCount = parseInt(document.getElementById("uraniumInput").value);
-    let neutronCount = parseInt(document.getElementById("neutronInput").value);
-
-    for (let i = 0; i < uraniumCount; i++) {
+    for (let i = 0; i < uraniumSlider.value; i++) {
         uraniumAtoms.push(new Uranium(
             Math.random() * canvas.width,
             Math.random() * canvas.height
         ));
     }
 
-    for (let i = 0; i < neutronCount; i++) {
+    for (let i = 0; i < neutronSlider.value; i++) {
         neutrons.push(new Neutron(
             Math.random() * canvas.width,
             Math.random() * canvas.height
@@ -197,9 +234,12 @@ function resetSimulation() {
 function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    uraniumAtoms.forEach(u => u.draw());
+    uraniumAtoms.forEach(u => {
+        u.move();
+        u.draw();
+    });
 
-    neutrons.forEach((n, ni) => {
+    neutrons.forEach(n => {
         n.move();
         n.draw();
 
@@ -225,9 +265,8 @@ function animate() {
         });
     });
 
-    fragments = fragments.filter(f => f.life > 0);
     fragments.forEach(f => {
-        f.update();
+        f.move();
         f.draw();
     });
 
@@ -242,6 +281,8 @@ function animate() {
 </script>
 
 </body>
+
+
 <footer>
   <p>© 2026 Misuse of Physics Project</p>
 </footer>
