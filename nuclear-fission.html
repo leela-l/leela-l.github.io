@@ -22,9 +22,11 @@
   
 <!DOCTYPE html>
 <html>
+<!DOCTYPE html>
+<html>
 <head>
 <meta charset="UTF-8">
-<title>Nuclear Fission Interactive Simulation</title>
+<title>Nuclear Fission with Uranium-235 and 238</title>
 <style>
     body {
         background: #0b0f1a;
@@ -62,23 +64,30 @@
 </head>
 <body>
 
-<h1>Nuclear Fission Chain Reaction</h1>
+<h1>Nuclear Fission Chain Reaction (Isotope Enrichment)</h1>
 
 <div class="controls">
     <label>
-        Initial Uranium Atoms: 
-        <span id="uraniumValue">20</span>
-        <input type="range" id="uraniumSlider" min="1" max="150" value="20">
+        Total Uranium Atoms:
+        <span id="uraniumValue">100</span>
+        <input type="range" id="uraniumSlider" min="10" max="300" value="100">
     </label>
 
     <label>
-        Initial Neutrons: 
+        Initial Neutrons:
         <span id="neutronValue">2</span>
         <input type="range" id="neutronSlider" min="1" max="50" value="2">
     </label>
 
     <label>
-        Temperature (Particle Speed):
+        Uranium-238 Percentage:
+        <span id="u238Value">95</span>% 
+        (U-235 = <span id="u235Value">5</span>%)
+        <input type="range" id="u238Slider" min="0" max="100" value="95">
+    </label>
+
+    <label>
+        Temperature:
         <span id="tempValue">1</span>
         <input type="range" id="tempSlider" min="0.5" max="3" step="0.1" value="1">
     </label>
@@ -87,14 +96,15 @@
     <button onclick="resetSimulation()">Reset</button>
 </div>
 
-<canvas id="canvas" width="900" height="500"></canvas>
+<canvas id="canvas" width="950" height="520"></canvas>
 
 <div class="legend">
-    <strong>Legend:</strong><br>
-    <div><span class="color-box" style="background:#22c55e"></span>Uranium Atom (U-235)</div>
-    <div><span class="color-box" style="background:#3b82f6"></span>Neutron</div>
-    <div><span class="color-box" style="background:#ef4444"></span>Fission Fragments (Smaller Atoms)</div>
-    <div><span class="color-box" style="background:yellow"></span>Energy Released</div>
+<strong>Legend:</strong><br>
+<div><span class="color-box" style="background:#22c55e"></span>Uranium-235 (Fissile)</div>
+<div><span class="color-box" style="background:#a855f7"></span>Uranium-238 (Non-fissile)</div>
+<div><span class="color-box" style="background:#3b82f6"></span>Neutron</div>
+<div><span class="color-box" style="background:#ef4444"></span>Fission Fragments</div>
+<div><span class="color-box" style="background:yellow"></span>Energy Released</div>
 </div>
 
 <script>
@@ -110,14 +120,19 @@ let temperature = 1;
 
 const uraniumSlider = document.getElementById("uraniumSlider");
 const neutronSlider = document.getElementById("neutronSlider");
+const u238Slider = document.getElementById("u238Slider");
 const tempSlider = document.getElementById("tempSlider");
 
-uraniumSlider.oninput = () => {
+uraniumSlider.oninput = () =>
     document.getElementById("uraniumValue").innerText = uraniumSlider.value;
-};
 
-neutronSlider.oninput = () => {
+neutronSlider.oninput = () =>
     document.getElementById("neutronValue").innerText = neutronSlider.value;
+
+u238Slider.oninput = () => {
+    let u238 = u238Slider.value;
+    document.getElementById("u238Value").innerText = u238;
+    document.getElementById("u235Value").innerText = 100 - u238;
 };
 
 tempSlider.oninput = () => {
@@ -126,13 +141,12 @@ tempSlider.oninput = () => {
 };
 
 class Particle {
-    constructor(x, y, radius, speedMultiplier) {
+    constructor(x, y, radius, speed) {
         this.x = x;
         this.y = y;
         this.radius = radius;
-        this.speedMultiplier = speedMultiplier;
-        this.vx = (Math.random() - 0.5) * speedMultiplier;
-        this.vy = (Math.random() - 0.5) * speedMultiplier;
+        this.vx = (Math.random() - 0.5) * speed;
+        this.vy = (Math.random() - 0.5) * speed;
     }
 
     move() {
@@ -145,13 +159,15 @@ class Particle {
 }
 
 class Uranium extends Particle {
-    constructor(x, y) {
+    constructor(x, y, type) {
         super(x, y, 12, 1);
+        this.type = type; // 235 or 238
         this.split = false;
     }
+
     draw() {
         if (!this.split) {
-            ctx.fillStyle = "#22c55e";
+            ctx.fillStyle = this.type === 235 ? "#22c55e" : "#a855f7";
             ctx.beginPath();
             ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
             ctx.fill();
@@ -205,10 +221,26 @@ class Energy {
 function startSimulation() {
     resetSimulation();
 
-    for (let i = 0; i < uraniumSlider.value; i++) {
+    let total = parseInt(uraniumSlider.value);
+    let u238Percent = parseInt(u238Slider.value);
+    let u235Percent = 100 - u238Percent;
+
+    let num235 = Math.round(total * (u235Percent / 100));
+    let num238 = total - num235;
+
+    for (let i = 0; i < num235; i++) {
         uraniumAtoms.push(new Uranium(
             Math.random() * canvas.width,
-            Math.random() * canvas.height
+            Math.random() * canvas.height,
+            235
+        ));
+    }
+
+    for (let i = 0; i < num238; i++) {
+        uraniumAtoms.push(new Uranium(
+            Math.random() * canvas.width,
+            Math.random() * canvas.height,
+            238
         ));
     }
 
@@ -244,7 +276,7 @@ function animate() {
         n.draw();
 
         uraniumAtoms.forEach(u => {
-            if (!u.split) {
+            if (!u.split && u.type === 235) {
                 let dx = n.x - u.x;
                 let dy = n.y - u.y;
                 let dist = Math.sqrt(dx * dx + dy * dy);
@@ -281,6 +313,7 @@ function animate() {
 </script>
 
 </body>
+
 
 
 <footer>
