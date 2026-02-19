@@ -233,17 +233,30 @@ function formatFreq(freq) {
 function drawWave(freq) {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // Convert frequency to visual scale
-  let visualFreq = Math.log10(freq) / 20;
+  // Convert frequency (log scale) into number of cycles on screen
+  // Low freq → ~1 cycle
+  // High freq → many cycles
+
+  let logFreq = Math.log10(freq);
+
+  // Map log frequency range (3–20) to cycles (1–40)
+  let minLog = 3;
+  let maxLog = 20;
+  let minCycles = 1;
+  let maxCycles = 40;
+
+  let cycles = minCycles + 
+      (logFreq - minLog) / (maxLog - minLog) * (maxCycles - minCycles);
 
   ctx.beginPath();
   ctx.strokeStyle = "#4fc3f7";
   ctx.lineWidth = 2;
 
   let amplitude = 40;
+  let wavelength = canvas.width / cycles;
 
   for (let x = 0; x < canvas.width; x++) {
-    let y = canvas.height/2 + amplitude * Math.sin(x * visualFreq);
+    let y = canvas.height/2 + amplitude * Math.sin((2 * Math.PI * x) / wavelength);
     ctx.lineTo(x, y);
   }
 
