@@ -68,7 +68,7 @@ header nav a::after {
 
 /* Hover effect */
 header nav a:hover {
-  color: #ffffff;
+  color: #38d9a9;
   transform: translateY(-2px);
   text-shadow: 0 0 8px rgba(79, 195, 247, 0.6);
 }
