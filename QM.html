@@ -4,6 +4,62 @@
   <meta charset="UTF-8">
   <title>Physics Mythbusters | The Quantum World</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    /* Interactive Quantum Field Styles */
+    #quantum-field-container {
+      width: 100%;
+      height: 500px;
+      margin: 30px auto;
+      border: 1px solid #ccc;
+      border-radius: 12px;
+      overflow: hidden;
+      position: relative;
+      background-color: #0a0a0a;
+    }
+
+    #quantum-controls {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 10px;
+      border-radius: 8px;
+    }
+
+    #quantum-controls button {
+      background-color: #e68e73;
+      border: none;
+      padding: 6px 10px;
+      border-radius: 4px;
+      color: #fff;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    #energy-level {
+      position: absolute;
+      left: 10px;
+      top: 10px;
+      width: 20px;
+      height: 100%;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background: linear-gradient(to top, #ff4d4d 0%, #ffe066 25%, #6bc5ff 50%, #ffffff 100%);
+      display: flex;
+      flex-direction: column-reverse;
+      overflow: hidden;
+    }
+
+    #energy-fill {
+      width: 100%;
+      height: 0%;
+      background-color: #6bc5ff;
+      transition: height 0.3s;
+    }
+  </style>
 </head>
 <body>
 
@@ -16,18 +72,15 @@
       <a href="QM.html">The Quantum World</a>
       <a href="Radiation.html">Cellular Technology</a>
       <a href="Astro.html">Astronomy</a>
-
     </nav>
-  </header>
+</header>
 
 <section class="feature">
   <h2>The invention of Ibupro-spin: the misuse of quantum physics in alternative medicine</h2>
   <img src="images/quantum-main-placeholder.jpg" alt="Quantum topic image placeholder">
-
   <p>
     Since the growing development of the field of quantum physics, a multitude of “medical professionals” and self-help gurus have jumped onboard, proclaiming the secret quantum world that we must tap into in order that we may become prosperous and free from disease. Yet, their claims are riddled with pseudoscience and ignorance of the actual field.
   </p>
-
   <p>
     This article aims to discuss the issue, and offer some explanations to what quantum physics really is, so that you, the reader, may better realise the errors of quantum quackery,
   </p>
@@ -76,9 +129,9 @@
 
   <img src="images/RichardFeynman.jpg" alt="Richard Feynman image placeholder" width = 400 height = 200>
 
-  </section>
+</section>
 
-  <section class="feature">
+<section class="feature">
    <h2>Where does Quantum Physics come from?</h2>
     
 
@@ -86,7 +139,6 @@
     <img src="images/Picture1.png" alt="Evolution from classical to quantum physics placeholder">
     <figcaption>Fig 1—The evolution from classical to quantum physics</figcaption>
   </figure>
-
 
   <p>
     Quantum Physics as a framework arose after existing classical theories, like Maxwell’s equations, could not explain things at very small sizes like the emission of light from heated metals, or the properties of crystals.
@@ -103,10 +155,6 @@
   <p>
     The resulting consequence would lay the foundation of quantum mechanics. This includes things like the uncertainty principle and the wavefunction, which arose out of the assumptions just mentioned, and were subsequently confirmed in laboratory environments.
   </p>
-
-  <!-- Figure Placeholder -->
-  
-  
 </section>
 
 <section class="feature dropdown-section">
@@ -138,12 +186,9 @@
   </details>
 </section>
 
-
-
 <section class="feature">
   <h2>Quantum Fields</h2>
 
-  
   <p>
     Now Quantum fields, they are not some secret energy fountains we can tap into, they are just very, complicated…
   </p>
@@ -166,11 +211,21 @@
 
   <img src="images/image_2026-02-12_094235949.png" alt="Quantum field illustration placeholder">
 
-  
   <p>
     Instead fields are incorporated in the quantum framework, and instead are operators which work on something called the Fock Space which is a special mathematical set which contains “nice” functions which represent various quantum states. And what comes out, is that disturbances in these fields, manifest as real particles.
   </p>
-    <img src="images/image_2026-02-12_095111223.png" alt="Quantum field illustration placeholder">
+
+  <!-- Quantum Field 3D Interactive -->
+  <div id="quantum-field-container"></div>
+  <div id="quantum-controls">
+    <button onclick="addEnergy()">Raise Energy (a†)</button>
+    <button onclick="removeEnergy()">Lower Energy (a)</button>
+    <button onclick="createInteraction()">Cause Interaction</button>
+  </div>
+  <div id="energy-level">
+    <div id="energy-fill"></div>
+  </div>
+
   <p>
     But some particles would naturally arise out of this framework, never having been seen before in experimental settings. For example, the negative energy solutions found by Dirac, predicted the notion of Anti-Electrons or Positrons.
   </p>
@@ -196,6 +251,125 @@
   </details>
 </section>
   
-  <section class="feature"> 
+<section class="feature"> 
     <h2>Conclusion</h2> 
-    <p> To conclude, despite the quirkiness of quantum physics, and as mystical as it sounds, the truth is, it’s just math that happens to make very good predictions based on well-constructed mathematical and philosophical arguments. Buy and large, there are no quantum fields to harness, nor negative energy to expel. The large brunt of any physics is pretty much like this: the truth of physical nature is always true regardless as apples always fall from trees, even if Newton was wrong and Einstein was right with General Relativity– in fact, even if his theory is not complete at explaining what happens inside of black holes. The mathematics in physics is likened to Platonic Ideals: it does not say exactly what the light is, but it is like its reflection on the walls of the cave or the river. Matter is always matter, but once it was Democritus cutting cheese and calling them atomos (atoms), right now it is Quantum Physics that explained what happens inside them. <\p>
+    <p> To conclude, despite the quirkiness of quantum physics, and as mystical as it sounds, the truth is, it’s just math that happens to make very good predictions based on well-constructed mathematical and philosophical arguments. Buy and large, there are no quantum fields to harness, nor negative energy to expel. The large brunt of any physics is pretty much like this: the truth of physical nature is always true regardless as apples always fall from trees, even if Newton was wrong and Einstein was right with General Relativity– in fact, even if his theory is not complete at explaining what happens inside of black holes. The mathematics in physics is likened to Platonic Ideals: it does not say exactly what the light is, but it is like its reflection on the walls of the cave or the river. Matter is always matter, but once it was Democritus cutting cheese and calling them atomos (atoms), right now it is Quantum Physics that explained what happens inside them. </p>
+    
+<!-- Three.js library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r152/three.min.js"></script>
+
+<script>
+  // Basic Three.js Scene
+  const container = document.getElementById('quantum-field-container');
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(75, container.clientWidth/container.clientHeight, 0.1, 1000);
+  const renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setSize(container.clientWidth, container.clientHeight);
+  container.appendChild(renderer.domElement);
+
+  // Grid helper for soft gridlines
+  const grid = new THREE.GridHelper(20, 20, 0x444444, 0x222222);
+  grid.rotation.x = Math.PI/2;
+  scene.add(grid);
+
+  // Quantum field plane with light reverberation
+  const planeGeometry = new THREE.PlaneGeometry(20, 20, 100, 100);
+  const planeMaterial = new THREE.MeshPhongMaterial({ color: 0x0a0a0a, side: THREE.DoubleSide, wireframe: false });
+  const plane = new THREE.Mesh(planeGeometry, planeMaterial);
+  plane.rotation.x = -Math.PI/2;
+  scene.add(plane);
+
+  // Lighting
+  const ambientLight = new THREE.AmbientLight(0x555555);
+  scene.add(ambientLight);
+  const pointLight = new THREE.PointLight(0xffe066, 1, 50);
+  pointLight.position.set(0, 10, 0);
+  scene.add(pointLight);
+
+  // Particle system
+  const particleGeometry = new THREE.SphereGeometry(0.2, 16, 16);
+  const particleMaterial = new THREE.MeshStandardMaterial({ color: 0x6bc5ff });
+  const antiparticleMaterial = new THREE.MeshStandardMaterial({ color: 0xff4d4d });
+  const particles = [];
+  let energyLevel = 0;
+
+  function createParticle() {
+    const particle = new THREE.Mesh(particleGeometry, particleMaterial.clone());
+    particle.position.set(
+      (Math.random() - 0.5) * 10,
+      0.5,
+      (Math.random() - 0.5) * 10
+    );
+    particle.userData.type = 'particle';
+    scene.add(particle);
+
+    // create matching antiparticle
+    const anti = new THREE.Mesh(particleGeometry, antiparticleMaterial.clone());
+    anti.position.copy(particle.position);
+    anti.position.y += 0.5;
+    anti.userData.type = 'antiparticle';
+    scene.add(anti);
+
+    particles.push({ particle, anti, lifetime: 0 });
+  }
+
+  function animateParticles() {
+    particles.forEach((p, index) => {
+      p.lifetime += 0.02;
+      p.particle.position.y = Math.sin(p.lifetime) + 0.5;
+      p.anti.position.y = -Math.sin(p.lifetime) + 0.5;
+
+      // annihilation
+      if (Math.random() < 0.002) {
+        scene.remove(p.particle);
+        scene.remove(p.anti);
+        particles.splice(index, 1);
+      }
+    });
+  }
+
+  // Energy controls
+  function addEnergy() {
+    if (energyLevel < 4) energyLevel += 1;
+    document.getElementById('energy-fill').style.height = (energyLevel / 4 * 100) + '%';
+    createParticle();
+  }
+
+  function removeEnergy() {
+    if (energyLevel > 0) energyLevel -= 1;
+    document.getElementById('energy-fill').style.height = (energyLevel / 4 * 100) + '%';
+  }
+
+  function createInteraction() {
+    if (particles.length >= 2) {
+      const p1 = particles[0].particle;
+      const p2 = particles[1].particle;
+      // small interaction line
+      const geometry = new THREE.BufferGeometry().setFromPoints([p1.position, p2.position]);
+      const line = new THREE.Line(geometry, new THREE.LineBasicMaterial({ color: 0xffff00 }));
+      scene.add(line);
+      setTimeout(() => scene.remove(line), 500);
+    }
+  }
+
+  camera.position.set(0, 10, 15);
+  camera.lookAt(0, 0, 0);
+
+  function animate() {
+    requestAnimationFrame(animate);
+    plane.rotation.z += 0.001;
+    animateParticles();
+    renderer.render(scene, camera);
+  }
+  animate();
+
+  // Handle resizing
+  window.addEventListener('resize', () => {
+    camera.aspect = container.clientWidth / container.clientHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(container.clientWidth, container.clientHeight);
+  });
+</script>
+
+</body>
+</html>
