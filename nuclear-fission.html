@@ -20,3 +20,234 @@
     </nav>
   </header>
   
+<head>
+<meta charset="UTF-8">
+<title>Nuclear Fission Chain Reaction Simulation</title>
+<style>
+    body {
+        background: #0b0f1a;
+        color: white;
+        font-family: Arial, sans-serif;
+        text-align: center;
+    }
+    canvas {
+        background: #111827;
+        border: 2px solid #444;
+        margin-top: 10px;
+    }
+    .controls {
+        margin-top: 15px;
+    }
+    input {
+        width: 60px;
+    }
+    button {
+        padding: 5px 12px;
+        margin-left: 5px;
+        cursor: pointer;
+    }
+</style>
+</head>
+<body>
+
+<h1>Nuclear Fission Chain Reaction</h1>
+
+<div class="controls">
+    Uranium Atoms:
+    <input type="number" id="uraniumInput" value="15" min="1" max="200">
+
+    Initial Neutrons:
+    <input type="number" id="neutronInput" value="1" min="1" max="50">
+
+    <button onclick="startSimulation()">Start</button>
+    <button onclick="resetSimulation()">Reset</button>
+</div>
+
+<canvas id="simulationCanvas" width="900" height="500"></canvas>
+
+<script>
+const canvas = document.getElementById("simulationCanvas");
+const ctx = canvas.getContext("2d");
+
+let uraniumAtoms = [];
+let neutrons = [];
+let fragments = [];
+let energyBursts = [];
+let animationId;
+
+class Uranium {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.radius = 12;
+        this.split = false;
+    }
+
+    draw() {
+        if (!this.split) {
+            ctx.fillStyle = "#22c55e";
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    }
+}
+
+class Neutron {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.radius = 4;
+        this.vx = (Math.random() - 0.5) * 3;
+        this.vy = (Math.random() - 0.5) * 3;
+    }
+
+    move() {
+        this.x += this.vx;
+        this.y += this.vy;
+
+        if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+        if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+    }
+
+    draw() {
+        ctx.fillStyle = "#3b82f6";
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fill();
+    }
+}
+
+class Fragment {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.life = 50;
+        this.vx = (Math.random() - 0.5) * 4;
+        this.vy = (Math.random() - 0.5) * 4;
+    }
+
+    update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        this.life--;
+    }
+
+    draw() {
+        ctx.fillStyle = "#ef4444";
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, 6, 0, Math.PI * 2);
+        ctx.fill();
+    }
+}
+
+class Energy {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.radius = 5;
+        this.life = 30;
+    }
+
+    update() {
+        this.radius += 1;
+        this.life--;
+    }
+
+    draw() {
+        ctx.strokeStyle = "yellow";
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.stroke();
+    }
+}
+
+function startSimulation() {
+    resetSimulation();
+
+    let uraniumCount = parseInt(document.getElementById("uraniumInput").value);
+    let neutronCount = parseInt(document.getElementById("neutronInput").value);
+
+    for (let i = 0; i < uraniumCount; i++) {
+        uraniumAtoms.push(new Uranium(
+            Math.random() * canvas.width,
+            Math.random() * canvas.height
+        ));
+    }
+
+    for (let i = 0; i < neutronCount; i++) {
+        neutrons.push(new Neutron(
+            Math.random() * canvas.width,
+            Math.random() * canvas.height
+        ));
+    }
+
+    animate();
+}
+
+function resetSimulation() {
+    cancelAnimationFrame(animationId);
+    uraniumAtoms = [];
+    neutrons = [];
+    fragments = [];
+    energyBursts = [];
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    uraniumAtoms.forEach(u => u.draw());
+
+    neutrons.forEach((n, ni) => {
+        n.move();
+        n.draw();
+
+        uraniumAtoms.forEach(u => {
+            if (!u.split) {
+                let dx = n.x - u.x;
+                let dy = n.y - u.y;
+                let dist = Math.sqrt(dx * dx + dy * dy);
+
+                if (dist < u.radius + n.radius) {
+                    u.split = true;
+
+                    fragments.push(new Fragment(u.x, u.y));
+                    fragments.push(new Fragment(u.x, u.y));
+                    energyBursts.push(new Energy(u.x, u.y));
+
+                    let newNeutrons = 2 + Math.floor(Math.random() * 2);
+                    for (let i = 0; i < newNeutrons; i++) {
+                        neutrons.push(new Neutron(u.x, u.y));
+                    }
+                }
+            }
+        });
+    });
+
+    fragments = fragments.filter(f => f.life > 0);
+    fragments.forEach(f => {
+        f.update();
+        f.draw();
+    });
+
+    energyBursts = energyBursts.filter(e => e.life > 0);
+    energyBursts.forEach(e => {
+        e.update();
+        e.draw();
+    });
+
+    animationId = requestAnimationFrame(animate);
+}
+</script>
+
+</body>
+<footer>
+  <p>© 2026 Misuse of Physics Project</p>
+</footer>
+
+</body>
+</html>
+
+  
+  
