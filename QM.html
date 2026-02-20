@@ -4,64 +4,73 @@
   <meta charset="UTF-8">
   <title>Physics Mythbusters | The Quantum World</title>
   <link rel="stylesheet" href="style.css">
+
   <style>
-    /* QFT section styling */
-    #qft-container {
-      max-width: 760px;
-      margin: 30px auto;
-      text-align: center;
+    /* --- Interactive QFT Feature Styles --- */
+
+    .qft-interactive {
+      margin-top: 40px;
+      margin-bottom: 40px;
     }
-    #qft-field {
-      width: 100%;
-      height: 300px;
-      background: url('images/vacuum-fluctuations.gif') no-repeat center center;
-      background-size: cover;
-      border-radius: 8px;
-      border: 1px solid #444;
-      position: relative;
+
+    .qft-container {
+      display: flex;
+      align-items: center;
+      gap: 30px;
+      max-width: 900px;
+      margin: auto;
     }
+
     .energy-bar {
       display: flex;
-      justify-content: space-between;
-      max-width: 200px;
-      margin: 12px auto;
+      flex-direction: column-reverse;
+      gap: 8px;
     }
+
     .energy-level {
-      width: 40px;
-      height: 15px;
-      background: #333;
-      border-radius: 3px;
-      transition: background 0.3s;
-    }
-    .energy-level.active {
-      background: #4cc9f0;
-    }
-    button {
-      font-size: 1.2rem;
-      margin: 4px;
-      padding: 6px 10px;
+      width: 25px;
+      height: 40px;
+      border: 2px solid #e68e73;
       border-radius: 4px;
+      background: transparent;
+      transition: background 0.3s ease;
+    }
+
+    .energy-level.active {
+      background: #e68e73;
+    }
+
+    #qftCanvas {
+      width: 500px;
+      height: 250px;
+      border: 1px solid #ccc;
+      background: #fafafa;
+      border-radius: 6px;
+    }
+
+    .qft-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .qft-controls button {
+      padding: 8px 12px;
       border: none;
-      cursor: pointer;
-      background-color: #e68e73;
+      background: #e68e73;
       color: white;
-      font-family: inherit;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: opacity 0.2s ease;
     }
-    button:hover {
-      background-color: #d65b4f;
-    }
-    #explanation {
-      color: #eee;
-      margin-top: 12px;
-      text-align: left;
-      max-width: 760px;
-      margin-left: auto;
-      margin-right: auto;
-      font-family: inherit;
-      font-size: 1rem;
+
+    .qft-controls button:hover {
+      opacity: 0.8;
     }
   </style>
 </head>
+
 <body>
 
 <header>
@@ -129,8 +138,7 @@
     But based on what Richard Feynman once famously said, the best thing you can do is to Shut up and calculate- you kind of have to just take it at face value.
   </p>
 
-  <img src="images/RichardFeynman.jpg" alt="Richard Feynman image placeholder" width = 400 height = 200>
-
+  <img src="images/RichardFeynman.jpg" alt="Richard Feynman image placeholder" width="400" height="200">
 </section>
 
 <section class="feature">
@@ -156,7 +164,35 @@
   <p>
     The resulting consequence would lay the foundation of quantum mechanics. This includes things like the uncertainty principle and the wavefunction, which arose out of the assumptions just mentioned, and were subsequently confirmed in laboratory environments.
   </p>
+</section>
 
+<section class="feature dropdown-section">
+  <details>
+    <summary style="color: #e68e73;">Misuse of Quantum Energy and Superposition</summary>
+
+    <div class="dropdown-content">
+      <p>
+        In healing Crystals: The vibration thus frequency of a Crystal can help 'remove the negative energy' from yourself; also tends to use ideas like spin or magnetism.
+      </p>
+
+      <p style="
+        font-size: 0.75rem;
+        font-style: italic;
+        margin-top: 25px;
+        padding-top: 12px;
+        border-top: 1px solid #ccc;
+        color: #555;
+        text-align: center;
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+      ">
+        Gazzola, Enrico. “Quantum Physics and the Modern Trends in Pseudoscience.”
+        Medical Misinformation and Social Harm in Non-Science Based Health Practices,
+        edited by Anita Lavorgna and Anna Di Ronco, 1st ed., Routledge, 2020, pp. 85–99.
+      </p>
+    </div>
+  </details>
 </section>
 
 <section class="feature">
@@ -187,74 +223,64 @@
   <p>
     Instead fields are incorporated in the quantum framework, and instead are operators which work on something called the Fock Space which is a special mathematical set which contains “nice” functions which represent various quantum states. And what comes out, is that disturbances in these fields, manifest as real particles.
   </p>
-    <img src="images/image_2026-02-12_095111223.png" alt="Quantum field illustration placeholder">
+
+  <img src="images/image_2026-02-12_095111223.png" alt="Quantum field illustration placeholder">
 
   <p>
     But some particles would naturally arise out of this framework, never having been seen before in experimental settings. For example, the negative energy solutions found by Dirac, predicted the notion of Anti-Electrons or Positrons.
   </p>
-
 </section>
 
-<!-- ===== Simplified Vacuum Fluctuations QFT Feature ===== -->
-<section class="feature">
-  <h2>Interactive Quantum Field</h2>
-  <p>Adjust the energy level to see more intense vacuum fluctuations, representing virtual particle-antiparticle creation and annihilation.</p>
+<section class="feature dropdown-section">
+  <details>
+    <summary style="color: #e68e73;">Misuse of Quantum Fields</summary>
 
-  <div id="qft-container">
-    <div id="qft-field"></div>
-    <div class="energy-bar" id="energyBar">
-      <div class="energy-level" id="level0"></div>
-      <div class="energy-level" id="level1"></div>
-      <div class="energy-level" id="level2"></div>
-      <div class="energy-level" id="level3"></div>
+    <div class="dropdown-content">
+      <p>
+        Law of Attraction: particular variants of this self-help idea use quantum fields as justification. They proclaim that one can change their futures and destinies by manipulating it.
+      </p>
+
+      <p>
+        Emotional wellbeing: they claim that your bad temper or sorrow is due to not being in tune with the quantum field which permeates throught the universe, like it is some tangible and material object.
+      </p>
+
+      <p>
+        [1] Gazzola, Enrico. “Quantum Physics and the Modern Trends in Pseudoscience.” Medical Misinformation and Social Harm in Non-Science Based Health Practices, edited by Anita Lavorgna and Anna Di Ronco, 1st ed., Routledge, 2020, pp. 85–99.
+      </p>
     </div>
-    <div>
-      <button onclick="lowerEnergy()">â↓</button>
-      <button onclick="raiseEnergy()">â†</button>
+  </details>
+</section>
+
+<!-- ============================= -->
+<!-- INSERTED INTERACTIVE FEATURE -->
+<!-- ============================= -->
+
+<section class="feature qft-interactive">
+  <h2>Interactive Quantum Field: Energy Levels & Vacuum Fluctuations</h2>
+
+  <div class="qft-container">
+
+    <div class="energy-bar">
+      <div class="energy-level" data-level="4"></div>
+      <div class="energy-level" data-level="3"></div>
+      <div class="energy-level" data-level="2"></div>
+      <div class="energy-level" data-level="1"></div>
     </div>
-    <div id="explanation"></div>
+
+    <canvas id="qftCanvas"></canvas>
+
+    <div class="qft-controls">
+      <button id="raiseBtn">Add Energy ( \( \hat{a}^\dagger \) )</button>
+      <button id="lowerBtn">Remove Energy ( \( \hat{a} \) )</button>
+    </div>
+
   </div>
-
-  <script>
-    const levels = 4;
-    let energy = 0;
-    const energyBar = document.getElementById("energyBar");
-    const explanation = document.getElementById("explanation");
-    const field = document.getElementById("qft-field");
-
-    function updateEnergyBar() {
-      for(let i=0;i<levels;i++){
-        document.getElementById('level'+i).classList.toggle('active', i <= energy);
-      }
-    }
-
-    function explain(msg){ explanation.innerHTML = msg; }
-
-    function raiseEnergy(){
-      if(energy < levels-1) energy++;
-      updateEnergyBar();
-      field.style.filter = `brightness(${1 + 0.15*energy}) contrast(${1 + 0.1*energy})`;
-      explain(`Energy raised to level ${energy}. Vacuum fluctuations intensify; virtual particle-antiparticle pairs appear more frequently.`);
-    }
-
-    function lowerEnergy(){
-      if(energy > 0) energy--;
-      updateEnergyBar();
-      field.style.filter = `brightness(${1 + 0.15*energy}) contrast(${1 + 0.1*energy})`;
-      explain(`Energy lowered to level ${energy}. Vacuum fluctuations weaken; virtual pairs appear less frequently.`);
-    }
-
-    updateEnergyBar();
-    explain("Vacuum Mode: animated sine-wave-like fluctuations representing virtual particle creation/annihilation.");
-  </script>
 </section>
+
+<!-- ============================= -->
+<!-- END INTERACTIVE FEATURE -->
+<!-- ============================= -->
 
 <section class="feature"> 
   <h2>Conclusion</h2> 
-  <p>
-    To conclude, despite the quirkiness of quantum physics, and as mystical as it sounds, the truth is, it’s just math that happens to make very good predictions based on well-constructed mathematical and philosophical arguments. By and large, there are no quantum fields to harness, nor negative energy to expel. The large brunt of any physics is pretty much like this: the truth of physical nature is always true regardless as apples always fall from trees, even if Newton was wrong and Einstein was right with General Relativity– in fact, even if his theory is not complete at explaining what happens inside of black holes. The mathematics in physics is likened to Platonic Ideals: it does not say exactly what the light is, but it is like its reflection on the walls of the cave or the river. Matter is always matter, but once it was Democritus cutting cheese and calling them atomos (atoms), right now it is Quantum Physics that explained what happens inside them.
-  </p>
-</section>
-
-</body>
-</html>
+  <p> To conclude, despite the quirkiness of quantum physics, and as mystical as it sounds, the truth is, it’s just math that happens to make very good predictions based on well-constructed mathematical and philosophical arguments. Buy and large, there are no quantum fields to harness, nor negative energy to expel. The large brunt of any physics is pretty much like this: the truth of physical nature is always true regardless as apples always fall from trees, even if Newton was wrong and Einstein was right with General Relativity– in fact, even if his theory is not complete at explaining what happens inside of black holes. The mathematics in physics is likened to Platonic Ideals: it does
