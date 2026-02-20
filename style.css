@@ -427,3 +427,66 @@ font-weight: bold;
 }
 
 
+/* --- Interactive QFT Feature Styles --- */
+
+.qft-interactive {
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
+
+.qft-container {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  max-width: 900px;
+  margin: auto;
+}
+
+.energy-bar {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 8px;
+}
+
+.energy-level {
+  width: 25px;
+  height: 40px;
+  border: 2px solid #e68e73;
+  border-radius: 4px;
+  background: transparent;
+  transition: background 0.3s ease;
+}
+
+.energy-level.active {
+  background: #e68e73;
+}
+
+#qftCanvas {
+  width: 500px;
+  height: 250px;
+  border: 1px solid #ccc;
+  background: #fafafa;
+  border-radius: 6px;
+}
+
+.qft-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.qft-controls button {
+  padding: 8px 12px;
+  border: none;
+  background: #e68e73;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: opacity 0.2s ease;
+}
+
+.qft-controls button:hover {
+  opacity: 0.8;
+}
+
