@@ -35,6 +35,7 @@
 <section class="feature">
   <h2>The invention of Ibupro-spin: the misuse of quantum physics in alternative medicine</h2>
 
+  <!-- Video Placeholder -->
   <div class="video-container">
     <iframe width="560" height="315"
       src="https://www.youtube.com/embed/pGw0h-44WvM"
@@ -77,12 +78,14 @@
 </section>
 
 <section class="feature">
-   <h2>Where does Quantum Physics come from?</h2>
+  <h2>Where does Quantum Physics come from?</h2>
     
+
   <figure>
     <img src="images/Picture1.png" alt="Evolution from classical to quantum physics placeholder">
     <figcaption>Fig 1—The evolution from classical to quantum physics</figcaption>
   </figure>
+
 
   <p>
     Quantum Physics as a framework arose after existing classical theories, like Maxwell’s equations, could not explain things at very small sizes like the emission of light from heated metals, or the properties of crystals.
@@ -157,150 +160,121 @@
   <img src="images/image_2026-02-12_094235949.png" alt="Quantum field illustration placeholder">
 
   <p>
-    Instead fields are incorporated in the quantum framework, and instead are operators which work on something called the Fock Space which is a special mathematical set which contains “nice” functions which represent various quantum states. And what comes out, is that disturbances in these fields, manifest as real particles.
+    Instead fields are incorporated in the quantum framework, and instead are operators which work on something called the Fock Space which is a special mathematical set which contains “nice” functions which represent various quantum states.
   </p>
 
-  <img src="images/image_2026-02-12_095111223.png" alt="Quantum field illustration placeholder">
-
-
-  <!-- ===== QFT INTERACTIVE VISUALISATION ===== -->
-
-  <div class="qft-interactive" style="margin:35px auto; max-width:760px; background:#111; border-radius:12px; padding:12px; color:#eee;">
-    
-    <div class="gauge-container" style="position:relative;">
-      <canvas id="qcanvas"></canvas>
-
-      <div class="gauge" id="gauge" style="position:absolute; left:10px; top:12px; width:28px; height:280px; background:#222; border-radius:6px; display:flex; flex-direction:column-reverse; overflow:hidden; border:1px solid #444;">
-        <div class="l4" style="background:#ef476f; flex:1; opacity:0.25;"></div>
-        <div class="l3" style="background:#ffd166; flex:1; opacity:0.25;"></div>
-        <div class="l2" style="background:#90db4f; flex:1; opacity:0.25;"></div>
-        <div class="l1 active" style="background:#4cc9f0; flex:1; opacity:1;"></div>
-      </div>
+  <!-- 2D QFT Interactive (Inserted Here) -->
+  <div style="margin:30px auto; max-width:760px; text-align:center;">
+    <canvas id="qft2d" width="760" height="400" style="border:1px solid #444; border-radius:8px; background:#1a1a1a;"></canvas>
+    <div style="margin-top:12px;">
+      <button onclick="lowerEnergy()" style="margin:4px;">⬇️ Lower Energy</button>
+      <button onclick="raiseEnergy()" style="margin:4px;">⬆️ Raise Energy</button>
+      <button onclick="switchMode()" style="margin:4px;">🔄 Switch Mode</button>
     </div>
-
-    <div class="controls" style="text-align:center; margin-top:12px;">
-      <button onclick="raiseEnergy()" style="background:#e68e73;color:white;border:none;margin:6px;padding:10px 18px;border-radius:6px;font-weight:bold;cursor:pointer;">↑ Raise Operator</button>
-      <button onclick="lowerEnergy()" style="background:#e68e73;color:white;border:none;margin:6px;padding:10px 18px;border-radius:6px;font-weight:bold;cursor:pointer;">↓ Lower Operator</button>
-      <button onclick="interaction()" style="background:#e68e73;color:white;border:none;margin:6px;padding:10px 18px;border-radius:6px;font-weight:bold;cursor:pointer;">Create Interaction</button>
-    </div>
-
+    <div id="explanation" style="color:#eee; margin-top:12px; text-align:left; max-width:760px; margin-left:auto; margin-right:auto;"></div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
   <script>
-  const canvas = document.getElementById("qcanvas");
-  const renderer = new THREE.WebGLRenderer({canvas, antialias:true});
-  renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+    const canvas = document.getElementById("qft2d");
+    const ctx = canvas.getContext("2d");
+    const explanation = document.getElementById("explanation");
 
-  const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x222222);
+    let energy = 0; // 0–3
+    let mode = 0; // 0=vacuum, 1=bosons/fermions, 2=LHC
+    const maxEnergy = 3;
+    const pairs = [];
 
-  const camera = new THREE.PerspectiveCamera(45, canvas.clientWidth/canvas.clientHeight, 0.1, 100);
-  camera.position.set(0,6,9);
-  camera.lookAt(0,0,0);
+    function explain(msg){ explanation.innerHTML = msg; }
 
-  scene.add(new THREE.AmbientLight(0x999999));
-
-  const light = new THREE.PointLight(0xff9966,1.5,40);
-  light.position.set(4,6,4);
-  scene.add(light);
-
-  const geo = new THREE.PlaneGeometry(8,8,40,40);
-  const mat = new THREE.MeshStandardMaterial({
-    color:0x6666ff,
-    wireframe:true,
-    emissive:0x222244
-  });
-  const field = new THREE.Mesh(geo,mat);
-  field.rotation.x = -Math.PI/2;
-  scene.add(field);
-
-  let energy = 0;
-  const MAX = 3;
-  function updateGauge(){
-    document.querySelectorAll("#gauge div").forEach((d,i)=>{
-      d.style.opacity = (i <= energy ? 1 : 0.25);
-    });
-  }
-  function raiseEnergy(){ if(energy<MAX){ energy++; updateGauge(); }}
-  function lowerEnergy(){ if(energy>0){ energy--; updateGauge(); }}
-
-  const particles = [];
-  function spawnPair(){
-    if(particles.length>14) return;
-    const pos = new THREE.Vector3((Math.random()-0.5)*6,0.15,(Math.random()-0.5)*6);
-    const g = new THREE.SphereGeometry(0.14,16,16);
-    const p = new THREE.Mesh(g,new THREE.MeshStandardMaterial({color:0x00ffff}));
-    const a = new THREE.Mesh(g,new THREE.MeshStandardMaterial({color:0xff0066}));
-    p.position.copy(pos).x-=0.25; a.position.copy(pos).x+=0.25;
-    scene.add(p,a);
-    particles.push({p,a,t:0});
-  }
-
-  function interaction(){
-    if(particles.length<1) return;
-    const pair = particles[Math.floor(Math.random()*particles.length)];
-    const start = pair.p.position.clone();
-    const end = pair.a.position.clone();
-
-    const g = new THREE.SphereGeometry(0.18,16,16);
-    const m = new THREE.MeshBasicMaterial({color:0xffd166, transparent:true, opacity:0.9});
-    const virtual = new THREE.Mesh(g,m);
-    virtual.position.copy(start);
-    scene.add(virtual);
-
-    let t=0;
-    function propagate(){
-      t+=0.04;
-      virtual.position.lerpVectors(start,end,t);
-      const verts = field.geometry.attributes.position;
-      for(let i=0;i<verts.count;i++){
-        const x=verts.getX(i), y=verts.getY(i);
-        const dx=x-virtual.position.x, dy=y-virtual.position.z;
-        const r=Math.sqrt(dx*dx+dy*dy);
-        verts.setZ(i, verts.getZ(i)+Math.exp(-r*r*4)*0.15*Math.sin(Date.now()*0.02));
-      }
-      verts.needsUpdate=true;
-      if(t<1) requestAnimationFrame(propagate);
-      else {
-        const flash=new THREE.Mesh(new THREE.SphereGeometry(0.35,16,16),
-          new THREE.MeshBasicMaterial({color:0xffffff, transparent:true, opacity:0.9}));
-        flash.position.copy(end);
-        scene.add(flash);
-        setTimeout(()=>scene.remove(flash),180);
-        pair.p.position.x-=0.25; pair.a.position.x+=0.25;
-        scene.remove(virtual);
-      }
+    function raiseEnergy(){
+      if(energy<maxEnergy) energy++;
+      explain(`Energy raised to level ${energy}. The field fluctuations are stronger, leading to more virtual particle-antiparticle pairs popping in/out of existence.`);
     }
-    propagate();
-  }
 
-  function animate(){
-    requestAnimationFrame(animate);
-    const verts=field.geometry.attributes.position;
-    for(let i=0;i<verts.count;i++){
-      const x=verts.getX(i), y=verts.getY(i);
-      const wave=Math.sin((x+y+Date.now()*0.001)*(energy+1))*0.25*(energy+1);
-      verts.setZ(i,wave);
+    function lowerEnergy(){
+      if(energy>0) energy--;
+      explain(`Energy lowered to level ${energy}. Field fluctuations reduce; virtual particles become rarer and less energetic.`);
     }
-    if(Math.random()<0.015*(energy+1)) spawnPair();
-    particles.forEach((pair,i)=>{
-      pair.t+=0.02*(energy+1);
-      pair.p.position.y+=0.01;
-      pair.a.position.y+=0.01;
-      if(pair.t>1){scene.remove(pair.p);scene.remove(pair.a);particles.splice(i,1);}
-    });
-    renderer.render(scene,camera);
-  }
 
-  updateGauge();
-  animate();
+    function switchMode(){
+      mode = (mode+1)%3;
+      if(mode===0) explain("Vacuum mode: see the noisy field, with virtual particle-antiparticle pairs emerging spontaneously.");
+      else if(mode===1) explain("Bosons & fermions mode: blue fermions, red bosons. Observe how force carriers mediate interactions.");
+      else explain("LHC detector mode: cross-sectional view. Random collisions show particle trajectories corresponding to different types.");
+    }
+
+    function spawnPair(){
+      const x = Math.random()*canvas.width;
+      const y = canvas.height/2;
+      pairs.push({x,y,t:0,vy:1+Math.random()*0.5});
+    }
+
+    function animate(){
+      ctx.fillStyle="#1a1a1a";
+      ctx.fillRect(0,0,canvas.width,canvas.height);
+
+      // Draw noisy sine-wave field (vacuum fluctuations)
+      for(let i=0;i<canvas.width;i++){
+        let y = canvas.height/2 + Math.sin(i*0.05 + Date.now()*0.003)*(10+energy*5) + (Math.random()*5-2.5);
+        ctx.fillStyle="#4cc9f0";
+        ctx.fillRect(i,y,1,2);
+      }
+
+      // Mode-specific rendering
+      if(mode===0){ // virtual pairs
+        if(Math.random()<0.02*(energy+1)) spawnPair();
+        pairs.forEach((p,i)=>{
+          p.t+=0.02*(energy+1);
+          ctx.fillStyle="#00ffff";
+          ctx.beginPath();
+          ctx.arc(p.x-5, p.y - p.vy*p.t*50, 6,0,Math.PI*2);
+          ctx.fill();
+          ctx.fillStyle="#ff0066";
+          ctx.beginPath();
+          ctx.arc(p.x+5, p.y + p.vy*p.t*50, 6,0,Math.PI*2);
+          ctx.fill();
+          if(p.t>1){ pairs.splice(i,1); }
+        });
+      } else if(mode===1){ // bosons / fermions
+        if(Math.random()<0.02*(energy+1)) spawnPair();
+        pairs.forEach((p,i)=>{
+          p.t+=0.02*(energy+1);
+          ctx.fillStyle="#00ff00"; // fermion
+          ctx.beginPath();
+          ctx.arc(p.x-5, p.y - p.vy*p.t*50, 6,0,Math.PI*2);
+          ctx.fill();
+          ctx.fillStyle="#ff9900"; // boson
+          ctx.beginPath();
+          ctx.arc(p.x+5, p.y + p.vy*p.t*50, 6,0,Math.PI*2);
+          ctx.fill();
+          if(p.t>1){ pairs.splice(i,1); }
+        });
+      } else if(mode===2){ // LHC cross-section
+        // Draw "detector" rings
+        ctx.strokeStyle="#5555ff";
+        ctx.beginPath(); ctx.arc(canvas.width/2,canvas.height/2,80,0,2*Math.PI); ctx.stroke();
+        ctx.beginPath(); ctx.arc(canvas.width/2,canvas.height/2,140,0,2*Math.PI); ctx.stroke();
+        // random collision
+        if(Math.random()<0.05) pairs.push({x:canvas.width/2, y:canvas.height/2, t:0, vx:(Math.random()-0.5)*4, vy:(Math.random()-0.5)*4});
+        pairs.forEach((p,i)=>{
+          p.t+=0.02*(energy+1);
+          p.x+=p.vx*10; p.y+=p.vy*10;
+          ctx.fillStyle="#ffcc00";
+          ctx.beginPath(); ctx.arc(p.x,p.y,5,0,Math.PI*2); ctx.fill();
+          if(p.t>2){ pairs.splice(i,1); }
+        });
+      }
+
+      requestAnimationFrame(animate);
+    }
+
+    switchMode(); // initialize explanation
+    animate();
   </script>
 
   <p>
     But some particles would naturally arise out of this framework, never having been seen before in experimental settings. For example, the negative energy solutions found by Dirac, predicted the notion of Anti-Electrons or Positrons.
   </p>
-
 </section>
 
 <section class="feature dropdown-section">
@@ -322,7 +296,7 @@
     </div>
   </details>
 </section>
-
+  
 <section class="feature"> 
   <h2>Conclusion</h2> 
   <p> To conclude, despite the quirkiness of quantum physics, and as mystical as it sounds, the truth is, it’s just math that happens to make very good predictions based on well-constructed mathematical and philosophical arguments. Buy and large, there are no quantum fields to harness, nor negative energy to expel. The large brunt of any physics is pretty much like this: the truth of physical nature is always true regardless as apples always fall from trees, even if Newton was wrong and Einstein was right with General Relativity– in fact, even if his theory is not complete at explaining what happens inside of black holes. The mathematics in physics is likened to Platonic Ideals: it does not say exactly what the light is, but it is like its reflection on the walls of the cave or the river. Matter is always matter, but once it was Democritus cutting cheese and calling them atomos (atoms), right now it is Quantum Physics that explained what happens inside them. <\p>
