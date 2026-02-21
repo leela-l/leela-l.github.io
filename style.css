@@ -40,6 +40,7 @@ header nav {
   margin-top: 15px;
   display: flex;
   justify-content: center;
+  justify-content: center;
   gap: 25px;
 }
 
@@ -76,40 +77,55 @@ header nav a:hover::after {
   width: 100%;
 }
 
-/* Dropdown container */
-.nav-dropdown {
+.nav-item {
   position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
 }
 
-/* Hidden menu */
-.nav-dropdown-content {
-  display: none;
+.nav-arrow {
+  cursor: pointer;
+  color: #e5e7eb;
+  font-size: 0.8em;
+  transition: 0.3s;
+}
+
+.nav-arrow:hover {
+  color: #4fc3f7;   /* your turquoise */
+}
+
+.dropdown-menu {
   position: absolute;
-  top: 30px;
+  top: 100%;
   left: 0;
   background: #2f3a4f;
   border-radius: 8px;
-  padding: 0.5rem 0;
+  padding: 10px 0;
   min-width: 180px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+  display: none;
+  z-index: 200;
 }
 
-/* Dropdown links */
-.nav-dropdown-content a {
+.nav-arrow:hover + .dropdown-menu,
+.dropdown-menu:hover {
   display: block;
-  padding: 0.5rem 1rem;
-  color: #e0e6ed;
 }
 
-.nav-dropdown-content a:hover {
-  background: rgba(79,195,247,0.15);
+.dropdown-menu a {
+  display: block;
+  padding: 8px 16px;
+  color: #e0e6ed;
+  text-decoration: none;
+  font-size: 0.95em;
+}
+
+.dropdown-menu a:hover {
+  background: rgba(79, 195, 247, 0.15);
   color: #4fc3f7;
 }
 
-/* Show on hover */
-.nav-dropdown:hover .nav-dropdown-content {
-  display: block;
-}
 
 /* --- FEATURE SECTION --- */
 .feature {
