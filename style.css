@@ -87,7 +87,7 @@ header nav a:hover::after {
 .nav-arrow {
   cursor: pointer;
   color: #e5e7eb;
-  font-size: 0.8em;
+  font-size: 1.1;
   transition: 0.3s;
 }
 
