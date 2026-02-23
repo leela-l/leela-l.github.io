@@ -630,7 +630,7 @@ font-weight: bold;
 
 /* Active tab style */
 .tab-link.active {
-  background: #8c63ff;
+  background: #5a3fa3;
   font-weight: 700;
   box-shadow: 0 7px 14px rgba(0,0,0,0.4);
   transform: translateY(-3px);
