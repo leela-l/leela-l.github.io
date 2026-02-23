@@ -593,7 +593,7 @@ font-weight: bold;
 
 /* Tabs container */
 .tabs-container {
-  max-width: 900px;
+  max-width: 1000px;
   margin: 30px auto;
   position: relative; /* needed for underline positioning */
 }
