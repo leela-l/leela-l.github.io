@@ -595,6 +595,7 @@ font-weight: bold;
 .tabs-container {
   max-width: 900px;
   margin: 30px auto;
+  position: relative; /* needed for underline positioning */
 }
 
 /* Tab buttons in a single row */
@@ -605,6 +606,7 @@ font-weight: bold;
   margin-bottom: 20px;
   flex-wrap: nowrap; /* ensure they stay on the same line */
   overflow-x: auto; /* allow horizontal scroll on very small screens */
+  position: relative; /* needed for underline */
 }
 
 /* Individual tab buttons */
@@ -619,13 +621,15 @@ font-weight: bold;
   font-weight: 600;
   border-radius: 10px 10px 0 0; /* rounded top corners only */
   cursor: pointer;
-  transition: background 0.3s, transform 0.2s, box-shadow 0.2s;
+  transition: background 0.3s, transform 0.2s, box-shadow 0.2s, color 0.3s;
+  position: relative; /* needed for underline indicator */
 }
 
 .tab-link:hover {
   background: #2fb58b;
   transform: translateY(-2px);
   box-shadow: 0 5px 10px rgba(0,0,0,0.3);
+  color: #fffacd; /* optional highlight on hover */
 }
 
 /* Active tab style */
@@ -635,6 +639,20 @@ font-weight: bold;
   box-shadow: 0 7px 14px rgba(0,0,0,0.4);
   transform: translateY(-3px);
   border-bottom: 3px solid #2b2b2b;
+  color: #ffb86c; /* highlight text for active tab */
+}
+
+/* Underline element for active tab */
+.tabs::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 4px;           /* thickness of underline */
+  width: 0;              /* will be set dynamically with JS */
+  background: #ffb86c;   /* underline color */
+  border-radius: 2px;
+  transition: left 0.3s, width 0.3s;
 }
 
 /* Tab content styling */
