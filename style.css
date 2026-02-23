@@ -642,7 +642,7 @@ font-weight: bold;
 /* Tab content styling */
 .tab-content {
   display: none;
-  background: #b097d1;
+  background: #9677bf;
   color: white;
   padding: 20px;
   border-radius: 0 0 12px 12px; /* rounded bottom corners to match tab */
