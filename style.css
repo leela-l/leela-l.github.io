@@ -529,13 +529,32 @@ font-weight: bold;
   transform: rotate(-15deg);
 }
 
-/* Flip card styles */
+.section-title {
+  color: #63bdf9;
+  text-align: center;
+  font-size: 2.5em;
+  margin-bottom: 20px;
+}
+
+/* Circle container */
+.circle-container {
+  position: relative;
+  width: 800px;
+  height: 800px;
+  margin: 0 auto;
+  border-radius: 50%;
+}
+
+/* Flip cards */
 .flip-card {
-  background-color: transparent;
-  width: 150px;
-  height: 150px;
+  width: 220px;       /* bigger width */
+  height: 250px;      /* bigger height to fit paragraphs */
   perspective: 1000px;
-  margin: 10px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform-origin: center center;
+  margin: -125px 0 0 -110px; /* centers the card at container's center */
 }
 
 .flip-card-inner {
@@ -562,14 +581,16 @@ font-weight: bold;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 10px;
+  padding: 15px;
   backface-visibility: hidden;
   font-weight: 600;
-  font-size: 1em;
+  font-size: 0.95em;
+  line-height: 1.4em;
+  text-align: center;
 }
 
 .flip-card-front {
-  font-size: 1.2em;
+  font-size: 1.1em;
 }
 
 /* Country-specific colors */
@@ -586,3 +607,10 @@ font-weight: bold;
   font-size: 0.9em;
   line-height: 1.4em;
 }
+
+/* Position cards around the circle using rotate */
+.circle-container .flip-card:nth-child(1) { transform: rotate(0deg) translate(350px) rotate(0deg); }
+.circle-container .flip-card:nth-child(2) { transform: rotate(72deg) translate(350px) rotate(-72deg); }
+.circle-container .flip-card:nth-child(3) { transform: rotate(144deg) translate(350px) rotate(-144deg); }
+.circle-container .flip-card:nth-child(4) { transform: rotate(216deg) translate(350px) rotate(-216deg); }
+.circle-container .flip-card:nth-child(5) { transform: rotate(288deg) translate(350px) rotate(-288deg); }
