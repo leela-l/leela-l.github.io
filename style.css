@@ -515,25 +515,23 @@ font-weight: bold;
   margin-bottom: 20px;
 }
 
-/* Circle container */
-.circle-container {
-  position: relative;
-  width: 900px;      /* adjust for desired circle size */
-  height: 900px;
-  margin: 0 auto;
+/* Container for the row of cards */
+.flip-cards-row {
+  display: flex;
+  flex-wrap: wrap;        /* wrap to next line on small screens */
+  justify-content: center; /* center horizontally */
+  gap: 20px;
+  margin: 40px 0;
 }
 
-/* Flip card */
+/* Flip card dimensions and perspective */
 .flip-card {
-  width: 280px;      /* wide enough for your paragraphs */
-  height: 300px;     /* tall enough for your paragraphs */
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  margin: -150px 0 0 -140px; /* centers the cards on the circle */
+  width: 280px;
+  height: 300px;
+  perspective: 1000px;
 }
 
-/* Flip animation (if you want hover flip) */
+/* Flip effect */
 .flip-card-inner {
   width: 100%;
   height: 100%;
@@ -546,7 +544,9 @@ font-weight: bold;
   transform: rotateY(180deg);
 }
 
+/* Front and back styling */
 .flip-card-front, .flip-card-back {
+  position: relative;
   width: 100%;
   height: 100%;
   border-radius: 15px;
@@ -565,7 +565,7 @@ font-weight: bold;
   color: white;
 }
 
-/* Card colors */
+/* Colors by country */
 .flip-card-front.australia { background-color: #8c63ff; }
 .flip-card-front.italy { background-color: #f06292; }
 .flip-card-front.belgium { background-color: #4db6ac; }
@@ -578,6 +578,5 @@ font-weight: bold;
   transform: rotateY(180deg);
   font-weight: 400;
   font-size: 0.95em;
-  line-height: 1.4em;
 }
 
