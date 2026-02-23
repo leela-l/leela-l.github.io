@@ -158,5 +158,23 @@
     <p>© 2026 Physics Mythbusters</p>
 </footer>
 
+
+<script>
+const tabs = document.querySelectorAll(".tab-link");
+const contents = document.querySelectorAll(".tab-content");
+
+tabs.forEach(tab => {
+  tab.addEventListener("click", () => {
+    // Remove active from all tabs & contents
+    tabs.forEach(t => t.classList.remove("active"));
+    contents.forEach(c => c.classList.remove("active"));
+
+    // Activate clicked tab & its content
+    tab.classList.add("active");
+    document.getElementById(tab.dataset.tab).classList.add("active");
+  });
+});
+</script>
+
 </body>
 </html>
