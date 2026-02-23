@@ -32,14 +32,14 @@
   <br><br>
   Possibly of the biggest safeguards in a reactor is the control rods. Control rods are rods made from neutron-absorbing materials, such as boron, which are used to absorb excess neutrons from the core, thus reducing the total number of neutrons in the core leading to a slowing down of the reaction. Control rods can be inserted into the core by varying amounts, as required by the current situation. They are usually placed in such a manner that if the mechanical system used to move the rods fail, then they will automatically fall into the reactor, thus preventing the core from becoming unstable. Below is a diagram of how the control rods work.
 
-<div class="reactor-sim-container">
+<div class="reactor-system-container">
 
 <style>
-.reactor-sim-container{
+.reactor-system-container{
     position:relative;
     width:100%;
-    max-width:1100px;
-    height:600px;
+    max-width:1150px;
+    height:620px;
     background:#111827;
     border:2px solid #555;
     font-family:Arial, sans-serif;
@@ -47,7 +47,7 @@
     overflow:hidden;
 }
 
-.reactor-sim-container canvas{
+.reactor-system-container canvas{
     position:absolute;
     top:0;
     left:0;
@@ -55,23 +55,23 @@
     height:100%;
 }
 
-.reactor-controls{
+.system-controls{
     position:absolute;
     top:15px;
     right:15px;
     background:#1f2937;
     padding:15px;
     border-radius:10px;
-    width:230px;
+    width:240px;
     font-size:14px;
 }
 
-.reactor-controls input{
+.system-controls input{
     width:100%;
     margin-top:6px;
 }
 
-.reactor-legend{
+.system-legend{
     position:absolute;
     bottom:15px;
     left:15px;
@@ -84,7 +84,7 @@
 
 <canvas></canvas>
 
-<div class="reactor-controls">
+<div class="system-controls">
     <strong>Control Rod Insertion</strong><br>
     <span id="rodPercent">50</span>% Inserted
     <input type="range" min="0" max="100" value="50" id="rodSlider">
@@ -98,12 +98,12 @@
     <span id="tempOutput">400</span> °C
 </div>
 
-<div class="reactor-legend">
+<div class="system-legend">
 <strong>Legend</strong><br>
 🟩 Fuel Rods<br>
 ⬛ Control Rods<br>
-🟦 Heated Water<br>
-⚪ Steam<br>
+🟦 Hot Water (Primary Loop)<br>
+⚪ Steam (Secondary Loop)<br>
 ⚙ Turbine<br>
 ❄ Condenser
 </div>
@@ -123,51 +123,133 @@ resize();
 window.addEventListener("resize", resize);
 
 const rodSlider = container.querySelector("#rodSlider");
-const rodPercentText = container.querySelector("#rodPercent");
-const powerOutput = container.querySelector("#powerOutput");
-const tempOutput = container.querySelector("#tempOutput");
+const rodText = container.querySelector("#rodPercent");
+const powerText = container.querySelector("#powerOutput");
+const tempText = container.querySelector("#tempOutput");
 
 let rodPercent = 50;
 let turbineAngle = 0;
-let steam = [];
+
+let steamParticles = [];
+let waterParticles = [];
 
 rodSlider.oninput = function(){
     rodPercent = parseInt(this.value);
-    rodPercentText.innerText = rodPercent;
+    rodText.innerText = rodPercent;
 };
 
 function drawCore(){
-    ctx.strokeStyle="#888";
-    ctx.strokeRect(60,120,260,360);
+    ctx.strokeStyle="#aaa";
+    ctx.strokeRect(60,150,250,350);
 
     let heat = (100 - rodPercent)/100;
-    ctx.fillStyle = `rgb(${40+180*heat},${70+50*heat},255)`;
-    ctx.fillRect(60,120,260,360);
+    ctx.fillStyle = `rgb(${40+180*heat},${70+40*heat},255)`;
+    ctx.fillRect(60,150,250,350);
 
-    // Fuel rods
     ctx.fillStyle="#22c55e";
     for(let i=0;i<5;i++){
-        ctx.fillRect(100 + i*35,170,20,260);
+        ctx.fillRect(100 + i*35,200,20,250);
     }
 
-    // Control rods
     ctx.fillStyle="black";
-    let rodHeight = 260*(rodPercent/100);
+    let rodHeight = 250*(rodPercent/100);
     for(let i=0;i<5;i++){
-        ctx.fillRect(100 + i*35,170,20,rodHeight);
+        ctx.fillRect(100 + i*35,200,20,rodHeight);
     }
 
     ctx.fillStyle="white";
-    ctx.fillText("Reactor Core",120,100);
+    ctx.fillText("Reactor Core",110,130);
 }
 
 function drawSteamGenerator(){
-    ctx.strokeStyle="#888";
-    ctx.strokeRect(380,180,220,220);
+    ctx.strokeStyle="#aaa";
+    ctx.strokeRect(400,200,220,250);
     ctx.fillStyle="white";
-    ctx.fillText("Steam Generator",410,165);
+    ctx.fillText("Steam Generator",430,180);
+}
 
-    steam.forEach(p=>{
+function drawTurbine(){
+    ctx.save();
+    ctx.translate(750,280);
+    ctx.rotate(turbineAngle);
+    ctx.fillStyle="silver";
+    for(let i=0;i<6;i++){
+        ctx.rotate(Math.PI/3);
+        ctx.fillRect(0,0,60,12);
+    }
+    ctx.restore();
+    ctx.fillStyle="white";
+    ctx.fillText("Turbine",720,360);
+}
+
+function drawCondenser(){
+    ctx.strokeStyle="#aaa";
+    ctx.strokeRect(950,230,180,180);
+    ctx.fillStyle="#3b82f6";
+    ctx.fillRect(950,230,180,180);
+    ctx.fillStyle="white";
+    ctx.fillText("Condenser",980,215);
+}
+
+function drawPipes(){
+    ctx.strokeStyle="#888";
+    ctx.lineWidth=6;
+
+    // Core to Steam Generator (hot water loop)
+    ctx.beginPath();
+    ctx.moveTo(310,320);
+    ctx.lineTo(400,320);
+    ctx.stroke();
+
+    // Steam Generator to Turbine (steam pipe)
+    ctx.beginPath();
+    ctx.moveTo(620,250);
+    ctx.lineTo(690,250);
+    ctx.stroke();
+
+    // Turbine to Condenser
+    ctx.beginPath();
+    ctx.moveTo(810,280);
+    ctx.lineTo(950,280);
+    ctx.stroke();
+
+    // Condenser back to Steam Generator
+    ctx.beginPath();
+    ctx.moveTo(950,350);
+    ctx.lineTo(620,350);
+    ctx.stroke();
+}
+
+function updatePhysics(){
+    let power = 100 - rodPercent;
+    powerText.innerText = power;
+
+    let temp = 250 + power*3;
+    tempText.innerText = temp;
+
+    // Create steam based on power
+    if(Math.random() < power/100){
+        steamParticles.push({x:450,y:400});
+    }
+
+    steamParticles.forEach(p=>{
+        if(p.x < 690){
+            p.x += 2.5;
+            p.y -= 1.2;
+        }else if(p.x < 950){
+            p.x += 3;
+        }else{
+            p.y += 2; // condensing
+        }
+    });
+
+    steamParticles = steamParticles.filter(p=>p.y < 410);
+
+    turbineAngle += power * 0.0015;
+}
+
+function drawSteam(){
+    steamParticles.forEach(p=>{
         ctx.beginPath();
         ctx.arc(p.x,p.y,4,0,Math.PI*2);
         ctx.fillStyle="white";
@@ -175,58 +257,16 @@ function drawSteamGenerator(){
     });
 }
 
-function drawTurbine(){
-    ctx.save();
-    ctx.translate(730,270);
-    ctx.rotate(turbineAngle);
-    ctx.fillStyle="silver";
-    for(let i=0;i<6;i++){
-        ctx.rotate(Math.PI/3);
-        ctx.fillRect(0,0,60,10);
-    }
-    ctx.restore();
-    ctx.fillStyle="white";
-    ctx.fillText("Turbine",700,350);
-}
-
-function drawCondenser(){
-    ctx.strokeStyle="#888";
-    ctx.strokeRect(900,200,180,180);
-    ctx.fillStyle="#3b82f6";
-    ctx.fillRect(900,200,180,180);
-    ctx.fillStyle="white";
-    ctx.fillText("Condenser",930,185);
-}
-
-function updatePhysics(){
-    let power = 100 - rodPercent;
-    powerOutput.innerText = power;
-
-    let temp = 250 + power*3;
-    tempOutput.innerText = temp;
-
-    if(Math.random() < power/100){
-        steam.push({x:430,y:380});
-    }
-
-    steam.forEach(p=>{
-        p.x += 3;
-        p.y -= 2;
-    });
-
-    steam = steam.filter(p=>p.x < 700);
-
-    turbineAngle += power * 0.001;
-}
-
 function animate(){
     ctx.clearRect(0,0,canvas.width,canvas.height);
 
     updatePhysics();
+    drawPipes();
     drawCore();
     drawSteamGenerator();
     drawTurbine();
     drawCondenser();
+    drawSteam();
 
     requestAnimationFrame(animate);
 }
@@ -237,7 +277,6 @@ animate();
 </script>
 
 </div>
-
   <footer>
   <p>© 2026 Misuse of Physics Project</p>
 </footer>
