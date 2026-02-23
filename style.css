@@ -518,8 +518,8 @@ font-weight: bold;
 /* Container for the row of cards */
 .flip-cards-row {
   display: flex;
-  flex-wrap: wrap;        /* wrap to next line on small screens */
-  justify-content: center; /* center horizontally */
+  flex-wrap: wrap;        
+  justify-content: center; 
   gap: 20px;
   margin: 40px 0;
 }
@@ -538,15 +538,12 @@ font-weight: bold;
   transition: transform 0.8s;
   transform-style: preserve-3d;
   cursor: pointer;
-}
-
-.flip-card:hover .flip-card-inner {
-  transform: rotateY(180deg);
+  position: relative; /* important for back/front alignment */
 }
 
 /* Front and back styling */
 .flip-card-front, .flip-card-back {
-  position: relative;
+  position: absolute;  /* <-- fixes jumping issue */
   width: 100%;
   height: 100%;
   border-radius: 15px;
@@ -578,5 +575,5 @@ font-weight: bold;
   transform: rotateY(180deg);
   font-weight: 400;
   font-size: 0.95em;
+  line-height: 1.4em;
 }
-
