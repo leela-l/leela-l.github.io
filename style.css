@@ -545,20 +545,33 @@ font-weight: bold;
   border-radius: 50%;
 }
 
-/* Flip cards */
+.section-title {
+  color: #63bdf9;
+  text-align: center;
+  font-size: 2.5em;
+  margin-bottom: 40px;
+}
+
+/* Circle container */
+.circle-container {
+  position: relative;
+  width: 900px;
+  height: 900px;
+  margin: 0 auto;
+}
+
+/* Flip card */
 .flip-card {
-  width: 280px;       /* bigger width */
-  height: 300px;      /* bigger height to fit paragraphs */
+  width: 280px;   /* larger to fit paragraphs */
+  height: 300px;
   perspective: 1000px;
   position: absolute;
   top: 50%;
   left: 50%;
-  transform-origin: center center;
-  margin: -125px 0 0 -110px; /* centers the card at container's center */
+  margin: -150px 0 0 -140px; /* center the cards */
 }
 
 .flip-card-inner {
-  position: relative;
   width: 100%;
   height: 100%;
   text-align: center;
@@ -571,29 +584,27 @@ font-weight: bold;
   transform: rotateY(180deg);
 }
 
-.flip-card-front,
-.flip-card-back {
+.flip-card-front, .flip-card-back {
   position: absolute;
   width: 100%;
   height: 100%;
-  color: white;
   border-radius: 15px;
+  padding: 15px;
+  backface-visibility: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 15px;
-  backface-visibility: hidden;
-  font-weight: 600;
-  font-size: 0.95em;
-  line-height: 1.4em;
   text-align: center;
+  line-height: 1.4em;
 }
 
 .flip-card-front {
+  font-weight: 600;
   font-size: 1.1em;
+  color: white;
 }
 
-/* Country-specific colors */
+/* Country-specific front colors */
 .flip-card-front.australia { background-color: #8c63ff; }
 .flip-card-front.italy { background-color: #f06292; }
 .flip-card-front.belgium { background-color: #4db6ac; }
@@ -602,15 +613,15 @@ font-weight: bold;
 
 .flip-card-back {
   background-color: #2b2b2b;
+  color: white;
   transform: rotateY(180deg);
   font-weight: 400;
-  font-size: 0.9em;
-  line-height: 1.4em;
+  font-size: 0.95em;
 }
 
-/* Position cards around the circle using rotate */
+/* Position cards around circle */
 .circle-container .flip-card:nth-child(1) { transform: rotate(0deg) translate(350px) rotate(0deg); }
-.circle-container .flip-card:nth-child(2) { transform: rotate(72deg) translate(350px) rotate(-72deg); }
-.circle-container .flip-card:nth-child(3) { transform: rotate(144deg) translate(350px) rotate(-144deg); }
-.circle-container .flip-card:nth-child(4) { transform: rotate(216deg) translate(350px) rotate(-216deg); }
-.circle-container .flip-card:nth-child(5) { transform: rotate(288deg) translate(350px) rotate(-288deg); }
+.circle-container .flip-card:nth-child(2) { transform: rotate(72deg) translate(350px) rotate(0deg); }
+.circle-container .flip-card:nth-child(3) { transform: rotate(144deg) translate(350px) rotate(0deg); }
+.circle-container .flip-card:nth-child(4) { transform: rotate(216deg) translate(350px) rotate(0deg); }
+.circle-container .flip-card:nth-child(5) { transform: rotate(288deg) translate(350px) rotate(0deg); }
