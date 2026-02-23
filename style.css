@@ -622,11 +622,11 @@ font-weight: bold;
 .tab-link:hover {
   background: #5a3fa3;
   transform: translateY(-3px);
-  color: white;
 }
 
 .tab-link.active {
-  background: #8c63ff;
+  background: #5a3fa3;
+  color: white;
 }
 
 /* Tab content */
