@@ -519,7 +519,7 @@ font-weight: bold;
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start; 
-  gap: 50px;
+  gap: 70px;
   width: max-content;  /* container width adjusts to cards */
   margin: 40px auto;   /* centers the whole group */
 }
