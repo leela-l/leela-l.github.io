@@ -609,7 +609,7 @@ font-weight: bold;
 
 .tab-link {
   background: #3b475c;
-  color: white;
+  color: #ffb86c;
   border: none;
   padding: 12px 20px;
   border-radius: 10px;
@@ -620,8 +620,9 @@ font-weight: bold;
 }
 
 .tab-link:hover {
-  background: #5a5f7a;
+  background: #5a3fa3;
   transform: translateY(-3px);
+  color: white;
 }
 
 .tab-link.active {
