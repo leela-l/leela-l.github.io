@@ -547,8 +547,8 @@ font-weight: bold;
 
 /* Flip cards */
 .flip-card {
-  width: 220px;       /* bigger width */
-  height: 250px;      /* bigger height to fit paragraphs */
+  width: 280px;       /* bigger width */
+  height: 300px;      /* bigger height to fit paragraphs */
   perspective: 1000px;
   position: absolute;
   top: 50%;
