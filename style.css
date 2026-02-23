@@ -578,6 +578,12 @@ font-weight: bold;
   line-height: 1.4em;
 }
 
+.flip-card.wider {
+  width: 400px;  /* wider than the default 300px */
+  /* height can stay the same, or increase if needed */
+  height: 350px;
+}
+
 /* Colors for each card front */
 .flip-card-front.australia { background-color: #8c63ff; }
 .flip-card-front.italy { background-color: #f06292; }
