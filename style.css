@@ -581,9 +581,3 @@ font-weight: bold;
   line-height: 1.4em;
 }
 
-/* Position cards around a circle, all upright */
-.circle-container .flip-card:nth-child(1) { transform: rotate(0deg) translate(350px) rotate(0deg); }
-.circle-container .flip-card:nth-child(2) { transform: rotate(72deg) translate(350px) rotate(0deg); }
-.circle-container .flip-card:nth-child(3) { transform: rotate(144deg) translate(350px) rotate(0deg); }
-.circle-container .flip-card:nth-child(4) { transform: rotate(216deg) translate(350px) rotate(0deg); }
-.circle-container .flip-card:nth-child(5) { transform: rotate(288deg) translate(350px) rotate(0deg); }
