@@ -609,33 +609,32 @@ font-weight: bold;
 
 /* Individual tab buttons */
 .tab-link {
-  flex: 1; /* make all tabs same width */
+  flex: 1; /* all tabs same width */
   text-align: center;
   background: #3b475c;
   color: white;
   border: none;
-  padding: 12px 0;
+  padding: 18px 0;           /* increase vertical padding */
+  font-size: 1.3em;          /* bigger text */
+  font-weight: 600;
   border-radius: 10px 10px 0 0; /* rounded top corners only */
   cursor: pointer;
-  font-size: 1.1em;
-  font-weight: 600;
   transition: background 0.3s, transform 0.2s, box-shadow 0.2s;
 }
 
 .tab-link:hover {
-  background: #5a5f7a;
+  background: #5a3fa3;
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  box-shadow: 0 5px 10px rgba(0,0,0,0.3);
 }
 
 /* Active tab style */
 .tab-link.active {
   background: #8c63ff;
-  color: white;
   font-weight: 700;
-  box-shadow: 0 6px 12px rgba(0,0,0,0.4);
+  box-shadow: 0 7px 14px rgba(0,0,0,0.4);
   transform: translateY(-3px);
-  border-bottom: 3px solid #2b2b2b; /* visually connects content below */
+  border-bottom: 3px solid #2b2b2b;
 }
 
 /* Tab content styling */
