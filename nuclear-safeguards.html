@@ -1,1 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Physics Mythbusters</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
+<header>
+    <h1>Physics Mythbusters</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="Climate.html">Climate Change</a>
+      <a href="Nuclear.html">Nuclear Energy</a>
+      <a href="QM.html">The Quantum World</a>
+      <a href="Radiation.html">Cellular Technology</a>
+      <a href="Astro.html">Astronomy</a>
+
+    </nav>
+  </header>
+  
+  
+<section class="feature">
+<h2>Nuclear reactor safeguards</h2></h2>
+<br><br>
+  For us to address misconceptions and misuse of physics surrounding nuclear energy it would useful to understand safeguards behind nuclear reactors to show how safe nuclear energy is. 
+
+  <br><br>
+  One such safeguard is in the fuel itself. Only between 3.5% to 5% of the nuclear fuel is fissionable. This means, for example, there would only be a small percentage of Uranium-235 (radioactive) to Uranium-238 (non-radioactive). With such a low density of fissionable materials, the neutrons are less likely to hit another Uranium-235 nucleus for a while, thus preventing a sudden release of energy. 
+
+  <br><br>
+  Possibly of the biggest safeguards in a reactor is the control rods. Control rods are rods made from neutron-absorbing materials, such as boron, which are used to absorb excess neutrons from the core, thus reducing the total number of neutrons in the core leading to a slowing down of the reaction. Control rods can be inserted into the core by varying amounts, as required by the current situation. They are usually placed in such a manner that if the mechanical system used to move the rods fail, then they will automatically fall into the reactor, thus preventing the core from becoming unstable. Below is a diagram of how the control rods work.
+
+<div class="reactor-sim-container">
+
+<style>
+.reactor-sim-container{
+    position:relative;
+    width:100%;
+    max-width:1100px;
+    height:600px;
+    background:#111827;
+    border:2px solid #555;
+    font-family:Arial, sans-serif;
+    color:white;
+    overflow:hidden;
+}
+
+.reactor-sim-container canvas{
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+}
+
+.reactor-controls{
+    position:absolute;
+    top:15px;
+    right:15px;
+    background:#1f2937;
+    padding:15px;
+    border-radius:10px;
+    width:230px;
+    font-size:14px;
+}
+
+.reactor-controls input{
+    width:100%;
+    margin-top:6px;
+}
+
+.reactor-legend{
+    position:absolute;
+    bottom:15px;
+    left:15px;
+    background:#1f2937;
+    padding:12px;
+    border-radius:10px;
+    font-size:13px;
+}
+</style>
+
+<canvas></canvas>
+
+<div class="reactor-controls">
+    <strong>Control Rod Insertion</strong><br>
+    <span id="rodPercent">50</span>% Inserted
+    <input type="range" min="0" max="100" value="50" id="rodSlider">
+
+    <br><br>
+    <strong>Reactor Power:</strong><br>
+    <span id="powerOutput">50</span>%
+
+    <br><br>
+    <strong>Water Temperature:</strong><br>
+    <span id="tempOutput">400</span> °C
+</div>
+
+<div class="reactor-legend">
+<strong>Legend</strong><br>
+🟩 Fuel Rods<br>
+⬛ Control Rods<br>
+🟦 Heated Water<br>
+⚪ Steam<br>
+⚙ Turbine<br>
+❄ Condenser
+</div>
+
+<script>
+(function(){
+
+const container = document.currentScript.parentElement;
+const canvas = container.querySelector("canvas");
+const ctx = canvas.getContext("2d");
+
+function resize(){
+    canvas.width = container.clientWidth;
+    canvas.height = container.clientHeight;
+}
+resize();
+window.addEventListener("resize", resize);
+
+const rodSlider = container.querySelector("#rodSlider");
+const rodPercentText = container.querySelector("#rodPercent");
+const powerOutput = container.querySelector("#powerOutput");
+const tempOutput = container.querySelector("#tempOutput");
+
+let rodPercent = 50;
+let turbineAngle = 0;
+let steam = [];
+
+rodSlider.oninput = function(){
+    rodPercent = parseInt(this.value);
+    rodPercentText.innerText = rodPercent;
+};
+
+function drawCore(){
+    ctx.strokeStyle="#888";
+    ctx.strokeRect(60,120,260,360);
+
+    let heat = (100 - rodPercent)/100;
+    ctx.fillStyle = `rgb(${40+180*heat},${70+50*heat},255)`;
+    ctx.fillRect(60,120,260,360);
+
+    // Fuel rods
+    ctx.fillStyle="#22c55e";
+    for(let i=0;i<5;i++){
+        ctx.fillRect(100 + i*35,170,20,260);
+    }
+
+    // Control rods
+    ctx.fillStyle="black";
+    let rodHeight = 260*(rodPercent/100);
+    for(let i=0;i<5;i++){
+        ctx.fillRect(100 + i*35,170,20,rodHeight);
+    }
+
+    ctx.fillStyle="white";
+    ctx.fillText("Reactor Core",120,100);
+}
+
+function drawSteamGenerator(){
+    ctx.strokeStyle="#888";
+    ctx.strokeRect(380,180,220,220);
+    ctx.fillStyle="white";
+    ctx.fillText("Steam Generator",410,165);
+
+    steam.forEach(p=>{
+        ctx.beginPath();
+        ctx.arc(p.x,p.y,4,0,Math.PI*2);
+        ctx.fillStyle="white";
+        ctx.fill();
+    });
+}
+
+function drawTurbine(){
+    ctx.save();
+    ctx.translate(730,270);
+    ctx.rotate(turbineAngle);
+    ctx.fillStyle="silver";
+    for(let i=0;i<6;i++){
+        ctx.rotate(Math.PI/3);
+        ctx.fillRect(0,0,60,10);
+    }
+    ctx.restore();
+    ctx.fillStyle="white";
+    ctx.fillText("Turbine",700,350);
+}
+
+function drawCondenser(){
+    ctx.strokeStyle="#888";
+    ctx.strokeRect(900,200,180,180);
+    ctx.fillStyle="#3b82f6";
+    ctx.fillRect(900,200,180,180);
+    ctx.fillStyle="white";
+    ctx.fillText("Condenser",930,185);
+}
+
+function updatePhysics(){
+    let power = 100 - rodPercent;
+    powerOutput.innerText = power;
+
+    let temp = 250 + power*3;
+    tempOutput.innerText = temp;
+
+    if(Math.random() < power/100){
+        steam.push({x:430,y:380});
+    }
+
+    steam.forEach(p=>{
+        p.x += 3;
+        p.y -= 2;
+    });
+
+    steam = steam.filter(p=>p.x < 700);
+
+    turbineAngle += power * 0.001;
+}
+
+function animate(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    updatePhysics();
+    drawCore();
+    drawSteamGenerator();
+    drawTurbine();
+    drawCondenser();
+
+    requestAnimationFrame(animate);
+}
+
+animate();
+
+})();
+</script>
+
+</div>
+
+  <footer>
+  <p>© 2026 Misuse of Physics Project</p>
+</footer>
+
+</body>
+</html>
+
+  
