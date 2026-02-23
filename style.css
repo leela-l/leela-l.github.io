@@ -623,14 +623,14 @@ font-weight: bold;
 }
 
 .tab-link:hover {
-  background: #5a3fa3;
+  background: #2fb58b;
   transform: translateY(-2px);
   box-shadow: 0 5px 10px rgba(0,0,0,0.3);
 }
 
 /* Active tab style */
 .tab-link.active {
-  background: #5a3fa3;
+  background: #38d9a9;
   font-weight: 700;
   box-shadow: 0 7px 14px rgba(0,0,0,0.4);
   transform: translateY(-3px);
