@@ -39,9 +39,8 @@
 .reactor-container{
     position:relative;
     width:100%;
-    max-width:100%;
     aspect-ratio:16/9;
-    background:#f8fafc;
+    background:#f1f5f9;
     border:2px solid #444;
     overflow:hidden;
     font-family:Arial, sans-serif;
@@ -60,7 +59,7 @@
     background:white;
     padding:12px 15px;
     border-radius:8px;
-    box-shadow:0 4px 10px rgba(0,0,0,0.15);
+    box-shadow:0 4px 12px rgba(0,0,0,0.15);
     font-size:14px;
 }
 .reactor-ui input{
@@ -98,8 +97,6 @@ const powerText = container.querySelector("#powerOutput");
 
 let rodLevel = 50;
 let turbineRotation = 0;
-let hotFlow = [];
-let coldFlow = [];
 
 slider.oninput = function(){
     rodLevel = parseInt(this.value);
@@ -108,162 +105,184 @@ slider.oninput = function(){
 
 function drawCore(w,h){
 
-    const coreCenterX = w * 0.25;
-    const coreCenterY = h * 0.5;
-    const coreW = w * 0.25;
-    const coreH = h * 0.55;
+    const cx = w*0.22;
+    const cy = h*0.5;
+    const cw = w*0.25;
+    const ch = h*0.6;
 
-    const coreX = coreCenterX - coreW/2;
-    const coreY = coreCenterY - coreH/2;
+    const x = cx - cw/2;
+    const y = cy - ch/2;
 
-    ctx.lineWidth = 3;
-    ctx.strokeStyle = "#555";
-    ctx.strokeRect(coreX, coreY, coreW, coreH);
+    ctx.lineWidth=3;
+    ctx.strokeStyle="#555";
+    ctx.strokeRect(x,y,cw,ch);
 
-    // Water inside core
-    let power = 100 - rodLevel;
-    let heatFactor = power/100;
-    let red = 120 + heatFactor*135;
+    // Reactor water heat color
+    let power = 100-rodLevel;
+    let heat = power/100;
+    let red = 120 + heat*135;
+    ctx.fillStyle=`rgb(${red},160,255)`;
+    ctx.fillRect(x+cw*0.1,y+ch*0.1,cw*0.8,ch*0.8);
 
-    ctx.fillStyle = `rgb(${red},170,255)`;
-    ctx.fillRect(coreX+coreW*0.1, coreY+coreH*0.1,
-                 coreW*0.8, coreH*0.8);
+    const rodCount=4;
+    const spacing=cw/(rodCount+1);
+    const fuelW=cw*0.06;
+    const fuelH=ch*0.5;
+    const fuelTop=y+ch*0.25;
 
-    // Fuel rods (vertical, fixed)
-    const rodCount = 4;
-    const spacing = coreW/(rodCount+1);
-    const fuelWidth = coreW*0.06;
-    const fuelHeight = coreH*0.5;
-    const fuelTop = coreY + coreH*0.25;
-
+    // Fuel rods
+    ctx.fillStyle="#f59e0b";
     for(let i=1;i<=rodCount;i++){
-        let x = coreX + i*spacing - fuelWidth/2;
-
-        ctx.fillStyle="#f59e0b";
-        ctx.fillRect(x, fuelTop, fuelWidth, fuelHeight);
+        let rx=x+i*spacing-fuelW/2;
+        ctx.fillRect(rx,fuelTop,fuelW,fuelH);
     }
 
-    // Control rods BETWEEN fuel rods
+    // Control rods between fuel rods
+    ctx.fillStyle="#333";
     for(let i=1;i<rodCount;i++){
-        let x = coreX + i*spacing + spacing/2 - fuelWidth/2;
+        let rx=x+i*spacing+spacing/2-fuelW/2;
 
-        let insertAmount = fuelHeight * (rodLevel/100);
+        let insert=fuelH*(rodLevel/100);
+        let topOffset=(fuelH-insert);
 
-        ctx.fillStyle="#333";
-        ctx.fillRect(x, fuelTop, fuelWidth, insertAmount);
+        ctx.fillRect(rx,fuelTop, fuelW, insert);
+
+        // If rods withdrawn show exposed section above
+        if(rodLevel<100){
+            let exposed= fuelH - insert;
+            ctx.fillRect(rx,fuelTop-exposed, fuelW, exposed);
+        }
+    }
+
+    // Reactor cap when fully inserted
+    if(rodLevel===100){
+        ctx.fillStyle="#777";
+        ctx.fillRect(x,y-15,cw,15);
     }
 
     ctx.fillStyle="#000";
-    ctx.fillText("Reactor Core", coreX, coreY-10);
+    ctx.fillText("Reactor Core", x, y-25);
 }
 
-function drawSystem(w,h){
+function drawSteamGenerator(w,h){
 
-    const genX = w*0.5;
-    const genY = h*0.3;
-    const genW = w*0.16;
-    const genH = h*0.4;
+    const gx=w*0.5;
+    const gy=h*0.3;
+    const gw=w*0.18;
+    const gh=h*0.45;
 
     ctx.strokeStyle="#444";
-    ctx.strokeRect(genX, genY, genW, genH);
-    ctx.fillText("Steam Generator", genX, genY-10);
+    ctx.strokeRect(gx,gy,gw,gh);
+    ctx.fillText("Steam Generator", gx, gy-10);
 
-    const turbX = w*0.75;
-    const turbY = h*0.45;
+    // Spiral heat exchanger
+    let loops=6;
+    let startY=gy+gh*0.15;
+    let endY=gy+gh*0.85;
+    let spacing=(endY-startY)/loops;
+
+    for(let i=0;i<loops;i++){
+        let t=i/loops;
+        let r=255-(t*200);
+        let b=50+(t*200);
+        ctx.strokeStyle=`rgb(${r},50,${b})`;
+        ctx.lineWidth=4;
+
+        ctx.beginPath();
+        ctx.moveTo(gx+gw*0.2,startY+i*spacing);
+        ctx.bezierCurveTo(
+            gx+gw*0.5,startY+i*spacing+spacing/2,
+            gx+gw*0.5,startY+i*spacing+spacing/2,
+            gx+gw*0.8,startY+(i+1)*spacing
+        );
+        ctx.stroke();
+    }
+}
+
+function drawTurbine(w,h){
+    const tx=w*0.78;
+    const ty=h*0.45;
 
     ctx.save();
-    ctx.translate(turbX, turbY);
+    ctx.translate(tx,ty);
     ctx.rotate(turbineRotation);
     ctx.fillStyle="#9ca3af";
+
     for(let i=0;i<6;i++){
         ctx.rotate(Math.PI/3);
         ctx.fillRect(0,0,w*0.05,h*0.02);
     }
+
     ctx.restore();
-    ctx.fillText("Turbine", turbX-30, turbY+60);
+    ctx.fillStyle="#000";
+    ctx.fillText("Turbine",tx-30,ty+60);
+}
 
-    const condX = w*0.65;
-    const condY = h*0.75;
-    const condW = w*0.22;
-    const condH = h*0.12;
+function drawCondenser(w,h){
 
-    ctx.strokeRect(condX, condY, condW, condH);
-    ctx.fillText("Condenser", condX+condW*0.3, condY-5);
+    const cx=w*0.65;
+    const cy=h*0.75;
+    const cw=w*0.25;
+    const ch=h*0.15;
 
-    // Pipes centered and aligned
-    ctx.lineWidth=5;
+    ctx.strokeRect(cx,cy,cw,ch);
+    ctx.fillText("Condenser",cx+cw*0.35,cy-8);
+
+    // Cooling water
+    ctx.fillStyle="#bfdbfe";
+    ctx.fillRect(cx+5,cy+ch*0.4,cw-10,ch*0.5);
+
+    // Cooling tubes
+    ctx.strokeStyle="#3b82f6";
+    ctx.lineWidth=2;
+
+    for(let i=1;i<6;i++){
+        ctx.beginPath();
+        ctx.moveTo(cx+cw*(i/6),cy+5);
+        ctx.lineTo(cx+cw*(i/6),cy+ch-5);
+        ctx.stroke();
+    }
+}
+
+function drawPipes(w,h){
     ctx.strokeStyle="#999";
+    ctx.lineWidth=5;
 
     ctx.beginPath();
-    ctx.moveTo(w*0.37, h*0.5);
-    ctx.lineTo(genX, h*0.5);
+    ctx.moveTo(w*0.35,h*0.5);
+    ctx.lineTo(w*0.5,h*0.5);
     ctx.stroke();
 
     ctx.beginPath();
-    ctx.moveTo(genX+genW, h*0.5);
-    ctx.lineTo(turbX, h*0.5);
+    ctx.moveTo(w*0.68,h*0.5);
+    ctx.lineTo(w*0.78,h*0.5);
     ctx.stroke();
 
     ctx.beginPath();
-    ctx.moveTo(turbX, h*0.5);
-    ctx.lineTo(turbX, condY);
+    ctx.moveTo(w*0.78,h*0.5);
+    ctx.lineTo(w*0.78,h*0.75);
     ctx.stroke();
 
     ctx.beginPath();
-    ctx.moveTo(condX, condY+condH/2);
-    ctx.lineTo(w*0.37, condY+condH/2);
-    ctx.lineTo(w*0.37, h*0.5);
+    ctx.moveTo(w*0.65,h*0.82);
+    ctx.lineTo(w*0.35,h*0.82);
+    ctx.lineTo(w*0.35,h*0.5);
     ctx.stroke();
-}
-
-function updateFlow(w,h){
-
-    let power = 100 - rodLevel;
-    powerText.innerText = power;
-
-    if(Math.random() < power/100){
-        hotFlow.push({x:w*0.37, y:h*0.5});
-    }
-
-    hotFlow.forEach(p=>{
-        p.x += w*0.003;
-        if(p.x > w*0.5) p.x = w*0.37;
-    });
-
-    if(Math.random() < power/120){
-        coldFlow.push({x:w*0.65, y:h*0.8});
-    }
-
-    coldFlow.forEach(p=>{
-        p.x -= w*0.003;
-        if(p.x < w*0.37) p.x = w*0.65;
-    });
-
-    turbineRotation += power * 0.0007;
-}
-
-function drawFlow(){
-    ctx.fillStyle="red";
-    hotFlow.forEach(p=>{
-        ctx.beginPath();
-        ctx.arc(p.x,p.y,4,0,Math.PI*2);
-        ctx.fill();
-    });
-
-    ctx.fillStyle="blue";
-    coldFlow.forEach(p=>{
-        ctx.beginPath();
-        ctx.arc(p.x,p.y,4,0,Math.PI*2);
-        ctx.fill();
-    });
 }
 
 function animate(){
     ctx.clearRect(0,0,canvas.width,canvas.height);
-    updateFlow(canvas.width, canvas.height);
-    drawCore(canvas.width, canvas.height);
-    drawSystem(canvas.width, canvas.height);
-    drawFlow();
+
+    let power=100-rodLevel;
+    powerText.innerText=power;
+    turbineRotation+=power*0.0008;
+
+    drawCore(canvas.width,canvas.height);
+    drawSteamGenerator(canvas.width,canvas.height);
+    drawTurbine(canvas.width,canvas.height);
+    drawCondenser(canvas.width,canvas.height);
+    drawPipes(canvas.width,canvas.height);
+
     requestAnimationFrame(animate);
 }
 
