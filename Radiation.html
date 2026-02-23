@@ -224,14 +224,14 @@ const freqValue = document.getElementById("freqValue");
 const waveType = document.getElementById("waveType");
 const ionisingStatus = document.getElementById("ionisingStatus");
 const waveUse = document.getElementById("waveUse");
-
+  
 // EM regions (frequency in Hz)
 function getRegion(freq) {
   if (freq < 3e9) return {type:"Radio Waves", ion:false, use:"Radio, TV, 5G"};
   if (freq < 3e11) return {type:"Microwaves", ion:false, use:"5G, microwave ovens"};
   if (freq < 4e14) return {type:"Infrared", ion:false, use:"Remote controls, heat sensors"};
   if (freq < 7.5e14) return {type:"Visible Light", ion:false, use:"Human vision, lighting"};
-  if (freq < 3e16) return {type:"Ultraviolet", ion:true, use:"Sterilisation, tanning"};
+  if (freq < 3e16) return {type:"Ultraviolet", ion:freq >= 1e15, use:"Sterilisation, tanning"};
   if (freq < 3e19) return {type:"X-Rays", ion:true, use:"Medical imaging"};
   return {type:"Gamma Rays", ion:true, use:"Cancer treatment, nuclear reactions"};
 }
