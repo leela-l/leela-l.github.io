@@ -652,3 +652,75 @@ font-weight: bold;
 .tab-content.active {
   display: block;
 }
+
+/* =========================
+   CARD LAYOUT (Topic boxes)
+   ========================= */
+
+.cards-section {
+  display: flex;
+  justify-content: center;
+  gap: 60px;
+  padding: 80px 20px;
+  flex-wrap: wrap;
+}
+
+.card {
+  background: #445066;
+  width: 340px;
+  padding: 28px;
+  border-radius: 18px;
+  box-shadow: 0 12px 28px rgba(0,0,0,0.45);
+  color: #e8edf6;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 16px 36px rgba(0,0,0,0.6);
+}
+
+.card h3 {
+  color: #4fc3f7;
+  margin-top: 0;
+}
+
+.card p {
+  line-height: 1.5;
+}
+
+.card-btn {
+  display: inline-block;
+  margin-top: 18px;
+  padding: 12px 22px;
+  background: #3fd0a5;
+  color: #08342c;
+  text-decoration: none;
+  border-radius: 10px;
+  font-weight: bold;
+  transition: background 0.25s;
+}
+
+.card-btn:hover {
+  background: #2fb892;
+}
+
+/* =========================
+   SUBPAGE STYLING
+   ========================= */
+
+.subpage-main {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 20px;
+}
+
+.back-link {
+  color: #4fc3f7;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
