@@ -1,1 +1,116 @@
+<head>
+  <meta charset="UTF-8">
+  <title>Physics Mythbusters | The Quantum World</title>
+  <link rel="stylesheet" href="style.css">
 
+  <style>
+    /* Title color */
+    header h1 {
+      color: #5a3fa3;
+    }
+
+    /* Remove box styling from selected sections */
+    .no-box {
+      background: none;
+      border: none;
+      box-shadow: none;
+      padding: 0;
+    }
+
+    /* QFT section styling */
+    #qft-container {
+      max-width: 760px;
+      margin: 30px auto;
+      text-align: center;
+    }
+
+    #qft-field {
+      width: 100%;
+      height: 300px;
+      background: #0a0a1a;
+      border-radius: 8px;
+      border: 1px solid #444;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .particle {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: #4cc9f0;
+      border-radius: 50%;
+      opacity: 0;
+    }
+
+    .energy-bar {
+      display: flex;
+      justify-content: space-between;
+      max-width: 200px;
+      margin: 12px auto;
+    }
+
+    .energy-level {
+      width: 40px;
+      height: 15px;
+      background: #333;
+      border-radius: 3px;
+      transition: background 0.3s;
+    }
+
+    .energy-level.active {
+      background: #4cc9f0;
+    }
+
+    button {
+      font-size: 1.2rem;
+      margin: 4px;
+      padding: 6px 10px;
+      border-radius: 4px;
+      border: none;
+      cursor: pointer;
+      background-color: #e68e73;
+      color: white;
+      font-family: inherit;
+    }
+
+    button:hover {
+      background-color: #d65b4f;
+    }
+
+    #explanation {
+      color: #eee;
+      margin-top: 12px;
+      text-align: left;
+      max-width: 760px;
+      margin-left: auto;
+      margin-right: auto;
+      font-family: inherit;
+      font-size: 1rem;
+    }
+
+    /* References section */
+    .references {
+      max-width: 760px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #f4f1fb;
+      border-left: 6px solid #5a3fa3;
+      border-radius: 6px;
+      font-size: 0.95rem;
+    }
+
+    .references h2 {
+      margin-top: 0;
+      color: #5a3fa3;
+    }
+
+    .references ul {
+      padding-left: 20px;
+    }
+
+    .references li {
+      margin-bottom: 8px;
+    }
+  </style>
+</head>
