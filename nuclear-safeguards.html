@@ -56,58 +56,53 @@
       <br><br>
       </p>
     
-<div class="reactor-container">
+<div style="font-family: sans-serif; background: #1e293b; color: white; padding: 20px; border-radius: 12px; width: 100%; max-width: 900px; margin: auto;">
+    <div style="display: flex; gap: 40px; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #475569;">
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+            <label style="font-weight: bold; color: #94a3b8; font-size: 14px;">CONTROL ROD INSERTION</label>
+            <input type="range" min="0" max="100" value="50" id="rodSlider" style="width: 200px; cursor: pointer;">
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 4px;">
+            <label style="font-weight: bold; color: #94a3b8; font-size: 14px;">REACTOR POWER</label>
+            <div><span id="pwr" style="font-size: 24px; color: #fbbf24; font-family: monospace; font-weight: bold;">50</span><span style="color: #fbbf24; font-size: 18px;"> %</span></div>
+        </div>
+    </div>
 
-<style>
-.reactor-container {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 16/9;
-    background: #0f172a;
-    border: 2px solid #334151;
-    overflow: hidden;
-    font-family: 'Segoe UI', Arial, sans-serif;
-}
-.reactor-container canvas { width: 100%; height: 100%; display: block; }
-.reactor-ui {
-    position: absolute; top: 15px; left: 15px;
-    background: rgba(15, 23, 42, 0.95); color: white;
-    padding: 15px; border-radius: 10px; font-size: 14px;
-    border: 1px solid #475569; width: 180px; z-index: 100;
-}
-.reactor-ui input { width: 100%; margin: 8px 0; cursor: pointer; }
-.label-tag { font-weight: bold; color: #94a3b8; text-transform: uppercase; font-size: 11px; }
-</style>
-
-<canvas></canvas>
-
-<div class="reactor-ui">
-    <div class="label-tag">Control Rod Insertion</div>
-    <input type="range" min="0" max="100" value="50" id="rodSlider">
-    <div class="label-tag">Reactor Power</div>
-    <span id="pwr" style="font-size:18px; color:#fbbf24; font-family: monospace;">50</span>%
+    <canvas id="reactorCanvas" style="width: 100%; height: 500px; background: #0f172a; border-radius: 8px;"></canvas>
 </div>
 
 <script>
 (function(){
-    const container = document.currentScript.parentElement;
-    const canvas = container.querySelector("canvas");
+    const canvas = document.getElementById("reactorCanvas");
     const ctx = canvas.getContext("2d");
+    const slider = document.getElementById("rodSlider");
+    const pwrDisplay = document.getElementById("pwr");
 
     let rodLevel = 50;
     let turbineRot = 0;
 
-    container.querySelector("#rodSlider").oninput = function() {
+    slider.oninput = function() {
         rodLevel = parseInt(this.value);
-        container.querySelector("#pwr").innerText = 100 - rodLevel;
+        pwrDisplay.innerText = 100 - rodLevel;
     };
 
     function resize(){
-        canvas.width = container.clientWidth;
-        canvas.height = container.clientHeight;
+        const dpr = window.devicePixelRatio || 1;
+        canvas.width = canvas.offsetWidth * dpr;
+        canvas.height = canvas.offsetHeight * dpr;
+        ctx.scale(dpr, dpr);
     }
-    resize();
     window.addEventListener("resize", resize);
+    resize();
+
+    // Helper to blend colors for the coolant based on power
+    function getCoolantColor(power) {
+        // From Cool Yellow (Power 0) to Hot Orange-Red (Power 100)
+        const r = Math.floor(251 + (power * 0.04)); 
+        const g = Math.floor(191 - (power * 1.5));
+        const b = Math.floor(36 - (power * 0.3));
+        return `rgb(${r}, ${g}, ${b})`;
+    }
 
     function drawArrow(x, y, angle, color) {
         ctx.save();
@@ -115,130 +110,135 @@
         ctx.rotate(angle);
         ctx.fillStyle = color;
         ctx.beginPath();
-        ctx.moveTo(0, 0); ctx.lineTo(-8, -4); ctx.lineTo(-8, 4);
+        ctx.moveTo(8, 0); ctx.lineTo(-4, -6); ctx.lineTo(-4, 6);
         ctx.closePath(); ctx.fill();
         ctx.restore();
     }
 
-    function drawPipe(points, color, width=16) {
-        ctx.strokeStyle = color;
-        ctx.lineWidth = width;
-        ctx.lineJoin = "round";
-        ctx.lineCap = "round";
-        ctx.beginPath();
-        ctx.moveTo(points[0].x, points[0].y);
-        for(let i=1; i<points.length; i++) ctx.lineTo(points[i].x, points[i].y);
-        ctx.stroke();
-    }
-
     function animate() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        const w = canvas.width, h = canvas.height;
+        const w = canvas.width / (window.devicePixelRatio || 1);
+        const h = canvas.height / (window.devicePixelRatio || 1);
+        ctx.clearRect(0, 0, w, h);
+
         let power = 100 - rodLevel;
-        turbineRot += power * 0.06;
+        turbineRot += power * 0.05;
+        const primaryColor = getCoolantColor(power);
 
-        // --- Layout ---
-        const coreX = w*0.08, coreY = h*0.3, coreW = w*0.18, coreH = h*0.5;
-        const genX = w*0.42, genY = h*0.22, genW = w*0.12, genH = h*0.6;
-        const turbX = w*0.75, turbY = h*0.35, turbW = 100, turbH = 100;
-        const condX = w*0.68, condY = h*0.68, condW = w*0.22, condH = h*0.22;
+        // --- Positioning Constants ---
+        const coreX = w * 0.05, coreY = h * 0.35, coreW = 120, coreH = 220;
+        const genX = w * 0.38, genY = h * 0.2, genW = 110, genH = 340;
+        const turbX = w * 0.78, turbY = h * 0.25, turbW = 120, turbH = 100;
+        const condX = w * 0.65, condY = h * 0.65, condW = 220, condH = 120;
 
-        // --- 1. Primary Coolant Loop (Yellow) ---
-        // Connected to top of SG, exits bottom back to Core
-        const primaryPoints = [
-            {x: coreX + coreW, y: genY + 40}, // From Core
-            {x: genX + genW/2, y: genY + 40}, // To Top of SG
-            {x: genX + genW/2, y: genY + genH - 40}, // From Bottom of SG
-            {x: coreX + coreW, y: genY + genH - 40}  // Back to Core
-        ];
-        drawPipe(primaryPoints, "#fbbf24", 18);
-        drawArrow(w*0.3, genY + 40, 0, "#854d0e");
-
-        // --- 2. Core & Steam Gen Backdrop (Yellow) ---
-        ctx.fillStyle = "rgba(251, 191, 36, 0.25)";
-        ctx.beginPath(); ctx.roundRect(coreX, coreY, coreW, coreH, 5); ctx.fill(); // Core Yellow
-        ctx.beginPath(); ctx.roundRect(genX, genY, genW, genH, 15); ctx.fill(); // SG Yellow
-
-        // Core Outlines
-        ctx.strokeStyle = "#475569"; ctx.lineWidth = 2;
-        ctx.strokeRect(coreX, coreY, coreW, coreH);
-        ctx.strokeStyle = "#fbbf24"; ctx.strokeRect(genX, genY, genW, genH);
-
-        // --- 3. Steam Gen Coil (Gradient) ---
-        const coilGrad = ctx.createLinearGradient(genX, genY, genX, genY + genH);
-        coilGrad.addColorStop(0, "#ef4444"); coilGrad.addColorStop(1, "#3b82f6");
+        // --- 1. Primary Coolant Loop ---
+        ctx.lineJoin = "round"; ctx.lineCap = "round";
+        ctx.strokeStyle = primaryColor;
+        ctx.lineWidth = 20;
         
-        ctx.strokeStyle = coilGrad; ctx.lineWidth = 6; ctx.beginPath();
-        ctx.moveTo(genX + genW, genY + 60);
-        for(let i=0; i<8; i++) {
-            let py = genY + 60 + (i*25);
-            let dir = (i % 2 === 0) ? -1 : 1;
-            ctx.lineTo(genX + genW/2 + (dir * genW/4), py);
-            ctx.arc(genX + genW/2 + (dir * genW/4), py + 12.5, 12.5, -Math.PI/2, Math.PI/2, i%2!==0);
-        }
-        ctx.lineTo(genX + genW, genY + genH - 60);
+        ctx.beginPath();
+        // Top Outflow (Core to SG Top)
+        ctx.moveTo(coreX + coreW, coreY + 40);
+        ctx.lineTo(genX + genW/2, coreY + 40);
+        ctx.lineTo(genX + genW/2, genY);
+        // Bottom Inflow (SG Bottom to Core)
+        ctx.moveTo(genX + genW/2, genY + genH);
+        ctx.lineTo(genX + genW/2, coreY + coreH - 40);
+        ctx.lineTo(coreX + coreW, coreY + coreH - 40);
         ctx.stroke();
 
-        // --- 4. Secondary Pipes ---
-        drawPipe([{x: genX+genW, y: genY+60}, {x: turbX - turbW/2, y: genY+60}, {x: turbX - turbW/2, y: turbY}], "#f87171", 10); // Steam
-        drawPipe([{x: turbX, y: turbY + turbH/2}, {x: turbX, y: condY}], "#94a3b8", 10); // Exhaust to Condenser
-        drawPipe([{x: condX, y: condY+condH-30}, {x: genX+genW, y: condY+condH-30}, {x: genX+genW, y: genY+genH-60}], "#3b82f6", 10); // Water
+        // --- 2. Secondary Loop (Steam/Water) ---
+        ctx.lineWidth = 10;
+        // Steam Line (Red)
+        ctx.strokeStyle = "#f87171";
+        ctx.beginPath();
+        ctx.moveTo(genX + genW, genY + 40);
+        ctx.lineTo(turbX - turbW/2, genY + 40);
+        ctx.lineTo(turbX - turbW/2, turbY);
+        ctx.stroke();
+        
+        // Exhaust to Condenser (Grey)
+        ctx.strokeStyle = "#64748b";
+        ctx.beginPath();
+        ctx.moveTo(turbX, turbY + turbH/2);
+        ctx.lineTo(turbX, condY);
+        ctx.stroke();
 
-        // --- 5. Components ---
+        // Feedwater back to SG (Blue)
+        ctx.strokeStyle = "#3b82f6";
+        ctx.beginPath();
+        ctx.moveTo(condX, condY + condH - 30);
+        ctx.lineTo(genX + genW, condY + condH - 30);
+        ctx.lineTo(genX + genW, genY + genH - 40);
+        ctx.stroke();
+
+        // --- 3. Vessels & Components ---
+        // Reactor Core
+        ctx.fillStyle = "#334155";
+        ctx.fillRect(coreX, coreY, coreW, coreH);
+        ctx.strokeStyle = "#94a3b8"; ctx.lineWidth = 2;
+        ctx.strokeRect(coreX, coreY, coreW, coreH);
+
         // Fuel Rods
         ctx.fillStyle = "#f59e0b";
-        for(let i=0; i<3; i++) ctx.fillRect(coreX + 25 + (i*45), coreY + 60, 15, coreH - 120);
+        for(let i=0; i<3; i++) ctx.fillRect(coreX + 20 + (i*35), coreY + 50, 10, coreH - 100);
 
-        // Control Rods
+        // Control Rods (Dynamic Insertion)
         ctx.fillStyle = "#94a3b8";
-        let insertPos = (rodLevel / 100) * (coreH - 160);
+        let insertPos = (rodLevel / 100) * (coreH - 120);
         for(let i=0; i<2; i++) {
-            let rx = coreX + 50 + (i*45);
-            ctx.fillRect(rx, coreY - 40 + insertPos, 10, coreH - 160);
-            ctx.fillRect(rx - 8, coreY - 45 + insertPos, 26, 8);
+            let rx = coreX + 37 + (i*35);
+            ctx.fillRect(rx, coreY - 60 + insertPos, 8, coreH - 120);
+            ctx.fillRect(rx - 6, coreY - 65 + insertPos, 20, 5);
         }
 
-        // Turbine Box
-        ctx.strokeStyle = "#475569"; ctx.lineWidth = 2;
+        // Steam Generator
+        ctx.fillStyle = "rgba(255,255,255,0.05)";
+        ctx.beginPath(); ctx.roundRect(genX, genY, genW, genH, 20); ctx.fill();
+        ctx.strokeStyle = "#94a3b8"; ctx.stroke();
+
+        // Turbine
         ctx.strokeRect(turbX - turbW/2, turbY - turbH/2, turbW, turbH);
-        
-        // Spinning Turbine
         ctx.save(); ctx.translate(turbX, turbY); ctx.rotate(turbineRot);
         ctx.fillStyle = "#cbd5e1";
-        for(let i=0; i<6; i++) { ctx.rotate(Math.PI/3); ctx.fillRect(-3, -35, 6, 70); }
+        for(let i=0; i<4; i++) { ctx.rotate(Math.PI/2); ctx.fillRect(-2, -30, 4, 60); }
         ctx.restore();
 
-        // Condenser & Thick U-Pipes
-        ctx.strokeStyle = "#475569"; ctx.strokeRect(condX, condY, condW, condH);
-        ctx.fillStyle = "rgba(59, 130, 246, 0.15)"; ctx.fillRect(condX, condY, condW, condH);
-        
-        ctx.strokeStyle = "#d1d5db"; ctx.lineWidth = 10;
-        for(let i=0; i<2; i++) {
-            let cy = condY + 35 + (i*65);
-            ctx.beginPath(); ctx.moveTo(condX + condW, cy); ctx.lineTo(condX + 40, cy);
-            ctx.arc(condX + 40, cy + 15, 15, -Math.PI/2, Math.PI/2, true);
-            ctx.lineTo(condX + condW, cy + 30); ctx.stroke();
-            
-            ctx.fillStyle = "white"; ctx.font = "bold 13px Arial";
-            ctx.fillText("COLD WATER IN", condX + condW - 115, cy - 10);
-            ctx.fillText("HOT WATER OUT", condX + condW - 115, cy + 55);
-        }
+        // Condenser
+        ctx.fillStyle = "rgba(59, 130, 246, 0.1)";
+        ctx.fillRect(condX, condY, condW, condH);
+        ctx.strokeRect(condX, condY, condW, condH);
 
-        // --- Labels ---
-        ctx.fillStyle = "#94a3b8"; ctx.font = "bold 15px Arial";
-        ctx.fillText("CONTROL RODS", coreX, coreY - 60);
-        ctx.fillText("FUEL RODS", coreX + 45, coreY + coreH + 30);
-        ctx.fillText("STEAM GENERATOR", genX - 25, genY - 20);
-        ctx.fillText("TURBINE UNIT", turbX - 50, turbY - 65);
-        ctx.fillText("CONDENSER", condX + 40, condY - 15);
-        ctx.fillText("COOLANT LOOP", coreX + coreW + 20, genY + genH - 50);
+        // --- 4. External Cooling (Condenser) ---
+        ctx.lineWidth = 8;
+        // Cold In (Bottom)
+        ctx.strokeStyle = "#3b82f6";
+        ctx.beginPath(); ctx.moveTo(condX + condW + 40, condY + 80); ctx.lineTo(condX + 20, condY + 80); ctx.stroke();
+        drawArrow(condX + 100, condY + 80, Math.PI, "#3b82f6"); 
+        
+        // Hot Out (Top)
+        ctx.strokeStyle = "#ef4444";
+        ctx.beginPath(); ctx.moveTo(condX + 20, condY + 40); ctx.lineTo(condX + condW + 40, condY + 40); ctx.stroke();
+        drawArrow(condX + 150, condY + 40, 0, "#ef4444");
+
+        // --- 5. Labels (Non-Overlapping) ---
+        ctx.fillStyle = "#f8fafc"; ctx.font = "bold 13px sans-serif";
+        ctx.fillText("REACTOR CORE", coreX, coreY - 80);
+        ctx.fillText("CONTROL RODS", coreX, coreY - 10);
+        ctx.fillText("STEAM GENERATOR", genX, genY - 15);
+        ctx.fillText("TURBINE UNIT", turbX - 45, turbY - 65);
+        ctx.fillText("CONDENSER", condX, condY - 15);
+        
+        ctx.font = "11px sans-serif"; ctx.fillStyle = "#94a3b8";
+        ctx.fillText("HOT LEG", genX - 60, coreY + 30);
+        ctx.fillText("COLD LEG", genX - 65, coreY + coreH - 50);
+        ctx.fillText("COLD WATER IN", condX + condW - 90, condY + 98);
+        ctx.fillText("HOT WATER OUT", condX + condW - 90, condY + 30);
 
         requestAnimationFrame(animate);
     }
     animate();
 })();
 </script>
-</div>
     
     
     </div>
