@@ -66,6 +66,7 @@
 }
 .reactor-ui input{ width:160px; }
 .reactor-ui b{ display:block; margin-top:6px; }
+.reactor-ui span.legend { display:inline-block; margin-right:10px; }
 </style>
 
 <canvas></canvas>
@@ -77,8 +78,8 @@
 <b>Reactor Power:</b>
 <span id="powerOutput">50</span>%
 <b>Legend:</b>
-<span style="color:#ef4444;">■ Hot Water</span> 
-<span style="color:#38bdf8;">■ Cold Water</span>
+<span class="legend" style="color:#ef4444;">■ Hot Water</span>
+<span class="legend" style="color:#38bdf8;">■ Cold Water</span>
 </div>
 
 <script>
@@ -141,6 +142,7 @@ function flow(x1,y1,x2,y2,color){
     }
 }
 
+// Reactor Core
 function drawCore(w,h){
     const x=w*0.07, y=h*0.22, cw=w*0.22, ch=h*0.56;
 
@@ -153,12 +155,14 @@ function drawCore(w,h){
     ctx.fillStyle=`rgba(${red},60,160,0.7)`;
     ctx.fillRect(x+6,y+6,cw-12,ch-12);
 
+    // Fuel rods
     ctx.fillStyle="#facc15";
     for(let i=0;i<6;i++){
         let rx=x+cw*0.25+i*(cw*0.08);
         ctx.fillRect(rx,y+ch*0.35,8,ch*0.4);
     }
 
+    // Control rods
     ctx.fillStyle="#cbd5e1";
     let rodTotal=ch*0.4;
     let insertion=(rodLevel/100)*rodTotal;
@@ -176,34 +180,32 @@ function drawCore(w,h){
     ctx.fillText("Control Rods",x+cw*0.25,y+ch*0.18);
 }
 
+// Steam Generator with U-pipes gradient
 function drawSteamGenerator(w,h){
     const x=w*0.38, y=h*0.32, sw=w*0.16, sh=h*0.32;
-
     ctx.strokeStyle="#94a3b8";
     ctx.lineWidth=3;
     ctx.strokeRect(x,y,sw,sh);
 
-    // Draw U-shaped pipes inside generator
     const uCount=3;
-    const uSpacing=sw/(uCount+1);
+    const uWidth=sw*0.2;
+    const uSpacing=sw*0.25;
     for(let i=0;i<uCount;i++){
-        const startX=x+uSpacing*(i+1);
-        const startY=y+10;
-        const endY=y+sh-10;
-        const segments=10;
-        for(let j=0;j<segments;j++){
-            let t=j/segments;
-            let px=startX + Math.sin(t*Math.PI)*20; // U shape
-            let py=startY + t*(endY-startY);
-            let nextT=(j+1)/segments;
-            let nextPx=startX + Math.sin(nextT*Math.PI)*20;
-            let nextPy=startY + nextT*(endY-startY);
-            // gradient from hot red at top to cold blue at bottom
+        let startX=x + uSpacing*(i+1);
+        let topY=y+10;
+        let bottomY=y+sh-10;
+        ctx.lineWidth=6;
+        for(let j=0;j<20;j++){
+            let t=j/20;
+            let px=startX + Math.sin(t*Math.PI)*uWidth;
+            let py=topY + t*(bottomY-topY);
+            let nextT=(j+1)/20;
+            let nextPx=startX + Math.sin(nextT*Math.PI)*uWidth;
+            let nextPy=topY + nextT*(bottomY-topY);
             let r=Math.floor(239*(1-t)+56*t);
             let g=Math.floor(68*(1-t)+189*t);
             let b=Math.floor(68*(1-t)+248*t);
             ctx.strokeStyle=`rgb(${r},${g},${b})`;
-            ctx.lineWidth=5;
             ctx.beginPath();
             ctx.moveTo(px,py);
             ctx.lineTo(nextPx,nextPy);
@@ -215,6 +217,7 @@ function drawSteamGenerator(w,h){
     ctx.fillText("Steam Generator",x,y-10);
 }
 
+// Turbine
 function drawTurbine(w,h){
     const x=w*0.65, y=h*0.5;
     ctx.save();
@@ -226,11 +229,11 @@ function drawTurbine(w,h){
         ctx.fillRect(0,0,35,6);
     }
     ctx.restore();
-
     ctx.fillStyle="white";
     ctx.fillText("Turbine",x-25,y+60);
 }
 
+// Condenser with right-aligned U-pipes
 function drawCondenser(w,h){
     const x=w*0.45, y=h*0.75, cw=w*0.28, ch=h*0.18;
     ctx.strokeStyle="#94a3b8";
@@ -240,33 +243,33 @@ function drawCondenser(w,h){
     ctx.fillRect(x+5,y+5,cw-10,ch-10);
 
     const rows=3;
+    const uTopX=x+cw-10;
+    const uBottomX=x+cw-50;
     const spacing=ch/4;
-
     for(let r=0;r<rows;r++){
-        const topX=x+cw-10; // right edge inside box
-        const topY=y + spacing*(r+1);
-        const bottomX=x+cw-50;
-        const bottomY=topY+20;
+        let topY=y + spacing*(r+1);
+        let bottomY=topY+20;
 
-        // main U pipe light grey
+        // U pipe light grey
         ctx.strokeStyle="#cbd5e1";
-        ctx.lineWidth=3;
+        ctx.lineWidth=5;
         ctx.beginPath();
-        ctx.moveTo(topX,topY);
-        ctx.lineTo(bottomX,topY);
-        ctx.arc(bottomX,topY+10,10,Math.PI*1.5,Math.PI*0.5,true);
-        ctx.lineTo(topX,topY+20);
+        ctx.moveTo(uTopX,topY);
+        ctx.lineTo(uBottomX,topY);
+        ctx.arc(uBottomX,topY+10,10,Math.PI*1.5,Math.PI*0.5,true);
+        ctx.lineTo(uTopX,topY+20);
         ctx.stroke();
 
-        // arrows for cold blue at top, hot red at bottom
-        flow(topX,topY,topX-10,topY,"#38bdf8");
-        flow(topX,topY+20,topX-10,topY+20,"#ef4444");
+        // Arrows cold top, hot bottom
+        flow(uTopX,topY,uTopX-10,topY,"#38bdf8");
+        flow(uTopX,topY+20,uTopX-10,topY+20,"#ef4444");
     }
 
     ctx.fillStyle="white";
     ctx.fillText("Condenser",x+cw*0.3,y-10);
 }
 
+// Pump
 function drawPump(w,h){
     const x=w*0.18, y=h*0.82;
     ctx.save();
@@ -277,12 +280,12 @@ function drawPump(w,h){
     ctx.arc(0,0,18,0,Math.PI*2);
     ctx.fill();
     ctx.restore();
-
     ctx.fillStyle="white";
     ctx.fillText("Pump",x-15,y+35);
     return {x,y};
 }
 
+// Draw pipes and flows
 function drawSystem(){
     const w=canvas.width, h=canvas.height;
     let power=100-rodLevel;
@@ -293,10 +296,10 @@ function drawSystem(){
     flowPos+=3;
 
     const coreOutX=w*0.29, coreOutY=h*0.5;
-    const steamInX=w*0.38, steamInY=h*0.48;
+    const steamInX=w*0.38+sw/2, steamInY=h*0.48;
     const steamOutX=w*0.54, steamOutY=h*0.48;
     const turbX=w*0.65, turbY=h*0.5;
-    const condX=w*0.45, condY=h*0.75;
+    const condX=w*0.45, condY=h*0.75, cw=w*0.28, ch=h*0.18;
     const pumpX=w*0.18, pumpY=h*0.82;
     const coreBottomX=w*0.18, coreBottomY=h*0.75;
 
@@ -308,15 +311,18 @@ function drawSystem(){
     pipe(steamOutX,steamOutY,turbX,turbY);
     flow(steamOutX,steamOutY,turbX,turbY,"orange");
 
-    // Turbine → Condenser (top-left edge)
-    // Pipe for cold water from left edge of condenser to pump
-    const leftCondX = condX + 5;
-    const leftCondY = condY + ch/2;
+    // Turbine → Condenser
+    pipe(turbX,turbY,condX+cw/2,condY+10);
+    flow(turbX,turbY,condX+cw/2,condY+10,"orange");
+
+    // Condenser left edge → Pump (cold water)
+    const leftCondX = condX+5;
+    const leftCondY = condY+ch/2;
     pipe(leftCondX,leftCondY,pumpX,pumpY,"#38bdf8");
     flow(leftCondX,leftCondY,pumpX,pumpY,"#38bdf8");
 
     // Pump → Reactor bottom
-    pipe(pumpX,pumpY,coreBottomX,coreBottomY);
+    pipe(pumpX,pumpY,coreBottomX,coreBottomY,"#38bdf8");
     flow(pumpX,pumpY,coreBottomX,coreBottomY,"#38bdf8");
 }
 
