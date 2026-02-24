@@ -119,8 +119,8 @@ function arrow(x,y,angle,color){
     ctx.restore();
 }
 
-function pipe(x1,y1,x2,y2){
-    ctx.strokeStyle="#64748b";
+function pipe(x1,y1,x2,y2,color){
+    ctx.strokeStyle=color||"#64748b";
     ctx.lineWidth=5;
     ctx.beginPath();
     ctx.moveTo(x1,y1);
@@ -130,7 +130,7 @@ function pipe(x1,y1,x2,y2){
 
 function flow(x1,y1,x2,y2,color){
     for(let i=0;i<4;i++){
-        let t=((flowPos+i*200)%1000)/1000;
+        let t=((flowPos+i*250)%1000)/1000;
         let x=x1+(x2-x1)*t;
         let y=y1+(y2-y1)*t;
         arrow(x,y,Math.atan2(y2-y1,x2-x1),color);
@@ -167,14 +167,13 @@ function drawCore(w,h){
         let rx=x+cw*0.25+i*(cw*0.08);
         let top=y+ch*0.35 - rodTotal + insertion;
         ctx.fillRect(rx-3,top,6,rodTotal);
-
-        ctx.fillStyle="#e2e8f0";
         ctx.fillRect(rx-6,top-8,12,8);
-        ctx.fillStyle="#cbd5e1";
     }
 
     ctx.fillStyle="white";
     ctx.fillText("Reactor Core",x,y-10);
+    ctx.fillText("Fuel Rods",x+cw*0.25,y+ch*0.82);
+    ctx.fillText("Control Rods",x+cw*0.25,y+ch*0.18);
 }
 
 function drawSteamGenerator(w,h){
@@ -188,8 +187,8 @@ function drawSteamGenerator(w,h){
     ctx.lineWidth=3;
     ctx.strokeRect(x,y,sw,sh);
 
-    ctx.strokeStyle="#ef4444";
-    ctx.lineWidth=3;
+    ctx.strokeStyle="#d1d5db";
+    ctx.lineWidth=6;
     ctx.beginPath();
 
     let segments=6;
@@ -225,19 +224,6 @@ function drawTurbine(w,h){
     }
     ctx.restore();
 
-    // Electricity output
-    ctx.strokeStyle="yellow";
-    ctx.lineWidth=3;
-    ctx.beginPath();
-    ctx.moveTo(x+40,y);
-    ctx.lineTo(x+100,y);
-    ctx.stroke();
-
-    arrow(x+100,y,0,"yellow");
-
-    ctx.fillStyle="yellow";
-    ctx.fillText("Electricity",x+110,y+5);
-
     ctx.fillStyle="white";
     ctx.fillText("Turbine",x-25,y+60);
 }
@@ -253,7 +239,6 @@ function drawCondenser(w,h){
     ctx.lineWidth=3;
     ctx.strokeRect(x,y,cw,ch);
 
-    // water surrounding tubes
     ctx.fillStyle="rgba(56,189,248,0.25)";
     ctx.fillRect(x+5,y+5,cw-10,ch-10);
 
@@ -267,15 +252,17 @@ function drawCondenser(w,h){
         let ty=y+spacing*(r+1);
 
         ctx.beginPath();
-        ctx.moveTo(x+cw-20,ty);
+        ctx.moveTo(x+cw-40,ty);
         ctx.lineTo(x+40,ty);
         ctx.arc(x+40,ty+10,10,Math.PI*1.5,Math.PI*0.5,true);
-        ctx.lineTo(x+cw-20,ty+20);
+        ctx.lineTo(x+cw-40,ty+20);
         ctx.stroke();
 
-        // connect right side
-        pipe(x+cw,ty+10,x+cw+30,ty+10);
-        flow(x+cw+30,ty+10,x+cw,ty+10,"#38bdf8");
+        pipe(x+cw-40,ty,x+cw,ty,"#38bdf8");
+        pipe(x+cw-40,ty+20,x+cw,ty+20,"#ef4444");
+
+        flow(x+cw,ty,x+cw-40,ty,"#38bdf8");      // cold in
+        flow(x+cw-40,ty+20,x+cw,ty+20,"#ef4444"); // hot out
     }
 
     ctx.fillStyle="white";
@@ -311,8 +298,8 @@ function drawSystem(){
     powerText.innerText=power;
 
     turbineRotation+=power*0.001;
-    pumpRotation+=power*0.0015;
-    flowPos+=2+power*0.03;
+    pumpRotation+=power*0.001;
+    flowPos+=3; // unified water speed
 
     const coreOutX=w*0.29, coreOutY=h*0.5;
     const steamInX=w*0.38, steamInY=h*0.48;
@@ -321,8 +308,6 @@ function drawSystem(){
     const turbX=w*0.65, turbY=h*0.5;
 
     const downX=w*0.65, downY=h*0.75;
-    const condLeftX=w*0.45, condLeftY=h*0.84;
-
     const pumpX=w*0.18, pumpY=h*0.82;
     const coreBottomX=w*0.18, coreBottomY=h*0.75;
 
@@ -335,11 +320,8 @@ function drawSystem(){
     pipe(turbX,turbY,downX,downY);
     flow(turbX,turbY,downX,downY,"orange");
 
-    pipe(downX,downY,condLeftX,condLeftY);
-    flow(downX,downY,condLeftX,condLeftY,"orange");
-
-    pipe(condLeftX,condLeftY,pumpX,pumpY);
-    flow(condLeftX,condLeftY,pumpX,pumpY,"#38bdf8");
+    pipe(downX,downY,pumpX,pumpY);
+    flow(downX,downY,pumpX,pumpY,"#38bdf8");
 
     pipe(pumpX,pumpY,coreBottomX,coreBottomY);
     flow(pumpX,pumpY,coreBottomX,coreBottomY,"#38bdf8");
@@ -364,7 +346,6 @@ animate();
 </script>
 
 </div>
-  
   <br><br>
 
   <p>
