@@ -1,126 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Physics Mythbusters | The Quantum World</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<title>Physics Mythbusters | The Quantum World</title>
 
-  <style>
-    /* Title color */
-    header h1 {
-      color: #5a3fa3;
-    }
-
-    /* Remove box styling from selected sections */
-    .no-box {
-      background: none;
-      border: none;
-      box-shadow: none;
-      padding: 0;
-    }
-
-    /* QFT section styling */
-    #qft-container {
-      max-width: 760px;
-      margin: 30px auto;
-      text-align: center;
-    }
-
-    #qft-field {
-      width: 100%;
-      height: 300px;
-      background: #0a0a1a;
-      border-radius: 8px;
-      border: 1px solid #444;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .particle {
-      position: absolute;
-      width: 6px;
-      height: 6px;
-      background: #4cc9f0;
-      border-radius: 50%;
-      opacity: 0;
-    }
-
-    .energy-bar {
-      display: flex;
-      justify-content: space-between;
-      max-width: 200px;
-      margin: 12px auto;
-    }
-
-    .energy-level {
-      width: 40px;
-      height: 15px;
-      background: #333;
-      border-radius: 3px;
-      transition: background 0.3s;
-    }
-
-    .energy-level.active {
-      background: #4cc9f0;
-    }
-
-    button {
-      font-size: 1.2rem;
-      margin: 4px;
-      padding: 6px 10px;
-      border-radius: 4px;
-      border: none;
-      cursor: pointer;
-      background-color: #e68e73;
-      color: white;
-      font-family: inherit;
-    }
-
-    button:hover {
-      background-color: #d65b4f;
-    }
-
-    #explanation {
-      color: #eee;
-      margin-top: 12px;
-      text-align: left;
-      max-width: 760px;
-      margin-left: auto;
-      margin-right: auto;
-      font-family: inherit;
-      font-size: 1rem;
-    }
-
-    /* References section */
-    .references {
-      max-width: 760px;
-      margin: 40px auto;
-      padding: 20px;
-      background: #f4f1fb;
-      border-left: 6px solid #5a3fa3;
-      border-radius: 6px;
-      font-size: 0.95rem;
-    }
-
-    .references h2 {
-      margin-top: 0;
-      color: #5a3fa3;
-    }
-
-    .references ul {
-      padding-left: 20px;
-    }
-
-    .references li {
-      margin-bottom: 8px;
-    }
-  </style>
+<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
 <header>
   <h1>Physics Mythbusters</h1>
+
   <nav>
     <a href="index.html">Home</a>
     <a href="Climate.html">Climate Change</a>
@@ -131,160 +22,37 @@
   </nav>
 </header>
 
-<!-- FIRST SECTION (no box) -->
-<section class="feature no-box">
-  <h2>The invention of Ibupro-spin: the misuse of quantum physics in alternative medicine</h2>
-  <img src="images/image_2026-02-24_100537251.png" alt="Quantum topic image placeholder">
-  <p style="margin-bottom: 40px;">
-    Since the growing development of the field of quantum physics, a multitude of “medical professionals” and self-help gurus have jumped onboard, proclaiming the secret quantum world that we must tap into in order that we may become prosperous and free from disease. Yet, their claims are riddled with pseudoscience and ignorance of the actual field.
-  </p>
-  <p>
-    This article aims to discuss the issue, and offer some explanations to what quantum physics really is, so that you, the reader, may better realise the errors of quantum quackery.
-  </p>
-</section>
+<section class="cards-section">
 
-<section class="feature">
-  <h2>The invention of Ibupro-spin: the misuse of quantum physics in alternative medicine</h2>
-  <div class="video-container">
-    <iframe width="560" height="315"
-      src="https://www.youtube.com/embed/pGw0h-44WvM"
-      title="The invention of Ibupro-spin"
-      frameborder="0"
-      allowfullscreen>
-    </iframe>
-  </div>
-</section>
+  <div class="card">
+    <h3>Quantum Mechanics</h3>
+    <p>
+      Explore the origins of quantum physics, Planck’s discovery,
+      wavefunctions, uncertainty, and the foundations of modern theory.
+    </p>
 
-<!-- DEMYSTIFYING SECTION (no box) -->
-<section class="feature no-box">
-  <h2>De-mystifying Quantum Physics</h2>
-  <p>Quantum Physics is something that is not that accessible to most of the public for many reasons. Here, however, we hope to clarify particular concepts in the form of analogies.</p>
-  <p style="margin-bottom: 40px;">To be quite frank, many concepts are abused.</p>
-  <p>But based on what Richard Feynman once famously said, the best thing you can do is to shut up and calculate.</p>
-  <img src="images/RichardFeynman.jpg" alt="Richard Feynman image placeholder" width="400" height="200">
-</section>
-
-<!-- ORIGIN SECTION (no box) -->
-<section class="feature no-box">
-  <h2>Where does Quantum Physics come from?</h2>
-  <figure>
-    <img src="images/Picture1.png" alt="Evolution from classical to quantum physics placeholder">
-    <figcaption>Fig 1—The evolution from classical to quantum physics</figcaption>
-  </figure>
-  <p>Quantum Physics as a framework arose after classical theories could not explain microscopic phenomena.</p>
-  <p>Max Planck introduced discrete energy packets — quanta — laying the foundation of quantum mechanics.</p>
-</section>
-
-<!-- QFT SECTION (no box) -->
-<section class="feature no-box">
-  <h2>Quantum Fields</h2>
-  <p>Quantum fields are not mystical energy sources. They are abstract mathematical constructs forming Quantum Field Theory.</p>
-  <p>Disturbances in fields manifest as particles.</p>
-</section>
-
-<!-- INTERACTIVE SECTION -->
-<section class="feature">
-  <h2>Interactive Quantum Field</h2>
-  <p>Adjust the energy level to see more intense vacuum fluctuations.</p>
-
-  <div id="qft-container">
-    <div id="qft-field"></div>
-
-    <div class="energy-bar" id="energyBar">
-      <div class="energy-level" id="level0"></div>
-      <div class="energy-level" id="level1"></div>
-      <div class="energy-level" id="level2"></div>
-      <div class="energy-level" id="level3"></div>
-    </div>
-
-    <div>
-      <button onclick="lowerEnergy()">↓</button>
-      <button onclick="raiseEnergy()">↑</button>
-    </div>
-
-    <div id="explanation"></div>
+    <a href="QuantumMechanics.html" class="card-btn">
+      Learn more
+    </a>
   </div>
 
-  <script>
-    const levels = 4;
-    let energy = 0;
-    const explanation = document.getElementById("explanation");
-    const field = document.getElementById("qft-field");
+  <div class="card">
+    <h3>Quantum Field Theory</h3>
+    <p>
+      Discover how fields replace particles as the fundamental entities,
+      and how virtual particles arise from quantum fluctuations.
+    </p>
 
-    const particles = [];
-    const maxParticles = 30;
+    <a href="QuantumFieldTheory.html" class="card-btn">
+      Learn more
+    </a>
+  </div>
 
-    function createParticle() {
-      const p = document.createElement('div');
-      p.className = 'particle';
-      p.style.left = Math.random() * field.offsetWidth + 'px';
-      p.style.top = Math.random() * field.offsetHeight + 'px';
-      field.appendChild(p);
-      particles.push({ el: p, lifetime: 0 });
-    }
-
-    function updateParticles() {
-      particles.forEach((p, idx) => {
-        p.lifetime += 1 + energy * 0.5;
-        p.el.style.opacity = Math.sin(p.lifetime / 5);
-        if (p.lifetime > 60) {
-          p.el.remove();
-          particles.splice(idx, 1);
-        }
-      });
-
-      while (particles.length < maxParticles + energy * 5) {
-        createParticle();
-      }
-
-      requestAnimationFrame(updateParticles);
-    }
-
-    function updateEnergyBar() {
-      for (let i = 0; i < levels; i++) {
-        document.getElementById('level' + i)
-          .classList.toggle('active', i <= energy);
-      }
-    }
-
-    function explain(msg) {
-      explanation.innerHTML = msg;
-    }
-
-    function raiseEnergy() {
-      if (energy < levels - 1) energy++;
-      updateEnergyBar();
-      explain(`Energy raised to level ${energy}.`);
-    }
-
-    function lowerEnergy() {
-      if (energy > 0) energy--;
-      updateEnergyBar();
-      explain(`Energy lowered to level ${energy}.`);
-    }
-
-    updateEnergyBar();
-    explain("Vacuum Mode: animated virtual particles.");
-    updateParticles();
-  </script>
 </section>
 
-<!-- CONCLUSION -->
-<section class="feature">
-  <h2>Conclusion</h2>
-  <p>Quantum physics is not mystical — it is mathematics making precise predictions about nature.</p>
-</section>
-
-<!-- REFERENCES -->
-<section class="references">
-  <h2>References</h2>
-  <ul>
-    <li>Planck, M. (1901). On the Law of Distribution of Energy in the Normal Spectrum.</li>
-    <li>Dirac, P. A. M. (1928). The Quantum Theory of the Electron.</li>
-    <li>Feynman, R. P. (1965). QED: The Strange Theory of Light and Matter.</li>
-    <li>Griffiths, D. (2018). Introduction to Quantum Mechanics.</li>
-  </ul>
-</section>
+<footer>
+  <p>© 2026 Physics Mythbusters</p>
+</footer>
 
 </body>
 </html>
