@@ -10,7 +10,7 @@ body {
 /* --- HEADER --- */
 header {
   background: #5a3fa3;         /* slightly darker purple */
-  padding: 10px 20px;
+  padding: 10px 10px;
   text-align: center;
   box-shadow: 0 4px 10px rgba(0,0,0,0.3);
   position: sticky;
@@ -214,10 +214,9 @@ header nav a:hover::after {
 footer {
   background: #5a3fa3;          /* same as header */
   text-align: center;
-  padding: 25px 20px;
+  padding: 10px 20px;
   color: #e5e7eb;
-  margin-top: 30px;
-}
+  margin-top: 15px;}
 
 /* --- QUIZ --- */
 .quiz {
