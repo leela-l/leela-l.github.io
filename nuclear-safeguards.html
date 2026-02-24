@@ -44,39 +44,29 @@
     position: relative;
     width: 100%;
     aspect-ratio: 16/9;
-    background: #111827;
-    border: 2px solid #374151;
+    background: #0f172a;
+    border: 2px solid #334155;
     overflow: hidden;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Segoe UI', sans-serif;
 }
 .reactor-container canvas { width: 100%; height: 100%; display: block; }
 .reactor-ui {
-    position: absolute; top: 15px; right: 15px;
-    background: rgba(31, 41, 55, 0.95); color: white;
-    padding: 16px; border-radius: 12px; font-size: 13px;
-    border: 1px solid #4b5563; backdrop-filter: blur(8px);
-    width: 200px;
+    position: absolute; top: 10px; right: 10px;
+    background: rgba(15, 23, 42, 0.9); color: white;
+    padding: 12px; border-radius: 8px; font-size: 12px;
+    border: 1px solid #475569; width: 180px; z-index: 10;
 }
-.reactor-ui input { width: 100%; margin: 10px 0; cursor: pointer; }
-.label-box { font-weight: bold; color: #9ca3af; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; }
-.stat-val { font-family: monospace; font-size: 16px; color: #60a5fa; }
+.reactor-ui input { width: 100%; margin: 5px 0; cursor: pointer; }
+.label-box { font-weight: bold; color: #94a3b8; font-size: 10px; text-transform: uppercase; }
 </style>
 
 <canvas></canvas>
 
 <div class="reactor-ui">
     <div class="label-box">Control Rod Insertion</div>
-    <span class="stat-val" id="rodPercent">50</span>%<br>
+    <span id="rodPercent">50</span>%<br>
     <input type="range" min="0" max="100" value="50" id="rodSlider">
-    
-    <div style="margin-top:10px;">
-        <div class="label-box">Reactor Power</div>
-        <span class="stat-val" id="powerOutput">50</span>%
-    </div>
-    <div style="margin-top:10px;">
-        <div class="label-box">Primary Temp</div>
-        <span class="stat-val" id="tempOutput">300</span>°C
-    </div>
+    <div class="label-box">Power: <span id="powerOutput" style="color:#60a5fa">50</span>%</div>
 </div>
 
 <script>
@@ -95,216 +85,139 @@
     const slider = container.querySelector("#rodSlider");
     const rodText = container.querySelector("#rodPercent");
     const powerText = container.querySelector("#powerOutput");
-    const tempText = container.querySelector("#tempOutput");
 
     let rodLevel = 50;
     let flowPos = 0;
     let turbineRot = 0;
-    let pumpRot = 0;
 
     slider.oninput = function() {
         rodLevel = parseInt(this.value);
         rodText.innerText = rodLevel;
     };
 
-    function drawPipe(points, color, width = 12) {
-        ctx.strokeStyle = "#1f2937"; // Border
-        ctx.lineWidth = width + 4;
-        ctx.lineJoin = "round";
-        ctx.lineCap = "round";
-        ctx.beginPath();
-        ctx.moveTo(points[0].x, points[0].y);
+    function drawPipe(points, color, width = 10) {
+        ctx.strokeStyle = "#1e293b"; ctx.lineWidth = width + 4;
+        ctx.beginPath(); ctx.moveTo(points[0].x, points[0].y);
         for(let i=1; i<points.length; i++) ctx.lineTo(points[i].x, points[i].y);
         ctx.stroke();
 
-        ctx.strokeStyle = color; // Main Pipe
-        ctx.lineWidth = width;
-        ctx.beginPath();
-        ctx.moveTo(points[0].x, points[0].y);
+        ctx.strokeStyle = color; ctx.lineWidth = width;
+        ctx.beginPath(); ctx.moveTo(points[0].x, points[0].y);
         for(let i=1; i<points.length; i++) ctx.lineTo(points[i].x, points[i].y);
         ctx.stroke();
-    }
-
-    function drawFlow(points, color, speed) {
-        let totalLen = 0;
-        for(let i=0; i<points.length-1; i++) {
-            totalLen += Math.hypot(points[i+1].x - points[i].x, points[i+1].y - points[i].y);
-        }
-
-        for(let j=0; j<4; j++) {
-            let offset = (flowPos * speed + (j * (totalLen/4))) % totalLen;
-            let currentLen = 0;
-            for(let i=0; i<points.length-1; i++) {
-                let segmentLen = Math.hypot(points[i+1].x - points[i].x, points[i+1].y - points[i].y);
-                if(currentLen + segmentLen >= offset) {
-                    let localT = (offset - currentLen) / segmentLen;
-                    let x = points[i].x + (points[i+1].x - points[i].x) * localT;
-                    let y = points[i].y + (points[i+1].y - points[i].y) * localT;
-                    
-                    ctx.fillStyle = color;
-                    ctx.beginPath();
-                    ctx.arc(x, y, 3, 0, Math.PI*2);
-                    ctx.fill();
-                    break;
-                }
-                currentLen += segmentLen;
-            }
-        }
-    }
-
-    function drawPump(x, y, color) {
-        ctx.save();
-        ctx.translate(x, y);
-        ctx.rotate(pumpRot);
-        ctx.fillStyle = "#374151";
-        ctx.beginPath(); ctx.arc(0, 0, 15, 0, Math.PI*2); ctx.fill();
-        ctx.strokeStyle = "#9ca3af"; ctx.lineWidth = 2; ctx.stroke();
-        ctx.fillStyle = "#9ca3af";
-        for(let i=0; i<3; i++) {
-            ctx.rotate((Math.PI*2)/3);
-            ctx.fillRect(-2, -12, 4, 10);
-        }
-        ctx.restore();
     }
 
     function animate() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         const w = canvas.width, h = canvas.height;
         let power = 100 - rodLevel;
-        let pSpeed = (power * 0.05) + 1;
-        flowPos += 2 * pSpeed;
-        turbineRot += power * 0.03;
-        pumpRot += 0.1 * pSpeed;
-
+        flowPos += (1 + power * 0.08);
+        turbineRot += power * 0.04;
         powerText.innerText = power;
-        tempText.innerText = 150 + (power * 3);
 
         // --- COORDINATES ---
-        const coreX = w*0.1, coreY = h*0.25, coreW = w*0.18, coreH = h*0.55;
-        const genX = w*0.45, genY = h*0.3, genW = w*0.12, genH = h*0.45;
-        const turbX = w*0.75, turbY = h*0.35, turbW = 80;
-        const condX = w*0.7, condY = h*0.65, condW = w*0.18, condH = h*0.18;
+        const coreX = w*0.08, coreY = h*0.25, coreW = w*0.16, coreH = h*0.5;
+        const genX = w*0.38, genY = h*0.3, genW = w*0.1, genH = h*0.45;
+        const turbX = w*0.65, turbY = h*0.35;
+        const condX = w*0.6, condY = h*0.65, condW = w*0.18, condH = h*0.2;
 
-        // --- PRIMARY LOOP (Core to Steam Gen) ---
-        const hotLeg = [
-            {x: coreX + coreW, y: coreY + 80},
-            {x: genX - 40, y: coreY + 80},
-            {x: genX - 40, y: genY + 20},
-            {x: genX, y: genY + 20}
-        ];
-        const coldLeg = [
-            {x: genX, y: genY + genH - 20},
-            {x: genX - 40, y: genY + genH - 20},
-            {x: genX - 40, y: coreY + coreH - 80},
-            {x: coreX + coreW, y: coreY + coreH - 80}
-        ];
-        drawPipe(hotLeg, "#fca5a5");
-        drawPipe(coldLeg, "#93c5fd");
-        drawFlow(hotLeg, "#ef4444", 1);
-        drawFlow(coldLeg, "#3b82f6", 1);
-        drawPump(genX - 40, h*0.8, "#9ca3af");
+        // --- PIPING: STEAM LOOP ---
+        // 1. Steam Gen Top to Turbine
+        drawPipe([
+            {x: genX + genW, y: genY + 30},
+            {x: turbX - 30, y: genY + 30},
+            {x: turbX - 30, y: turbY}
+        ], "#fca5a5", 8);
 
-        // --- SECONDARY LOOP (Steam Gen to Turbine) ---
-        const steamLeg = [
-            {x: genX + genW, y: genY + 60},
-            {x: turbX - 20, y: genY + 60},
-            {x: turbX - 20, y: turbY}
-        ];
-        const returnLeg = [
-            {x: condX + 20, y: condY + condH},
-            {x: condX + 20, y: h*0.85},
-            {x: genX + genW/2, y: h*0.85},
+        // 2. Turbine to Condenser
+        drawPipe([
+            {x: turbX, y: turbY + 20},
+            {x: turbX, y: condY}
+        ], "#94a3b8", 8);
+
+        // 3. Condenser to Steam Gen Bottom
+        drawPipe([
+            {x: condX, y: condY + condH - 30},
+            {x: genX + genW/2, y: condY + condH - 30},
             {x: genX + genW/2, y: genY + genH}
-        ];
-        drawPipe(steamLeg, "#cbd5e1", 10);
-        drawPipe(returnLeg, "#60a5fa", 10);
-        drawFlow(steamLeg, "#f8fafc", 1.5);
-        drawFlow(returnLeg, "#2563eb", 1.2);
-        drawPump(genX + genW/2, h*0.85, "#9ca3af");
+        ], "#60a5fa", 8);
+
+        // --- PIPING: PRIMARY LOOP ---
+        drawPipe([{x: coreX+coreW, y: coreY+60}, {x: genX, y: genY+60}], "#ef4444");
+        drawPipe([{x: genX, y: genY+genH-60}, {x: coreX+coreW, y: coreY+coreH-60}], "#3b82f6");
 
         // --- COMPONENTS ---
         
-        // Shielding
-        ctx.fillStyle = "#374151";
-        ctx.beginPath();
-        ctx.roundRect(coreX - 20, coreY - 20, coreW + 40, coreH + 40, [80, 80, 0, 0]);
-        ctx.fill();
-
-        // Core
-        ctx.fillStyle = "#1f2937";
-        ctx.fillRect(coreX, coreY, coreW, coreH);
+        // Reactor Core
+        ctx.strokeStyle = "#475569"; ctx.lineWidth = 3;
+        ctx.strokeRect(coreX, coreY, coreW, coreH);
         
-        // Glow
-        let glow = ctx.createRadialGradient(coreX+coreW/2, coreY+coreH/2, 10, coreX+coreW/2, coreY+coreH/2, coreW);
-        glow.addColorStop(0, `rgba(239, 68, 68, ${power/150})`);
-        glow.addColorStop(1, "transparent");
-        ctx.fillStyle = glow;
-        ctx.fillRect(coreX, coreY, coreW, coreH);
-
-        // Control Rods
-        const rodW = 10;
-        const rodGap = coreW / 4;
-        for(let i=1; i<=3; i++){
-            let rx = coreX + (i * rodGap) - rodW/2;
-            // Rod Housing
-            ctx.fillStyle = "#4b5563";
-            ctx.fillRect(rx-2, coreY - 40, rodW+4, 40);
-            // The Rod
-            ctx.fillStyle = "#9ca3af";
-            let rodPos = (rodLevel / 100) * (coreH * 0.7);
-            ctx.fillRect(rx, coreY - 30 + rodPos, rodW, coreH * 0.7);
-            // T-Top
-            ctx.fillRect(rx - 5, coreY - 35 + rodPos, rodW + 10, 5);
+        // Fuel Rods (Static)
+        ctx.fillStyle = "#facc15";
+        for(let i=0; i<3; i++) {
+            ctx.fillRect(coreX + 25 + (i*35), coreY + 50, 12, coreH - 100);
         }
 
-        // Steam Generator & U-Bends
-        ctx.fillStyle = "#374151";
-        ctx.beginPath(); ctx.roundRect(genX, genY, genW, genH, 20); ctx.fill();
+        // Control Rods (Dynamic - Max insertion stays in core)
+        ctx.fillStyle = "#94a3b8";
+        let insertion = (rodLevel / 100) * (coreH - 80);
+        for(let i=0; i<3; i++) {
+            let rx = coreX + 28 + (i*35);
+            ctx.fillRect(rx - 2, coreY - 20 + insertion, 8, coreH - 80);
+            ctx.fillRect(rx - 8, coreY - 25 + insertion, 20, 5); // T-Top
+        }
+
+        // Steam Generator
+        ctx.fillStyle = "#1e293b";
+        ctx.beginPath(); ctx.roundRect(genX, genY, genW, genH, 15); ctx.fill();
+        ctx.strokeStyle = "#475569"; ctx.stroke();
         
-        const grad = ctx.createLinearGradient(genX, genY, genX, genY + genH);
+        // Internal U-Bends (Steam Gen)
+        const grad = ctx.createLinearGradient(genX, genY, genX, genY+genH);
         grad.addColorStop(0, "#ef4444"); grad.addColorStop(1, "#3b82f6");
-        ctx.strokeStyle = grad; ctx.lineWidth = 4; ctx.beginPath();
-        for(let i=0; i<6; i++) {
-            let uy = genY + 40 + (i*25);
-            ctx.moveTo(genX + 20, uy);
-            ctx.bezierCurveTo(genX + genW + 20, uy, genX + genW + 20, uy + 15, genX + 20, uy + 15);
+        ctx.strokeStyle = grad; ctx.lineWidth = 4;
+        ctx.beginPath();
+        for(let i=0; i<5; i++) {
+            let uy = genY + 30 + (i*30);
+            ctx.moveTo(genX + 15, uy);
+            ctx.bezierCurveTo(genX+genW+15, uy, genX+genW+15, uy+15, genX+15, uy+15);
         }
         ctx.stroke();
 
         // Turbine
-        ctx.fillStyle = "#4b5563";
-        ctx.fillRect(turbX - 40, turbY - 30, 80, 60);
         ctx.save();
         ctx.translate(turbX, turbY);
         ctx.rotate(turbineRot);
-        ctx.fillStyle = "#d1d5db";
-        for(let i=0; i<4; i++){
-            ctx.rotate(Math.PI/2);
-            ctx.beginPath(); ctx.ellipse(0, 0, 5, 25, 0, 0, Math.PI*2); ctx.fill();
+        ctx.fillStyle = "#cbd5e1";
+        for(let i=0; i<6; i++) {
+            ctx.rotate(Math.PI/3); ctx.fillRect(-2, -25, 4, 50);
         }
         ctx.restore();
 
-        // Condenser (Light Grey Pipes)
-        ctx.fillStyle = "#1f2937";
-        ctx.strokeRect(condX, condY, condW, condH);
-        ctx.fillStyle = "rgba(59, 130, 246, 0.2)";
-        ctx.fillRect(condX, condY + condH/2, condW, condH/2);
+        // Condenser (Flipped U-Bends touching right side)
+        ctx.strokeStyle = "#475569"; ctx.strokeRect(condX, condY, condW, condH);
+        ctx.fillStyle = "rgba(59, 130, 246, 0.1)"; ctx.fillRect(condX, condY, condW, condH);
         
-        ctx.strokeStyle = "#d1d5db"; // Light Grey as requested
-        ctx.lineWidth = 4;
+        ctx.strokeStyle = "#d1d5db"; ctx.lineWidth = 3;
         for(let i=0; i<3; i++) {
-            let cy = condY + 20 + (i*20);
-            ctx.beginPath(); ctx.moveTo(condX + 20, cy); ctx.lineTo(condX + condW - 20, cy);
-            ctx.arc(condX + condW - 20, cy+5, 5, -Math.PI/2, Math.PI/2);
-            ctx.lineTo(condX + 20, cy + 10); ctx.stroke();
+            let cy = condY + 20 + (i*40);
+            // Cold in (Top)
+            ctx.strokeStyle = "#60a5fa";
+            ctx.beginPath(); ctx.moveTo(condX + condW, cy); ctx.lineTo(condX + 40, cy); ctx.stroke();
+            // Curve
+            ctx.beginPath(); ctx.arc(40 + condX, cy+10, 10, -Math.PI/2, Math.PI/2, true); ctx.stroke();
+            // Hot out (Bottom)
+            ctx.strokeStyle = "#f87171";
+            ctx.beginPath(); ctx.moveTo(condX + 40, cy + 20); ctx.lineTo(condX + condW, cy + 20); ctx.stroke();
         }
 
-        // Labels
-        ctx.fillStyle = "#9ca3af";
-        ctx.font = "bold 10px Arial";
-        ctx.fillText("REACTOR CORE", coreX, coreY - 50);
-        ctx.fillText("STEAM GENERATOR", genX, genY - 15);
-        ctx.fillText("TURBINE", turbX - 25, turbY - 45);
+        // --- LABELS ---
+        ctx.fillStyle = "#94a3b8"; ctx.font = "bold 9px Arial";
+        ctx.fillText("FUEL RODS", coreX + 5, coreY + coreH + 15);
+        ctx.fillText("CONTROL RODS", coreX + 5, coreY - 30);
+        ctx.fillText("COOLANT (PRIMARY)", coreX + coreW + 10, coreY + 55);
+        ctx.fillText("STEAM GENERATOR", genX, genY - 10);
+        ctx.fillText("TURBINE", turbX - 20, turbY - 40);
         ctx.fillText("CONDENSER", condX, condY - 10);
 
         requestAnimationFrame(animate);
