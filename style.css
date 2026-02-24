@@ -798,6 +798,9 @@ font-weight: bold;
 /* Tidy text spacing */
 .feature-home h2 {
   margin-top: 5px;
+  color: #38bdf8;              /* bright turquoise titles */
+  font-size: 2em;
+  margin-bottom: 15px;
 }
 
 .feature-home p {
