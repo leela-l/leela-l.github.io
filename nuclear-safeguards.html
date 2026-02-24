@@ -61,6 +61,15 @@
     font-size:14px;
 }
 .reactor-ui input{ width:160px; }
+.label{
+    font-size:14px;
+    font-weight:bold;
+    fill:#111;
+}
+.loop-label{
+    font-size:13px;
+    fill:#555;
+}
 </style>
 
 <canvas></canvas>
@@ -94,37 +103,34 @@ const powerText=container.querySelector("#powerOutput");
 let rodLevel=50;
 let turbineRotation=0;
 let pumpRotation=0;
-let arrowOffset=0;
+let flowOffset=0;
 
 slider.oninput=function(){
     rodLevel=parseInt(this.value);
     rodText.innerText=rodLevel;
 };
 
-function drawArrow(x,y,angle,color){
+function arrow(x,y,angle,color){
     ctx.save();
     ctx.translate(x,y);
     ctx.rotate(angle);
     ctx.fillStyle=color;
     ctx.beginPath();
     ctx.moveTo(0,0);
-    ctx.lineTo(-10,-5);
-    ctx.lineTo(-10,5);
+    ctx.lineTo(-12,-6);
+    ctx.lineTo(-12,6);
     ctx.closePath();
     ctx.fill();
     ctx.restore();
 }
 
 function drawCore(w,h){
-
-    const cx=w*0.22;
-    const cy=h*0.5;
-    const cw=w*0.25;
+    const x=w*0.08;
+    const y=h*0.2;
+    const cw=w*0.22;
     const ch=h*0.6;
-    const x=cx-cw/2;
-    const y=cy-ch/2;
 
-    ctx.strokeStyle="#555";
+    ctx.strokeStyle="#444";
     ctx.lineWidth=3;
     ctx.strokeRect(x,y,cw,ch);
 
@@ -134,9 +140,12 @@ function drawCore(w,h){
     ctx.fillStyle=`rgb(${red},160,255)`;
     ctx.fillRect(x+cw*0.1,y+ch*0.1,cw*0.8,ch*0.8);
 
+    ctx.fillStyle="#000";
+    ctx.fillText("Reactor Core",x,y-10);
+
     const rodCount=4;
     const spacing=cw/(rodCount+1);
-    const fuelW=cw*0.06;
+    const fuelW=cw*0.05;
     const fuelH=ch*0.5;
     const fuelTop=y+ch*0.25;
 
@@ -158,7 +167,6 @@ function drawCore(w,h){
             ctx.fillRect(rx,fuelTop-exposed,fuelW,exposed);
         }
 
-        // Individual cap
         ctx.fillStyle="#777";
         ctx.fillRect(rx-2,fuelTop-exposed-8,fuelW+4,8);
         ctx.fillStyle="#333";
@@ -166,144 +174,136 @@ function drawCore(w,h){
 }
 
 function drawSteamGenerator(w,h){
+    const x=w*0.4;
+    const y=h*0.25;
+    const sw=w*0.18;
+    const sh=h*0.45;
 
-    const gx=w*0.5;
-    const gy=h*0.3;
-    const gw=w*0.18;
-    const gh=h*0.45;
+    ctx.strokeRect(x,y,sw,sh);
+    ctx.fillText("Steam Generator",x,y-10);
 
-    ctx.strokeStyle="#444";
-    ctx.strokeRect(gx,gy,gw,gh);
-
-    let loops=6;
-    let start=gy+gh*0.15;
-    let space=(gh*0.7)/loops;
-
-    for(let i=0;i<loops;i++){
-        let t=i/loops;
+    for(let i=0;i<6;i++){
+        let t=i/6;
         let r=255-(t*200);
         let b=50+(t*200);
         ctx.strokeStyle=`rgb(${r},50,${b})`;
         ctx.lineWidth=4;
-
         ctx.beginPath();
-        ctx.moveTo(gx+gw*0.2,start+i*space);
-        ctx.bezierCurveTo(
-            gx+gw*0.5,start+i*space+space/2,
-            gx+gw*0.5,start+i*space+space/2,
-            gx+gw*0.8,start+(i+1)*space
-        );
+        ctx.moveTo(x+sw*0.2,y+sh*0.15+i*sh*0.1);
+        ctx.lineTo(x+sw*0.8,y+sh*0.2+i*sh*0.1);
         ctx.stroke();
     }
 }
 
 function drawTurbine(w,h){
-    const tx=w*0.78;
-    const ty=h*0.45;
+    const x=w*0.7;
+    const y=h*0.45;
 
     ctx.save();
-    ctx.translate(tx,ty);
+    ctx.translate(x,y);
     ctx.rotate(turbineRotation);
     ctx.fillStyle="#9ca3af";
 
     for(let i=0;i<6;i++){
         ctx.rotate(Math.PI/3);
-        ctx.fillRect(0,0,w*0.05,h*0.02);
+        ctx.fillRect(0,0,40,8);
     }
     ctx.restore();
+
+    ctx.fillStyle="#000";
+    ctx.fillText("Turbine",x-25,y+60);
+}
+
+function drawCondenser(w,h){
+    const x=w*0.55;
+    const y=h*0.75;
+    const cw=w*0.25;
+    const ch=h*0.15;
+
+    ctx.strokeRect(x,y,cw,ch);
+    ctx.fillText("Condenser",x+cw*0.35,y-10);
+
+    ctx.fillStyle="#bfdbfe";
+    ctx.fillRect(x+5,y+ch*0.4,cw-10,ch*0.5);
 }
 
 function drawPump(w,h){
-    const px=w*0.35;
-    const py=h*0.82;
+    const x=w*0.2;
+    const y=h*0.8;
 
     ctx.save();
-    ctx.translate(px,py);
+    ctx.translate(x,y);
     ctx.rotate(pumpRotation);
 
     ctx.fillStyle="#6b7280";
     ctx.beginPath();
-    ctx.arc(0,0,18,0,Math.PI*2);
+    ctx.arc(0,0,20,0,Math.PI*2);
     ctx.fill();
 
     ctx.fillStyle="#374151";
     for(let i=0;i<4;i++){
         ctx.rotate(Math.PI/2);
-        ctx.fillRect(0,0,18,4);
+        ctx.fillRect(0,0,20,4);
     }
     ctx.restore();
+
+    ctx.fillStyle="#000";
+    ctx.fillText("Pump",x-20,y+40);
 }
 
-function drawCondenser(w,h){
+function drawPipesAndFlow(w,h){
 
-    const cx=w*0.65;
-    const cy=h*0.75;
-    const cw=w*0.25;
-    const ch=h*0.15;
-
-    ctx.strokeRect(cx,cy,cw,ch);
-
-    ctx.fillStyle="#bfdbfe";
-    ctx.fillRect(cx+5,cy+ch*0.4,cw-10,ch*0.5);
-
-    ctx.strokeStyle="#3b82f6";
-    for(let i=1;i<6;i++){
-        ctx.beginPath();
-        ctx.moveTo(cx+cw*(i/6),cy+5);
-        ctx.lineTo(cx+cw*(i/6),cy+ch-5);
-        ctx.stroke();
-    }
-}
-
-function drawFlow(w,h){
-
-    arrowOffset+=2;
+    flowOffset+=3;
 
     let power=100-rodLevel;
-    turbineRotation+=power*0.0008;
-    pumpRotation+=power*0.0015;
     powerText.innerText=power;
 
-    // Hot coolant arrows
-    for(let i=0;i<5;i++){
-        drawArrow(w*0.35+i*40-arrowOffset%200,h*0.5,0,"red");
-    }
+    turbineRotation+=power*0.0008;
+    pumpRotation+=power*0.0015;
 
-    // Steam arrows
-    for(let i=0;i<4;i++){
-        drawArrow(w*0.68+i*35-arrowOffset%150,h*0.5,0,"orange");
-    }
-
-    // Cold return arrows
-    for(let i=0;i<5;i++){
-        drawArrow(w*0.65-i*40+arrowOffset%200,h*0.82,Math.PI,"blue");
-    }
-}
-
-function drawPipes(w,h){
     ctx.strokeStyle="#999";
     ctx.lineWidth=5;
 
+    // Reactor → Steam Generator (HOT PRIMARY LOOP)
     ctx.beginPath();
-    ctx.moveTo(w*0.35,h*0.5);
-    ctx.lineTo(w*0.5,h*0.5);
+    ctx.moveTo(w*0.3,h*0.5);
+    ctx.lineTo(w*0.4,h*0.5);
     ctx.stroke();
 
+    for(let i=0;i<5;i++){
+        arrow(w*0.3+i*30+(flowOffset%150),h*0.5,0,"red");
+    }
+
+    // Steam → Turbine (SECONDARY LOOP)
     ctx.beginPath();
-    ctx.moveTo(w*0.68,h*0.5);
-    ctx.lineTo(w*0.78,h*0.5);
+    ctx.moveTo(w*0.58,h*0.5);
+    ctx.lineTo(w*0.7,h*0.5);
     ctx.stroke();
 
+    for(let i=0;i<4;i++){
+        arrow(w*0.58+i*30+(flowOffset%120),h*0.5,0,"orange");
+    }
+
+    // Turbine → Condenser
     ctx.beginPath();
-    ctx.moveTo(w*0.78,h*0.5);
-    ctx.lineTo(w*0.78,h*0.75);
+    ctx.moveTo(w*0.7,h*0.5);
+    ctx.lineTo(w*0.7,h*0.75);
     ctx.stroke();
 
+    // Condenser → Pump → Reactor (COLD RETURN)
     ctx.beginPath();
-    ctx.moveTo(w*0.65,h*0.82);
-    ctx.lineTo(w*0.35,h*0.82);
-    ctx.lineTo(w*0.35,h*0.5);
+    ctx.moveTo(w*0.55,h*0.82);
+    ctx.lineTo(w*0.2,h*0.82);
+    ctx.lineTo(w*0.2,h*0.6);
     ctx.stroke();
+
+    for(let i=0;i<6;i++){
+        arrow(w*0.55-i*40-(flowOffset%240),h*0.82,Math.PI,"blue");
+    }
+
+    ctx.fillStyle="#555";
+    ctx.fillText("Primary Loop (Hot Coolant)",w*0.25,h*0.45);
+    ctx.fillText("Secondary Loop (Steam)",w*0.6,h*0.4);
 }
 
 function animate(){
@@ -314,8 +314,7 @@ function animate(){
     drawTurbine(canvas.width,canvas.height);
     drawCondenser(canvas.width,canvas.height);
     drawPump(canvas.width,canvas.height);
-    drawPipes(canvas.width,canvas.height);
-    drawFlow(canvas.width,canvas.height);
+    drawPipesAndFlow(canvas.width,canvas.height);
 
     requestAnimationFrame(animate);
 }
@@ -326,7 +325,7 @@ animate();
 </script>
 
 </div>
-
+  
   <br><br>
 
   <p>
