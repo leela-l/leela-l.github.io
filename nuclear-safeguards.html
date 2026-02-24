@@ -268,6 +268,12 @@
   <br><br>
 
 </section>
+
+  
+  
+  
+  
+  
   <section class="feature">
    <h2>Negative reactivity feedback and modulation</h2>
     
@@ -282,7 +288,81 @@
         <p style="font-size:1.2em; line-height:1.7; max-width:900px; margin:auto;">
     The majority of reactors are ‘under-moderated’. This means that if more moderation material is added to the reactor then the neutrons will become closer to the optimal speed for fission reaction, this is called degree of thermalisation of neutrons. So for under-moderated reactors, the degree of thermalisation of neutrons is below 100%. This under-moderation helps to keep a stable equilibrium. For example, if there is a sudden power surge in the core, then the moderator heats up, decreasing the moderator density, reducing the degree of thermalisation. Therefore, neutrons are not slowed down, reducing the probability of nuclear fission, thus decreasing power output. This is a passive action and is why the reactor is determined to be self-regulating. 
   <br><br>
+<div id="reactor-demo" style="font-family:Arial, sans-serif; max-width:600px; margin:auto; padding:20px; background:#1e293b; color:white; border-radius:12px;">
 
+  <h2 style="text-align:center;">Nuclear Reactor Moderation Demo</h2>
+
+  <label><strong>Moderator Level (Density)</strong></label>
+  <input type="range" min="0" max="100" value="40" id="moderatorSlider" style="width:100%;">
+
+  <p>Neutron Speed: <span id="speedValue"></span></p>
+  <div style="background:#334155; height:20px; border-radius:6px;">
+    <div id="speedBar" style="height:100%; width:0%; background:#38bdf8; border-radius:6px;"></div>
+  </div>
+
+  <p>Thermalisation: <span id="thermalValue"></span></p>
+  <div style="background:#334155; height:20px; border-radius:6px;">
+    <div id="thermalBar" style="height:100%; width:0%; background:#22c55e; border-radius:6px;"></div>
+  </div>
+
+  <p>Reactor Power Output: <span id="powerValue"></span></p>
+  <div style="background:#334155; height:20px; border-radius:6px;">
+    <div id="powerBar" style="height:100%; width:0%; background:#ef4444; border-radius:6px;"></div>
+  </div>
+
+  <p id="statusText" style="margin-top:15px; font-weight:bold;"></p>
+
+</div>
+
+<script>
+(function(){
+  const slider = document.getElementById("moderatorSlider");
+  const speedBar = document.getElementById("speedBar");
+  const thermalBar = document.getElementById("thermalBar");
+  const powerBar = document.getElementById("powerBar");
+
+  const speedValue = document.getElementById("speedValue");
+  const thermalValue = document.getElementById("thermalValue");
+  const powerValue = document.getElementById("powerValue");
+  const statusText = document.getElementById("statusText");
+
+  function update() {
+    const moderator = parseInt(slider.value);
+
+    // Neutron speed decreases as moderation increases
+    const neutronSpeed = 100 - moderator;
+
+    // Optimal thermalisation around 70%
+    const optimal = 70;
+    const thermalisation = 100 - Math.abs(moderator - optimal);
+
+    // Power proportional to thermalisation
+    const power = thermalisation;
+
+    speedBar.style.width = neutronSpeed + "%";
+    thermalBar.style.width = thermalisation + "%";
+    powerBar.style.width = power + "%";
+
+    speedValue.textContent = neutronSpeed.toFixed(0) + "%";
+    thermalValue.textContent = thermalisation.toFixed(0) + "%";
+    powerValue.textContent = power.toFixed(0) + "%";
+
+    if (moderator < optimal) {
+      statusText.textContent = "Under-moderated: Increasing moderation increases power.";
+      statusText.style.color = "#22c55e";
+    } else if (moderator === optimal) {
+      statusText.textContent = "Optimal moderation: Maximum reactor efficiency.";
+      statusText.style.color = "#facc15";
+    } else {
+      statusText.textContent = "Over-moderated: Too much moderation reduces power.";
+      statusText.style.color = "#ef4444";
+    }
+  }
+
+  slider.addEventListener("input", update);
+  update();
+})();
+</script>
   
   </section>
 
