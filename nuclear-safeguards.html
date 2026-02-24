@@ -35,6 +35,8 @@
   <br><br>
   Possibly of the biggest safeguards in a reactor is the control rods. Control rods are rods made from neutron-absorbing materials, such as boron, which are used to absorb excess neutrons from the core, thus reducing the total number of neutrons in the core leading to a slowing down of the reaction. Control rods can be inserted into the core by varying amounts, as required by the current situation. They are usually placed in such a manner that if the mechanical system used to move the rods fail, then they will automatically fall into the reactor, thus preventing the core from becoming unstable. Below is a diagram of how the control rods work.
 <br><br>
+
+  
 <div class="reactor-container">
 
 <style>
@@ -42,8 +44,8 @@
     position:relative;
     width:100%;
     aspect-ratio:16/9;
-    background:#0f172a;
-    border:2px solid #222;
+    background:#0b1220;
+    border:2px solid #1f2937;
     overflow:hidden;
     font-family:Arial, sans-serif;
 }
@@ -56,11 +58,10 @@
     position:absolute;
     top:15px;
     right:15px;
-    background:#1e293b;
+    background:#111827;
     color:white;
     padding:14px 18px;
     border-radius:10px;
-    box-shadow:0 0 20px rgba(0,0,0,0.6);
     font-size:14px;
 }
 .reactor-ui input{ width:160px; }
@@ -120,49 +121,80 @@ function arrow(x,y,angle,color){
 
 function drawPipe(x1,y1,x2,y2){
     ctx.strokeStyle="#475569";
-    ctx.lineWidth=5;
+    ctx.lineWidth=4;
     ctx.beginPath();
     ctx.moveTo(x1,y1);
     ctx.lineTo(x2,y2);
     ctx.stroke();
 }
 
-function drawFlowAlongLine(x1,y1,x2,y2,count,color){
-    for(let i=0;i<count;i++){
-        let t=((flowPos+i*80)%800)/800;
+function drawFlow(x1,y1,x2,y2,color){
+    for(let i=0;i<4;i++){
+        let t=((flowPos+i*120)%800)/800;
         let x=x1+(x2-x1)*t;
         let y=y1+(y2-y1)*t;
-        let angle=Math.atan2(y2-y1,x2-x1);
-        arrow(x,y,angle,color);
+        arrow(x,y,Math.atan2(y2-y1,x2-x1),color);
     }
 }
 
 function drawCore(w,h){
-    const x=w*0.1;
+    const x=w*0.08;
     const y=h*0.25;
-    const cw=w*0.18;
+    const cw=w*0.2;
     const ch=h*0.5;
 
+    // outer vessel
     ctx.strokeStyle="#94a3b8";
+    ctx.lineWidth=3;
     ctx.strokeRect(x,y,cw,ch);
 
+    // water around core
     let power=100-rodLevel;
-    let red=150+(power/100)*100;
-    ctx.fillStyle=`rgb(${red},80,200)`;
-    ctx.fillRect(x+cw*0.1,y+ch*0.1,cw*0.8,ch*0.8);
+    let red=120+(power*1.2);
+    ctx.fillStyle=`rgba(${red},60,150,0.6)`;
+    ctx.fillRect(x+5,y+5,cw-10,ch-10);
+
+    // fuel rods
+    ctx.fillStyle="#facc15";
+    for(let i=0;i<6;i++){
+        let rx=x+cw*0.2+i*(cw*0.1);
+        ctx.fillRect(rx,y+ch*0.2,8,ch*0.6);
+    }
+
+    // control rods
+    ctx.fillStyle="#94a3b8";
+    let insertDepth=(rodLevel/100)*(ch*0.6);
+    for(let i=0;i<6;i++){
+        let rx=x+cw*0.2+i*(cw*0.1);
+        ctx.fillRect(rx-3,y+ch*0.2-insertDepth,6,insertDepth);
+
+        // cap
+        ctx.fillStyle="#e5e7eb";
+        ctx.fillRect(rx-6,y+ch*0.2-insertDepth-8,12,8);
+        ctx.fillStyle="#94a3b8";
+    }
 
     ctx.fillStyle="white";
     ctx.fillText("Reactor Core",x,y-10);
 }
 
 function drawSteamGenerator(w,h){
-    const x=w*0.38;
+    const x=w*0.35;
     const y=h*0.28;
-    const sw=w*0.15;
+    const sw=w*0.18;
     const sh=h*0.4;
 
     ctx.strokeStyle="#94a3b8";
     ctx.strokeRect(x,y,sw,sh);
+
+    // internal heat pipes
+    ctx.strokeStyle="#ef4444";
+    for(let i=0;i<5;i++){
+        ctx.beginPath();
+        ctx.moveTo(x+20,y+20+i*25);
+        ctx.lineTo(x+sw-20,y+20+i*25);
+        ctx.stroke();
+    }
 
     ctx.fillStyle="white";
     ctx.fillText("Steam Generator",x,y-10);
@@ -170,7 +202,7 @@ function drawSteamGenerator(w,h){
 
 function drawTurbine(w,h){
     const x=w*0.65;
-    const y=h*0.48;
+    const y=h*0.5;
 
     ctx.save();
     ctx.translate(x,y);
@@ -183,20 +215,29 @@ function drawTurbine(w,h){
     ctx.restore();
 
     ctx.fillStyle="white";
-    ctx.fillText("Turbine",x-20,y+55);
+    ctx.fillText("Turbine",x-20,y+60);
 }
 
 function drawCondenser(w,h){
     const x=w*0.5;
     const y=h*0.75;
     const cw=w*0.25;
-    const ch=h*0.12;
+    const ch=h*0.13;
 
     ctx.strokeStyle="#94a3b8";
     ctx.strokeRect(x,y,cw,ch);
 
+    // cooling pipes
+    ctx.strokeStyle="#38bdf8";
+    for(let i=0;i<5;i++){
+        ctx.beginPath();
+        ctx.moveTo(x+20+i*40,y+15);
+        ctx.lineTo(x+20+i*40,y+ch-15);
+        ctx.stroke();
+    }
+
     ctx.fillStyle="white";
-    ctx.fillText("Condenser",x+cw*0.35,y-10);
+    ctx.fillText("Condenser (Cooling Pipes)",x+cw*0.2,y-10);
 }
 
 function drawPump(w,h){
@@ -229,7 +270,7 @@ function drawSystem(){
     flowPos+=2+power*0.02;
 
     const coreOutX=w*0.28, coreOutY=h*0.5;
-    const steamInX=w*0.38, steamInY=h*0.5;
+    const steamInX=w*0.35, steamInY=h*0.5;
 
     const steamOutX=w*0.53, steamOutY=h*0.5;
     const turbX=w*0.65, turbY=h*0.5;
@@ -243,19 +284,19 @@ function drawSystem(){
     const returnUpX=w*0.22, returnUpY=h*0.6;
 
     drawPipe(coreOutX,coreOutY,steamInX,steamInY);
-    drawFlowAlongLine(coreOutX,coreOutY,steamInX,steamInY,4,"red");
+    drawFlow(coreOutX,coreOutY,steamInX,steamInY,"red");
 
     drawPipe(steamOutX,steamOutY,turbX,turbY);
-    drawFlowAlongLine(steamOutX,steamOutY,turbX,turbY,4,"orange");
+    drawFlow(steamOutX,steamOutY,turbX,turbY,"orange");
 
     drawPipe(turbX,turbY,downX,downY);
-    drawFlowAlongLine(turbX,turbY,downX,downY,3,"orange");
+    drawFlow(turbX,turbY,downX,downY,"orange");
 
     drawPipe(condLeftX,condLeftY,pumpX,pumpY);
-    drawFlowAlongLine(condLeftX,condLeftY,pumpX,pumpY,5,"#38bdf8");
+    drawFlow(condLeftX,condLeftY,pumpX,pumpY,"#38bdf8");
 
     drawPipe(pumpX,pumpY,returnUpX,returnUpY);
-    drawFlowAlongLine(pumpX,pumpY,returnUpX,returnUpY,3,"#38bdf8");
+    drawFlow(pumpX,pumpY,returnUpX,returnUpY,"#38bdf8");
 }
 
 function animate(){
