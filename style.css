@@ -756,7 +756,7 @@ font-weight: bold;
 
 /* Left text */
 .intro-left {
-  flex: 1;
+  flex: 1.2;
   font-size: 1.1em;
   line-height: 1.7;
 }
@@ -767,7 +767,7 @@ font-weight: bold;
 
 /* Right feature box */
 .intro-right {
-  flex: 1;
+  flex: 1.2;
 }
 
 /* Make it stack on small screens */
@@ -775,4 +775,32 @@ font-weight: bold;
   .intro-split {
     flex-direction: column;
   }
+}
+
+
+/* Homepage right-side feature card */
+.feature-home {
+  max-width: 100%;
+  background: #3b475c;
+  padding: 20px;
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.3);
+}
+
+/* Make the image fit nicely */
+.feature-home img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+/* Tidy text spacing */
+.feature-home h2 {
+  margin-top: 5px;
+}
+
+.feature-home p {
+  font-size: 1em;
+  line-height: 1.6;
 }
