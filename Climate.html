@@ -155,5 +155,60 @@ Its important to note that “positive” doesn’t mean good. It just means it 
   <p>© 2026 Misuse of Physics Project</p>
 </footer>
 
+  <script>
+const tabs = document.querySelectorAll(".tab-link");
+const contents = document.querySelectorAll(".tab-content");
+
+tabs.forEach(tab => {
+  tab.addEventListener("click", () => {
+    // Remove active from all tabs & contents
+    tabs.forEach(t => t.classList.remove("active"));
+    contents.forEach(c => c.classList.remove("active"));
+
+    // Activate clicked tab & its content
+    tab.classList.add("active");
+    document.getElementById(tab.dataset.tab).classList.add("active");
+  });
+});
+</script>
+
+<script>
+const tabs = document.querySelectorAll(".tab-link");
+const contents = document.querySelectorAll(".tab-content");
+const tabsContainer = document.querySelector(".tabs");
+const underline = tabsContainer.querySelector("::after"); // pseudo-element
+
+// Since we can't select pseudo-element directly, we'll create a div instead
+const ul = document.createElement("div");
+ul.style.position = "absolute";
+ul.style.bottom = "0";
+ul.style.height = "4px";
+ul.style.background = "#ffb86c";
+ul.style.borderRadius = "2px";
+ul.style.transition = "left 0.3s, width 0.3s";
+tabsContainer.appendChild(ul);
+
+// Function to move the underline
+function moveUnderline(activeTab) {
+  const rect = activeTab.getBoundingClientRect();
+  const containerRect = tabsContainer.getBoundingClientRect();
+  ul.style.left = (rect.left - containerRect.left) + "px";
+  ul.style.width = rect.width + "px";
+}
+
+// Initialize underline
+moveUnderline(document.querySelector(".tab-link.active"));
+
+tabs.forEach(tab => {
+  tab.addEventListener("click", () => {
+    tabs.forEach(t => t.classList.remove("active"));
+    contents.forEach(c => c.classList.remove("active"));
+    tab.classList.add("active");
+    document.getElementById(tab.dataset.tab).classList.add("active");
+    moveUnderline(tab);
+  });
+});
+</script>
+  
 </body>
 </html>
