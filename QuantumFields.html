@@ -138,12 +138,12 @@
 <section class="feature">
   <div id="qft-container">
     <h2>Interactive Quantum Field</h2>
-    <p>Even the lowest-energy state of a field, the vacuum, is not truly empty. Due to Heisenberg's Uncertainty Principle, the energy of a field can fluctuate briefly. These fluctuations can create short-lived "virtual" particle-antiparticle pairs, which appear and vanish almost instantly.</p>
+    <p>The lowest-energy state of a field, the vacuum, is not empty. Due to Heisenberg's Uncertainty Principle, energy briefly fluctuates, creating short-lived "virtual" particle-antiparticle pairs.</p>
     
-    <p>When additional energy is added to a field, these fluctuations become stronger. If enough energy is supplied, the field can produce real, observable particles that persist and can interact with other systems.</p>
+    <p>Adding energy to the field increases the amplitude of these fluctuations. If sufficient energy is supplied, real particles can be produced, which persist for a measurable time before decaying.</p>
 
     <!-- STATUS TEXT -->
-    <div id="explanation">Vacuum Mode: animated virtual particles.</div>
+    <div id="explanation">Vacuum Mode: virtual particles appearing and disappearing.</div>
 
     <!-- FIELD -->
     <div id="qft-field">
@@ -181,7 +181,7 @@
       p.style.left = Math.random() * field.offsetWidth + 'px';
       p.style.top = Math.random() * field.offsetHeight + 'px';
       field.appendChild(p);
-      particles.push({ el: p, lifetime: 0 });
+      particles.push({ el: p, lifetime: 0, decay: 30 + Math.random() * 30 }); // decay after some frames
     }
 
     function updateParticles() {
@@ -189,7 +189,7 @@
         p.lifetime += 1 + energy * 0.5;
         p.el.style.opacity = Math.sin(p.lifetime / 5);
 
-        if (p.lifetime > 60) {
+        if (p.lifetime > p.decay) { // particle decays
           p.el.remove();
           particles.splice(idx, 1);
         }
@@ -216,13 +216,13 @@
     function raiseEnergy() {
       if (energy < levels - 1) energy++;
       updateEnergyBar();
-      explain("Energy raised to level " + energy + ".");
+      explain("Energy raised to level " + energy + ": stronger fluctuations, more real particles.");
     }
 
     function lowerEnergy() {
       if (energy > 0) energy--;
       updateEnergyBar();
-      explain("Energy lowered to level " + energy + ".");
+      explain("Energy lowered to level " + energy + ": weaker fluctuations, fewer particles.");
     }
 
     updateEnergyBar();
