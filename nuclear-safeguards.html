@@ -56,69 +56,361 @@
       <br><br>
       </p>
     
-<div style="font-family:Arial, sans-serif; max-width:700px; margin:auto; padding:20px; background:#0f172a; color:white; border-radius:12px;">
+<div class="fission-sim-container">
+    <style>
+        .fission-sim-container {
+            position: relative;
+            width: 100%;
+            max-width: 950px;
+            height: 550px;
+            background: #0b0f1a;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: white;
+            overflow: hidden;
+            border: 2px solid #374151;
+            border-radius: 12px;
+        }
 
-<h2 style="text-align:center;">Neutron Thermalisation and Power Simulation</h2>
+        .fission-sim-container canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #111827;
+        }
 
-<input type="range" min="0" max="100" value="30"
-       style="width:100%;"
-       oninput="
-       var density = this.value;
-       var fullPoint = 60;
+        /* Stats Overlay */
+        .fission-stats {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(17, 24, 39, 0.8);
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: 1px solid #3b82f6;
+            font-family: monospace;
+            font-size: 14px;
+            color: #60a5fa;
+            pointer-events: none;
+        }
 
-       var thermal = density <= fullPoint
-           ? (density / fullPoint) * 100
-           : 100;
+        .fission-legend {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(31, 41, 55, 0.9);
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            pointer-events: none;
+            border: 1px solid #4b5563;
+        }
 
-       var power = density <= fullPoint
-           ? thermal
-           : 100 - (density - fullPoint) * 1.5;
+        .color-box {
+            width: 12px;
+            height: 12px;
+            display: inline-block;
+            margin-right: 8px;
+            border-radius: 2px;
+        }
 
-       if(power < 0) power = 0;
-       if(power > 100) power = 100;
+        .fission-controls {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            background: rgba(31, 41, 55, 0.9);
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 12px;
+            width: 240px;
+            border: 1px solid #4b5563;
+        }
 
-       this.parentNode.querySelector('#thermalBar').style.width = thermal + '%';
-       this.parentNode.querySelector('#powerBar').style.width = power + '%';
+        .fission-controls label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
 
-       this.parentNode.querySelector('#thermalText').innerHTML =
-           Math.round(thermal) + '% of neutrons thermalised';
+        /* Slider with Ticks */
+        .slider-container {
+            position: relative;
+            margin-bottom: 20px;
+        }
 
-       this.parentNode.querySelector('#powerText').innerHTML =
-           Math.round(power) + '% power output';
+        .fission-controls input {
+            width: 100%;
+            margin-top: 4px;
+            cursor: pointer;
+        }
 
-       if(density < fullPoint){
-           this.parentNode.querySelector('#statusText').innerHTML =
-           'Under-moderated core: Increasing moderator increases thermalisation and power.';
-           this.parentNode.querySelector('#statusText').style.color = '#22c55e';
-       }
-       else if(density == fullPoint){
-           this.parentNode.querySelector('#statusText').innerHTML =
-           'Fully thermalised: Maximum efficient power.';
-           this.parentNode.querySelector('#statusText').style.color = '#facc15';
-       }
-       else{
-           this.parentNode.querySelector('#statusText').innerHTML =
-           'Over-moderated core: Extra moderator reduces power.';
-           this.parentNode.querySelector('#statusText').style.color = '#ef4444';
-       }
-       ">
+        .tick-wrapper {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2px;
+            font-size: 9px;
+            color: #9ca3af;
+            position: relative;
+            padding: 0 5px;
+        }
 
-<p style="margin-top:20px;"><strong>Degree of Thermalisation</strong></p>
-<div style="background:#334155; height:20px; border-radius:6px;">
-  <div id="thermalBar" style="height:100%; width:50%; background:#22c55e; border-radius:6px;"></div>
-</div>
-<p id="thermalText">50% of neutrons thermalised</p>
+        .tick-mark {
+            position: absolute;
+            top: -5px;
+            width: 1px;
+            height: 5px;
+            background: #4b5563;
+        }
 
-<p style="margin-top:20px;"><strong>Power Output</strong></p>
-<div style="background:#334155; height:20px; border-radius:6px;">
-  <div id="powerBar" style="height:100%; width:50%; background:#38bdf8; border-radius:6px;"></div>
-</div>
-<p id="powerText">50% power output</p>
+        .slider-value {
+            float: right;
+            color: #60a5fa;
+        }
 
-<p id="statusText" style="font-weight:bold; margin-top:15px; color:#22c55e;">
-Under-moderated core: Increasing moderator increases thermalisation and power.
-</p>
+        .btn-group {
+            display: flex;
+            gap: 5px;
+            margin-top: 10px;
+        }
 
+        .fission-controls button {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn-start { background: #22c55e; color: #fff; }
+        .btn-reset { background: #ef4444; color: #fff; }
+        hr { border: 0; border-top: 1px solid #374151; margin: 12px 0; }
+    </style>
+
+    <canvas id="fissionCanvas"></canvas>
+
+    <div class="fission-stats">
+        Neutron Flux: <span id="fluxVal">0</span>
+    </div>
+
+    <div class="fission-legend">
+        <strong style="display:block; margin-bottom:5px; color:#9ca3af;">Reactor Core</strong>
+        <div><span class="color-box" style="background:#22c55e"></span>U-235 (Fissile)</div>
+        <div><span class="color-box" style="background:#a855f7"></span>U-238 (Stable)</div>
+        <div><span class="color-box" style="background:#3b82f6"></span>Neutron</div>
+        <div><span class="color-box" style="background:#4b5563; border: 1px solid #9ca3af;"></span>Control Rod</div>
+    </div>
+
+    <div class="fission-controls">
+        <label>Rod Insertion <span id="rodVal" class="slider-value">0%</span>
+            <input type="range" id="rodSlider" min="0" max="100" value="0">
+        </label>
+        
+        <hr>
+
+        <label>Modulation Density <span id="uraniumVal" class="slider-value">150</span></label>
+        <div class="slider-container">
+            <input type="range" id="uraniumSlider" min="20" max="400" value="150">
+            <div class="tick-wrapper">
+                <span style="left: 0%;">Under</span>
+                <span style="left: 45%;">Optimal</span>
+                <span style="left: 90%;">Over</span>
+                <div class="tick-mark" style="left: 5%;"></div>
+                <div class="tick-mark" style="left: 50%;"></div>
+                <div class="tick-mark" style="left: 95%;"></div>
+            </div>
+        </div>
+
+        <label>U-238 Ratio <span id="u238Val" class="slider-value">95%</span>
+            <input type="range" id="u238Slider" min="0" max="100" value="95">
+        </label>
+
+        <label>Startup Neutrons <span id="neutronVal" class="slider-value">2</span>
+            <input type="range" id="neutronSlider" min="1" max="50" value="2">
+        </label>
+
+        <div class="btn-group">
+            <button class="btn-start" onclick="startSimulation()">START</button>
+            <button class="btn-reset" onclick="resetSimulation()">SCRAM</button>
+        </div>
+    </div>
+
+    <script>
+        const container = document.querySelector(".fission-sim-container");
+        const canvas = document.getElementById("fissionCanvas");
+        const ctx = canvas.getContext("2d");
+        const fluxDisplay = document.getElementById("fluxVal");
+
+        let particles = [];
+        let animationId;
+        let rodInsertion = 0;
+        const speedFactor = 0.25;
+        const MAX_PARTICLES = 1200;
+        const rodWidth = 45;
+        const numRods = 3;
+
+        const uSlider = document.getElementById("uraniumSlider");
+        const nSlider = document.getElementById("neutronSlider");
+        const u238Slider = document.getElementById("u238Slider");
+        const rSlider = document.getElementById("rodSlider");
+
+        const uVal = document.getElementById("uraniumVal");
+        const nVal = document.getElementById("neutronVal");
+        const u28Val = document.getElementById("u238Val");
+        const rVal = document.getElementById("rodVal");
+
+        rSlider.oninput = () => { rodInsertion = rSlider.value; rVal.innerText = rSlider.value + "%"; };
+        uSlider.oninput = () => uVal.innerText = uSlider.value;
+        nSlider.oninput = () => nVal.innerText = nSlider.value;
+        u238Slider.oninput = () => u28Val.innerText = u238Slider.value + "%";
+
+        function resizeCanvas() {
+            canvas.width = container.clientWidth;
+            canvas.height = container.clientHeight;
+        }
+        window.addEventListener("resize", resizeCanvas);
+        resizeCanvas();
+
+        class Particle {
+            constructor(x, y, radius, type) {
+                this.x = x; this.y = y;
+                this.radius = radius;
+                this.type = type;
+                this.active = true;
+                this.mass = type === "neutron" ? 1 : (type === "fragment" ? 100 : 235);
+                this.vx = (Math.random() - 0.5) * 2 * speedFactor;
+                this.vy = (Math.random() - 0.5) * 2 * speedFactor;
+            }
+
+            move() {
+                this.x += this.vx;
+                this.y += this.vy;
+
+                if (this.x < this.radius || this.x > canvas.width - this.radius) this.vx *= -1;
+                if (this.y < this.radius || this.y > canvas.height - this.radius) this.vy *= -1;
+
+                if (rodInsertion > 0) {
+                    const spacing = canvas.width / (numRods + 1);
+                    const rodLen = (canvas.height * 0.8) * (rodInsertion / 100);
+
+                    for (let i = 1; i <= numRods; i++) {
+                        let rL = i * spacing - rodWidth / 2;
+                        let rR = rL + rodWidth;
+                        let rB = rodLen;
+
+                        if (this.x + this.radius > rL && this.x - this.radius < rR && this.y - this.radius < rB) {
+                            if (this.type === "neutron") {
+                                this.active = false; 
+                            } else {
+                                if (this.y - this.vy > rB) { 
+                                    this.vy = Math.abs(this.vy);
+                                    this.y = rB + this.radius;
+                                } else { 
+                                    this.vx *= -1;
+                                    this.x = (this.x < (rL + rR) / 2) ? rL - this.radius : rR + this.radius;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            draw() {
+                const colors = { "u235": "#22c55e", "u238": "#a855f7", "neutron": "#3b82f6", "fragment": "#ef4444" };
+                ctx.fillStyle = colors[this.type];
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function resolveCollision(p1, p2) {
+            if (!p1.active || !p2.active) return;
+            const dx = p2.x - p1.x;
+            const dy = p2.y - p1.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+
+            if (dist < p1.radius + p2.radius) {
+                if (p1.type === "neutron" && p2.type === "u235") { fission(p2); p1.active = false; return; }
+                if (p2.type === "neutron" && p1.type === "u235") { fission(p1); p2.active = false; return; }
+
+                const angle = Math.atan2(dy, dx);
+                const m1 = p1.mass; const m2 = p2.mass;
+                const v1x = p1.vx; const v1y = p1.vy;
+                const v2x = p2.vx; const v2y = p2.vy;
+
+                p1.vx = (v1x * (m1 - m2) + 2 * m2 * v2x) / (m1 + m2);
+                p1.vy = (v1y * (m1 - m2) + 2 * m2 * v2y) / (m1 + m2);
+                p2.vx = (v2x * (m2 - m1) + 2 * m1 * v1x) / (m1 + m2);
+                p2.vy = (v2y * (m2 - m1) + 2 * m1 * v1y) / (m1 + m2);
+                
+                const overlap = (p1.radius + p2.radius - dist) / 2;
+                p1.x -= overlap * Math.cos(angle); p1.y -= overlap * Math.sin(angle);
+                p2.x += overlap * Math.cos(angle); p2.y += overlap * Math.sin(angle);
+            }
+        }
+
+        function fission(u) {
+            u.active = false;
+            for (let i = 0; i < 3; i++) {
+                let n = new Particle(u.x, u.y, 3, "neutron");
+                n.vx = (Math.random() - 0.5) * 6 * speedFactor;
+                n.vy = (Math.random() - 0.5) * 6 * speedFactor;
+                particles.push(n);
+            }
+            for (let i = 0; i < 2; i++) particles.push(new Particle(u.x, u.y, 7, "fragment"));
+        }
+
+        function drawRods() {
+            const spacing = canvas.width / (numRods + 1);
+            const rodLen = (canvas.height * 0.8) * (rodInsertion / 100);
+            ctx.fillStyle = "#4b5563";
+            ctx.strokeStyle = "#9ca3af";
+            for (let i = 1; i <= numRods; i++) {
+                let rX = i * spacing - rodWidth / 2;
+                ctx.fillRect(rX, 0, rodWidth, rodLen);
+                ctx.strokeRect(rX, 0, rodWidth, rodLen);
+                ctx.fillStyle = "#1f2937";
+                ctx.fillRect(rX - 4, rodLen - 4, rodWidth + 8, 8);
+                ctx.fillStyle = "#4b5563";
+            }
+        }
+
+        function startSimulation() {
+            resetSimulation();
+            let total = parseInt(uSlider.value);
+            let u238P = parseInt(u238Slider.value);
+            let u235C = Math.round(total * (100 - u238P) / 100);
+            for (let i = 0; i < u235C; i++) particles.push(new Particle(Math.random() * canvas.width, Math.random() * (canvas.height - 40) + 20, 10, "u235"));
+            for (let i = 0; i < total - u235C; i++) particles.push(new Particle(Math.random() * canvas.width, Math.random() * (canvas.height - 40) + 20, 10, "u238"));
+            for (let i = 0; i < parseInt(nSlider.value); i++) particles.push(new Particle(Math.random() * canvas.width, Math.random() * canvas.height, 3, "neutron"));
+            animate();
+        }
+
+        function resetSimulation() {
+            cancelAnimationFrame(animationId);
+            particles = [];
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            fluxDisplay.innerText = "0";
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawRods();
+            particles = particles.filter(p => p.active).slice(0, MAX_PARTICLES);
+            
+            let nFlux = 0;
+            for (let i = 0; i < particles.length; i++) {
+                if(particles[i].type === "neutron") nFlux++;
+                for (let j = i + 1; j < particles.length; j++) resolveCollision(particles[i], particles[j]);
+                particles[i].move();
+                particles[i].draw();
+            }
+            fluxDisplay.innerText = nFlux;
+            animationId = requestAnimationFrame(animate);
+        }
+    </script>
 </div>
     
     
