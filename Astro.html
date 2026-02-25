@@ -111,6 +111,53 @@ header nav a:hover::after {
   width: 100%;
 }
 
+/* Astronomy dropdown overrides */
+.astro-dropdown-menu {
+  background-color: #2f2d6a; /* Purple-ish background like screenshot */
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+  padding: 10px 0;
+  min-width: 180px;
+}
+
+.astro-dropdown-menu a {
+  color: #3affd1; /* Bright teal text */
+  font-weight: 700;
+  padding: 12px 24px;
+  display: block;
+  font-size: 1.1em;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+
+.astro-dropdown-menu a:hover {
+  background-color: rgba(58, 255, 209, 0.15);
+  color: #38d9a9; /* Slightly darker teal on hover */
+}
+
+.nav-arrow {
+  cursor: pointer;
+  color: #3affd1;
+  font-size: 0.8em;
+  margin-left: 4px;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.nav-item:hover > .nav-arrow,
+.nav-item:hover > a.nav-link {
+  color: #3affd1;
+  transform: translateY(-2px);
+}
+
+.nav-item:hover > .nav-arrow {
+  transform: translateY(-2px) rotate(180deg);
+}
+
+/* Keep dropdown hidden by default and shown on hover */
+.nav-item:hover .astro-dropdown-menu {
+  display: block;
+}
+
 /* Purple centered page title */
 .intro-center {
   text-align: center;
