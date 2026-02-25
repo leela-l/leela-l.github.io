@@ -128,8 +128,9 @@ function checkQuiz() {
 
   <canvas id="waveCanvas" width="600" height="200"></canvas>
 
-  <input type="range" id="frequencySlider" min="3" max="20" step="0.1" value="6">
-
+  <input type="range" id="frequencySlider" min="3" max="20" step="0.1" value="6" style="width:600px;">
+  <canvas id="tickCanvas" height="10" style="display:block; margin:auto;"></canvas>
+  
   <div class="em-info">
     <p><strong>Frequency:</strong> <span id="freqValue">1 MHz</span></p>
     <p><strong>Type:</strong> <span id="waveType">Radio Waves</span></p>
@@ -283,6 +284,38 @@ function updateSpectrum() {
 
 slider.addEventListener("input", updateSpectrum);
 updateSpectrum();
+
+
+const slider = document.getElementById("frequencySlider");
+const tickCanvas = document.getElementById("tickCanvas");
+const tickCtx = tickCanvas.getContext("2d");
+
+// Manual pixel positions of ticks (from left edge of slider/canvas)
+const tickPositionsPx = [20, 80, 140, 200, 260, 320, 380, 440, 500, 560]; // edit these numbers by eye
+
+function drawTicks() {
+  // Match canvas width to slider
+  tickCanvas.width = slider.offsetWidth;
+  tickCanvas.height = 10;
+
+  tickCtx.clearRect(0, 0, tickCanvas.width, tickCanvas.height);
+  tickCtx.strokeStyle = "#ffffff";
+  tickCtx.lineWidth = 1;
+
+  tickPositionsPx.forEach(x => {
+    // Draw tick
+    tickCtx.beginPath();
+    tickCtx.moveTo(x, 0);
+    tickCtx.lineTo(x, tickCanvas.height);
+    tickCtx.stroke();
+  });
+}
+
+// Draw ticks on load
+drawTicks();
+
+// Redraw ticks if window resizes
+window.addEventListener("resize", drawTicks);
 </script>
 
 </body>
