@@ -55,10 +55,7 @@ header nav a {
 }
 
 
-header nav a:hover {
-  color: #38d9a9;
-  transform: translateY(-2px);
-}
+
 
 header nav a:hover::after {
   width: 100%;
@@ -69,6 +66,7 @@ header nav a:hover::after {
   display: inline-flex;
   align-items: center;
   gap: 5px;
+  cursor: pointer;
 }
 
 .nav-arrow {
@@ -78,8 +76,16 @@ header nav a:hover::after {
   transition: 0.3s;
 }
 
-.nav-arrow:hover {
-  color: #38d9a9;   /* your turquoise */
+/* Move both text and arrow */
+.nav-item:hover a,
+.nav-item:hover .nav-arrow {
+  color: #38d9a9;
+  transform: translateY(-2px);
+}
+
+/* Show dropdown */
+.nav-item:hover .dropdown-menu {
+  display: block;
 }
 
 .dropdown-menu {
@@ -95,9 +101,7 @@ header nav a:hover::after {
   z-index: 200;
 }
 
-.nav-item:hover .dropdown-menu {
-  display: block;
-}
+
 
 .dropdown-menu a {
   display: block;
