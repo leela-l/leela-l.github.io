@@ -120,10 +120,10 @@ header nav a:hover::after {
   content: "";
   position: absolute;
   left: 0;
-  bottom: 4px;        /* adjust to sit nicely under text */
+  bottom: 0;        /* adjust to sit nicely under text */
   width: 0;
   height: 2px;
-  background: #4fc3f7;
+  background: #38d9a9;
   transition: width 0.3s ease;
 }
 
