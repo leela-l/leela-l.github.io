@@ -134,20 +134,10 @@ function checkQuiz() {
 
   <h3>Explore the Electromagnetic Spectrum</h3>
 
- <div class="slider-container">
-  <input type="range" id="frequencySlider" min="3" max="20" step="0.1" value="6" list="spectrumMarks">
-  
-  <!-- Divider markers -->
-  <div class="dividers">
-    <span class="divider" data-label="Radio"></span>
-    <span class="divider" data-label="Microwave"></span>
-    <span class="divider" data-label="Infrared"></span>
-    <span class="divider" data-label="Visible"></span>
-    <span class="divider" data-label="UV"></span>
-    <span class="divider" data-label="X-ray"></span>
-    <span class="divider" data-label="Gamma"></span>
-  </div>
-</div>
+  <canvas id="waveCanvas" width="600" height="200"></canvas>
+
+  <input type="range" id="frequencySlider" min="3" max="20" step="0.1" value="6">
+
   <div class="em-info">
     <p><strong>Frequency:</strong> <span id="freqValue">1 MHz</span></p>
     <p><strong>Type:</strong> <span id="waveType">Radio Waves</span></p>
