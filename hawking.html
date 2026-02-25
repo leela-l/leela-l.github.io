@@ -8,28 +8,93 @@
 
 <body>
 
-<header>
-  <h1>Physics Mythbusters</h1>
-  <nav>
-    <a href="index.html">Home</a>
-    <a href="Climate.html">Climate Change</a>
-    <a href="Nuclear.html">Nuclear Energy</a>
-    <a href="QM.html">The Quantum World</a>
-    <a href="Radiation.html">Cellular Technology</a>
-    <a href="Astro.html">Astronomy</a>
-  </nav>
-</header>
+<!-- ================= HAWKING RADIATION EXPLANATION ================= -->
 
-<section class="feature">
-  <h2>Hawking Radiation</h2>
+<style>
+  .hawking-explanation {
+    max-width: 900px;
+    margin: 70px auto 50px auto;
+    padding: 0 25px;
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    line-height: 1.7;
+    color: #e8e8f0;
+  }
+
+  .hawking-explanation h2 {
+    font-size: 2.2rem;
+    margin-bottom: 25px;
+    font-weight: 600;
+  }
+
+  .hawking-explanation p {
+    margin-bottom: 20px;
+    font-size: 1.05rem;
+  }
+
+  .equation-intro {
+    margin-top: 35px;
+  }
+
+  .equation {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 600;
+    margin: 25px 0;
+    color: #ff8c00; /* orange */
+  }
+
+  .summary {
+    margin-top: 35px;
+    font-size: 1.1rem;
+  }
+</style>
+
+<section class="hawking-explanation">
+
+  <h2>What is Hawking radiation?</h2>
+
   <p>
-    Replace this text with your Hawking radiation explanation.
+    Proposed in 1974 by Stephen Hawking, Hawking radiation solved the question
+    of how black holes can decay. It is the theoretical prediction that black holes
+    slowly emit thermal radiation due to quantum effects at the event horizon.
   </p>
+
+  <p>
+    It turns out that empty space is not really ‘empty’. Pairs of virtual particles
+    and their corresponding antiparticles are constantly coming into existence
+    and then annihilating each other.
+  </p>
+
+  <p>
+    However, when this phenomenon occurs at the edge of a black hole,
+    one particle can fall in, leaving the other to escape. To an outside observer,
+    it appears as if the black hole emitted a particle. To conserve mass,
+    a particle escaping dictates that the black hole must lose mass.
+    As a result, black holes shrink over large timescales.
+  </p>
+
+  <p class="equation-intro">
+    Hawking predicts that the radiation has a spectrum such that:
+  </p>
+
+  <div class="equation">
+    T ∝ 1 / M
+  </div>
+
+  <p>
+    Where <strong>T</strong> is the black hole’s temperature and
+    <strong>M</strong> is its mass.
+  </p>
+
+  <p class="summary">
+    <strong>Essentially:</strong><br><br>
+    Small black holes → Hotter<br>
+    Large black holes → Colder
+  </p>
+
 </section>
 
-<footer>
-  <p>© 2026 Misuse of Physics Project</p>
-</footer>
+<!-- ================= END HAWKING RADIATION EXPLANATION ================= --> 
 
 </body>
 </html>
