@@ -16,12 +16,11 @@
     }
 
     #qft-container {
-      max-width: 760px;
-      margin: 30px auto;
-      text-align: center;
-      color: #eee;
-      font-family: inherit;
-    }
+  max-width: 760px;
+  margin: 0 auto;   /* center horizontally */
+  text-align: center;
+  color: #eee;
+}
 
     /* FIELD (simulation box) */
     #qft-field {
@@ -93,6 +92,8 @@
       background-color: #d65b4f;
     }
   </style>
+
+  
 </head>
 
 <body>
@@ -135,39 +136,40 @@
 
 <!-- INTERACTIVE SECTION -->
 <section class="feature">
-  <h2>Interactive Quantum Field</h2>
-  <p>Adjust the energy level to see more intense vacuum fluctuations.</p>
 
   <div id="qft-container">
 
+    <h2>Interactive Quantum Field</h2>
+    <p>Adjust the energy level to see more intense vacuum fluctuations.</p>
 
-  <!-- ⭐ STATUS TEXT NOW AT TOP -->
-  <div id="explanation">Energy lowered to level 0.</div>
+    <!-- STATUS TEXT -->
+    <div id="explanation">Vacuum Mode: animated virtual particles.</div>
 
-  <!-- FIELD -->
-  <div id="qft-field">
+    <!-- FIELD -->
+    <div id="qft-field">
 
-    <!-- ⭐ ENERGY BAR INSIDE FIELD -->
-    <div class="energy-bar" id="energyBar">
-      <div class="energy-level" id="level0"></div>
-      <div class="energy-level" id="level1"></div>
-      <div class="energy-level" id="level2"></div>
-      <div class="energy-level" id="level3"></div>
+      <!-- ENERGY BAR INSIDE FIELD -->
+      <div class="energy-bar" id="energyBar">
+        <div class="energy-level" id="level0"></div>
+        <div class="energy-level" id="level1"></div>
+        <div class="energy-level" id="level2"></div>
+        <div class="energy-level" id="level3"></div>
+      </div>
+
+    </div>
+
+    <!-- CONTROLS -->
+    <div style="margin-top:12px;">
+      <button onclick="lowerEnergy()">↓</button>
+      <button onclick="raiseEnergy()">↑</button>
     </div>
 
   </div>
 
-  <!-- CONTROLS -->
-  <div>
-    <button onclick="decreaseEnergy()">↓</button>
-    <button onclick="increaseEnergy()">↑</button>
-  </div>
-
-</div>
-
   <script>
     const levels = 4;
     let energy = 0;
+
     const explanation = document.getElementById("explanation");
     const field = document.getElementById("qft-field");
 
@@ -187,6 +189,7 @@
       particles.forEach((p, idx) => {
         p.lifetime += 1 + energy * 0.5;
         p.el.style.opacity = Math.sin(p.lifetime / 5);
+
         if (p.lifetime > 60) {
           p.el.remove();
           particles.splice(idx, 1);
@@ -208,26 +211,24 @@
     }
 
     function explain(msg) {
-      explanation.innerHTML = msg;
+      explanation.textContent = msg;
     }
 
     function raiseEnergy() {
       if (energy < levels - 1) energy++;
       updateEnergyBar();
-      explain(`Energy raised to level ${energy}.`);
+      explain("Energy raised to level " + energy + ".");
     }
 
     function lowerEnergy() {
       if (energy > 0) energy--;
       updateEnergyBar();
-      explain(`Energy lowered to level ${energy}.`);
+      explain("Energy lowered to level " + energy + ".");
     }
 
     updateEnergyBar();
-    explain("Vacuum Mode: animated virtual particles.");
     updateParticles();
   </script>
-</section>
 
 </section>
 
