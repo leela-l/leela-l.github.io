@@ -71,13 +71,18 @@ header nav a:hover::after {
   cursor: pointer;
   color: #e5e7eb;
   font-size: 1.1;
-  transition: 0.3s;
+  transition: transform 0.3s ease, color 0.3s ease;
 }
 
 
 .nav-item > a,
 .nav-item > .nav-arrow {
   transition: all 0.3s ease;
+}
+
+.nav-item:hover > .nav-arrow {
+  transform: rotate(180deg);
+  color: #38d9a9; /* optional: match main text hover color */
 }
 
 .nav-item:hover > a,
