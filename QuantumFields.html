@@ -99,6 +99,22 @@
   }
 </style>
 
+<style>
+.stories {
+  display: flex;
+  justify-content: center;
+  gap: 28px;
+  flex-wrap: nowrap; /* prevents wrapping to next line */
+}
+
+.stories article {
+  flex: 1;            /* equal width */
+  max-width: 360px;   /* keeps them from getting huge */
+  background: #4a5568;
+  padding: 28px;
+  border-radius: 14px;
+}
+</style>
   
 </head>
 
@@ -141,7 +157,8 @@
 <section class="feature">
   <div id="qft-container">
     <h2>Interactive Quantum Field</h2>
-    <p>The vacuum fluctuates even at low energy. Adding energy creates stronger fluctuations and persistent real particles.</p>
+    <p>This interactive demonstrates a very simplfiied notion of particle creation. Even at its lowest, the field is not "quiet", rather because of Heisenberg's Uncertainty, the field has inexact energies at any given time.</p>
+    <p style = "margin-top: 10px; margin-bottom: 10px;"> As a consequence, the field has virtual particle pairs (light blue) which quickly appear and dissapear. But adding energy creates real particles (yellow)- these, along with the field however decay back to the lowest energy state.</p>
 
     <div id="explanation">Vacuum Mode: animated virtual particles.</div>
 
