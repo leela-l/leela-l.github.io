@@ -1,439 +1,299 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Physics Mythbusters</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Astronomy – Physics Mythbusters</title>
+<link rel="stylesheet" href="style.css">
+
+<style>
+
+/* ---------- Astronomy Page Enhancements ---------- */
+
+.subpage-main{
+  max-width:1100px;
+  margin:40px auto;
+  padding:20px;
+}
+
+.section-title{
+  text-align:center;
+  margin-bottom:40px;
+}
+
+.content-section{
+  margin-bottom:60px;
+}
+
+.feature img{
+  max-width:350px;
+  display:block;
+  margin:0 auto;
+  border-radius:16px;
+}
+
+.feature p{
+  text-align:center;
+  margin-top:15px;
+  opacity:0.85;
+}
+
+/* Card Grid */
+.card-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:25px;
+  margin-top:30px;
+}
+
+.card{
+  padding:20px;
+  border-radius:18px;
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.1);
+  backdrop-filter:blur(10px);
+  transition:all 0.3s ease;
+}
+
+.card:hover{
+  transform:translateY(-6px);
+  background:rgba(125,195,255,0.08);
+}
+
+/* Dropdowns */
+details{
+  margin-bottom:20px;
+  border-radius:16px;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,0.15);
+  background:rgba(255,255,255,0.04);
+}
+
+summary{
+  padding:16px 20px;
+  cursor:pointer;
+  font-weight:600;
+}
+
+.dropdown-content{
+  padding:18px 20px;
+  border-top:1px solid rgba(255,255,255,0.1);
+  line-height:1.6;
+}
+
+/* Simulation Box */
+.media-box{
+  height:500px;
+  border-radius:20px;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,0.15);
+  margin-top:20px;
+}
+
+/* ---------- Sliding Definitions Panel ---------- */
+
+.sideTab{
+  position:fixed;
+  top:0;
+  left:0;
+  height:100vh;
+  width:50px;
+  background:rgba(0,0,0,0.85);
+  border-right:1px solid rgba(255,255,255,0.15);
+  display:flex;
+  align-items:flex-start;
+  justify-content:center;
+  padding-top:20px;
+  cursor:pointer;
+  z-index:1000;
+}
+
+.sideTab span{
+  writing-mode:vertical-rl;
+  transform:rotate(180deg);
+  font-weight:600;
+  letter-spacing:0.08em;
+  font-size:14px;
+}
+
+.inDepthPanel{
+  position:fixed;
+  top:0;
+  left:-400px;
+  width:400px;
+  height:100vh;
+  background:#111;
+  border-right:1px solid rgba(255,255,255,0.15);
+  box-shadow:10px 0 40px rgba(0,0,0,0.6);
+  padding:30px;
+  overflow-y:auto;
+  transition:left 0.35s ease;
+  z-index:999;
+}
+
+.inDepthPanel.open{
+  left:50px;
+}
+
+.inDepthPanel h2{
+  margin-top:0;
+}
+
+.definitionsDL dt{
+  font-weight:bold;
+  margin-top:25px;
+}
+
+.definitionsDL dd{
+  margin-left:0;
+  margin-top:5px;
+  line-height:1.6;
+}
+
+.closeBtn{
+  margin-top:25px;
+  padding:8px 14px;
+  border-radius:8px;
+  border:1px solid rgba(255,255,255,0.2);
+  background:rgba(255,255,255,0.05);
+  cursor:pointer;
+}
+
+</style>
 </head>
+
 <body>
 
 <header>
-    <h1>Physics Mythbusters</h1>
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="Climate.html">Climate Change</a>
-      <a href="Nuclear.html">Nuclear Energy</a>
-      <a href="QM.html">The Quantum World</a>
-      <a href="Radiation.html">Cellular Technology</a>
-      <a href="Astro.html">Astronomy</a>
+  <h1>Physics Mythbusters</h1>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="Climate.html">Climate Change</a>
+    <a href="Nuclear.html">Nuclear Energy</a>
+    <a href="QM.html">The Quantum World</a>
+    <a href="Radiation.html">Cellular Technology</a>
+    <a href="Astro.html">Astronomy</a>
+  </nav>
+</header>
 
-    </nav>
-  </header>
+<main class="subpage-main">
 
+<h2 class="section-title">Sucked In – Pseudoscience in Black Holes</h2>
 
-<div class="container">
-
-<h1>Sucked In - Pseudoscience in Blackholes</h1></h1>
-
-<!-- OLD SCIENCE TEXT -->
-<section class="box">
-<h2>‘The Oldest Science’:</h2>
-<p>
-Often referred to as the oldest science, the study of astronomy has captivated minds throughout history.
-Archaeological evidence shows that ancient communities like the Egyptians, Babylonians and Maya all had
-forms of astronomy, aiding in timekeeping and navigation as well as underpinning many of their religious beliefs.
-</p>
-</section>
-
-<!-- IMAGE BOX -->
-<section class="box">
-<div class="imgWrap">
-<img
-src="./images/Astronomical_Ceiling,_Tomb_of_Senenmut_MET_DT207429.jpg"
-alt="Astronomical ceiling of the tomb of Senenmut showing constellation diagrams and 24-part discs.">
+<div class="info-box">
+  <h3>The Oldest Science</h3>
+  <p>
+    Astronomy is often called the oldest science. Civilisations such as the ancient Egyptians,
+    Babylonians and Maya used celestial observations for timekeeping, navigation and religion.
+  </p>
 </div>
 
-<div class="caption">
-Astronomical ceiling of the tomb of Senenmut depicting a constellation diagram with discs divided into 24 sections,
-suggesting a 24-hour time period.
+<div class="feature content-section">
+  <img src="images/Astronomical_Ceiling,_Tomb_of_Senenmut_MET_DT207429.jpg" alt="Astronomical ceiling of Senenmut">
+  <p>Astronomical ceiling of the tomb of Senenmut.</p>
 </div>
-</section>
 
-<!-- MODERN DAY SECTION -->
-<section class="box">
-<h2>The Modern Day:</h2>
-<p>
-The vast mysterious nature of the universe captures the interest of the general public in the modern day too.
-That wonder however, leaves astronomy and cosmology vulnerable to misleading or exaggerated headlines.
-</p>
-</section>
-
-<section class="box">
-<p>
-Websites and videos will commonly abuse a highly speculative hypothesis and present it as an established fact with
-headlines that evoke an awe-inspiring narrative such as black holes being a portal to another universe.
-The average reader may be convinced of the existence of cosmic gateways when such claims actually stem from
-theoretical models that are mathematically interesting but lack observational proof.
-</p>
-</section>
-
-<!-- BLACKHOLES SECTION -->
-<section class="box">
-  <h2>Blackholes:</h2>
+<div class="info-box-light content-section">
+  <h3>The Modern Day</h3>
   <p>
-    Blackholes are particularly susceptible to pseudoscience that appeals to the mystery of what they are and how they function.
+    The mystery of the universe inspires curiosity — but that same wonder makes astronomy
+    vulnerable to exaggerated or misleading headlines.
   </p>
+</div>
 
-  <div class="btnRow">
-    <div class="hoverBtn">
-      <button type="button">The concept…</button>
-      <div class="pop">
-        The concept of a blackhole was first hypothesised by the philosopher John Mitchell in 1783, with his proposition that
-        there may exist ‘dark stars’ with gravity so strong even light cannot escape.
-      </div>
+<div class="content-section">
+  <h3>Black Holes</h3>
+  <div class="card-grid">
+    <div class="card">
+      <h4>The Concept</h4>
+      <p>First proposed in 1783 as “dark stars” whose gravity prevents even light from escaping.</p>
     </div>
-
-    <div class="hoverBtn">
-      <button type="button">Complex notion…</button>
-      <div class="pop">
-        The workings of black holes are still a complex notion to articulate to a general audience. Exotic-sounding ideas like a
-        singularity or space-time curvature make it easy for pseudoscientific claims to take root.
-      </div>
+    <div class="card">
+      <h4>Complexity</h4>
+      <p>Ideas like singularities and spacetime curvature are difficult to explain clearly.</p>
     </div>
-
-    <div class="hoverBtn">
-      <button type="button">The aim…</button>
-      <div class="pop">
-        The aim of this section is to explore examples of the type of media described. There is an ‘in-depth’ section below that
-        expands on some of these ideas.
-      </div>
+    <div class="card">
+      <h4>The Aim</h4>
+      <p>To separate dramatic storytelling from established scientific evidence.</p>
     </div>
   </div>
-</section>
+</div>
 
-<!-- EXAMPLES SECTION -->
-<section class="exampleSection">
+<section class="content-section">
+  <h3>Examples of Misleading Claims</h3>
 
   <details>
-    <summary>
-      Example 1 – ‘Blackholes are a Portal to Another Dimension’
-      <span class="summaryArrow">▼</span>
-    </summary>
-
-    <div class="exampleContent">
-      <a href="https://www.popularmechanics.com/space/a62650520/black-holes-could-be-back-doors-to-other-universes/" target="_blank" class="articleLink">
-        Could Black Holes Be Portals to Other Universes?
-      </a>
-
-      This article, published by Popular Mechanics, makes the claim,
-      ‘Blackholes could be back doors to other universes’. It discusses
-      the ideas of theoretical physicist Nikodem Popławski, that blackholes
-      may not end in a singularity but instead form a wormhole.
-
-      <br><br>
-
-      The theory is based off a concept called torsion. However, the article asserts that,
-      ‘cosmological torsion is not something that science has proven.’
-      This is supported by observation with the study [1], which found no evidence
-      for torsion through cosmological observation.
-
-      <br><br>
-
-      The article fails to adequately explore the issues with Popławski’s theory,
-      despite the fact that torsion-based extensions lie outside the accepted model
-      of the Universe and are unsupported through empiricism. The use of exotic
-      terminology such as “wormholes” and “alternate universes” appeals through
-      impressive-sounding language rather than grounded scientific consensus.
+    <summary>“Black Holes Are Portals”</summary>
+    <div class="dropdown-content">
+      Some articles suggest black holes may act as wormholes. These ideas stem from speculative
+      theoretical extensions and lack observational confirmation.
     </div>
   </details>
 
   <details>
-    <summary>
-      Example 2 – ‘Time stops inside a blackhole’
-      <span class="summaryArrow">▼</span>
-    </summary>
-
-    <div class="exampleContent">
-      <a href="https://sites.google.com/view/ceointellect/themysteryoftime" target="_blank" class="articleLink">
-        ceointellect – themysteryoftime
-      </a>
-
-      This website makes the assertion that ‘we must say that time stops
-      inside of each black hole’, a claim that misinterprets Einstein’s
-      theory of general relativity [2].
-
-      <br><br>
-
-      The author states that, inside a blackhole exists an infinite
-      gravitational field and so, ‘no further change can take place,
-      and no physical process can go on that would give meaning to time.
-      Thus, the theory simply asserts that time stops.’
-
-      <br><br>
-
-      While correct in saying the infinitely large gravitational field
-      inside a blackhole can have a strange impact on time, relativity
-      tells us that time would not stop from all reference frames.
-      Time dilation depends on the observer’s frame of reference —
-      an external observer sees extreme slowing near the event horizon,
-      but locally, time continues normally for an infalling observer.
+    <summary>“Time Stops Inside”</summary>
+    <div class="dropdown-content">
+      Relativity predicts extreme time dilation near black holes, but time does not universally stop.
+      Effects depend on the observer’s frame of reference.
     </div>
   </details>
 
   <details>
-    <summary>
-      Example 3 – ‘Blackholes do not exist’
-      <span class="summaryArrow">▼</span>
-    </summary>
-
-    <div class="exampleContent">
-      <a href="https://phys.org/news/2014-09-black-holes.html" target="_blank" class="articleLink">
-        Researcher shows that black holes do not exist
-      </a>
-
-      The article frames speculative ideas about reconciling quantum theory
-      with general relativity as definitive proof that black holes cannot form,
-      despite strong observational evidence for black holes.
-
-      <br><br>
-
-      This includes gravitational waves detected from black hole mergers,
-      as well as direct imaging of event horizons. The broader scientific
-      consensus overwhelmingly supports the existence of black holes based
-      on extensive empirical data.
+    <summary>“Black Holes Do Not Exist”</summary>
+    <div class="dropdown-content">
+      Gravitational waves and direct imaging provide strong empirical support
+      for the existence of black holes.
     </div>
   </details>
-
 </section>
 
-<!-- BUSTING THE MYTHS SECTION -->
-<section class="box">
-
-  <h2>Busting the Myths – What does science really say?</h2>
-
-  <p>
-    In light of these theatrical interpretations, the next section aims to clarify what science can definitively say about blackholes, including what they are, how they function and whether the claims made in the websites shown have any merit.
-  </p>
-
-  <br>
-
-  <p>
-    For further investigation into the subject, below the video is a more in-depth analysis, giving greater insight into the science behind blackholes.
-  </p>
-
-</section>
-
-<!-- VIDEO PLACEHOLDER -->
-<section class="box videoSection">
-
-  <div class="videoPlaceholder">
-    [ Video Script / Video Coming Soon ]
-  </div>
-
-</section>
-
-<div class="card">
-  <div class="cardHeader">2D Spacetime Warp</div>
-
-  <div style="padding:18px; line-height:1.6; font-size:15px; opacity:0.9;">
-    This interactive simulation visualises spacetime curvature caused by a massive object.
-    The grid represents the fabric of spacetime, and the central depression illustrates
-    how mass warps that fabric. Objects moving across the grid follow curved paths not
-    because a force is pulling them in the traditional sense, but because spacetime itself
-    is curved.
-  </div>
-  
-  <div class="sim">
+<div class="content-section">
+  <h3>Spacetime Warp Simulation</h3>
+  <div class="media-box">
     <iframe src="./warp/" title="2D Spacetime Warp"></iframe>
   </div>
 </div>
 
-<!-- REFERENCES DROPDOWN -->
-<section class="exampleSection">
-
-  <details>
-    <summary>
-      Click Here to go more in-depth
-      <span class="summaryArrow">▼</span>
-    </summary>
-
-    <div class="exampleContent">
-
-      <p>
-        <strong>[1]</strong>
-<a href="https://link.springer.com/article/10.1140/epjc/s10052-025-15090-0" target="_blank">
-Torsion cosmology in the light of DESI, supernovae and CMB observational constraints |
-The European Physical Journal C | Springer Nature Link
-</a>.
-
-        The study attempted to fit a torsion parameter, α, to measurements taken from
-        Type Ia Supernovae as well as Cosmic Microwave Background Radiation. The best-fit value
-        for the torsion parameter was α = −0.00066 ± 0.00098. This result is statistically
-        consistent with zero at less than 1σ, meaning it is indistinguishable from zero within
-        the uncertainties. Essentially, the study found that a non-zero torsion was not required
-        to fit observation, meaning it could not be proven to exist.
-      </p>
-
-      <p>
-        <strong>[2]</strong>
-        Einstein’s Theory of General Relativity.
-
-        Einstein’s theory describes gravity not as a force, but as the curvature of spacetime
-        due to an object’s mass. Objects move along the straightest possible path within this
-        curved spacetime which gives rise to orbits. The theory presents this curvature as the
-        reason behind phenomena like time dilation. The stronger the gravitational potential
-        in a gravitational field, the slower time will pass relative to an observer.
-      </p>
-
-      <p>
-        <strong>[3]</strong> Blackholes were first predicted in 1915 by Albert Einstein
-        through his theory of General Relativity. Karl Schwarzschild later built on this by
-        finding an exact solution which described a region of spacetime where even light cannot
-        escape a gravitational field. However, definitive confirmation of blackholes existing
-        did not come until 2015 when LIGO detected gravitational waves that indicated two
-        blackholes merging.
-      </p>
-
-    </div>
-  </details>
-
-</section>
-
-<section class="box">
-  <h2>References</h2>
-  <ol>
-    <li>
-      Liu, T., Li, X., Xu, T., Biesiada, M., & Wang, J. (2025). 
-      <em>Torsion cosmology in the light of DESI, supernovae and CMB observational constraints.</em> 
-      The European Physical Journal C, 85, Article 1351. 
-      <a href="https://doi.org/10.1140/epjc/s10052-025-15090-0" target="_blank">https://doi.org/10.1140/epjc/s10052-025-15090-0</a>
-    </li>
-    <li>
-      Einstein, A. (1916). <em>Relativity: The Special and General Theory</em> (R. W. Lawson, Trans.). 
-      Available at 
-      <a href="https://www.marxists.org/reference/archive/einstein/works/1910s/relative/relativity.pdf" target="_blank">
-      https://www.marxists.org/reference/archive/einstein/works/1910s/relative/relativity.pdf
-      </a> (Accessed February 23, 2026).
-    </li>
-    <li>
-      Abbott, B. P., Abbott, R., Abbott, T. D., Abernathy, M. R., Acernese, F., Ackley, K., … & the LIGO Scientific Collaboration and Virgo Collaboration. (2016). 
-      Observation of Gravitational Waves from a Binary Black Hole Merger. 
-      <em>Physical Review Letters, 116(6), 061102.</em> 
-      <a href="https://doi.org/10.1103/PhysRevLett.116.061102" target="_blank">https://doi.org/10.1103/PhysRevLett.116.061102</a>
-    </li>
-  </ol>
-</section>
-
-<section class="box">
-  <h2>Websites Reviewed</h2>
-  <ol>
-    <li>
-      Wells, S. (2024, October 18). 
-      Black holes could be back doors to other universes, scientist claims. 
-      <em>PopularMechanics.com</em>. Retrieved February 23, 2026, from 
-      <a href="https://www.popularmechanics.com/space/a62650520/black-holes-could-be-back-doors-to-other-universes/" target="_blank">
-      https://www.popularmechanics.com/space/a62650520/black-holes-could-be-back-doors-to-other-universes/
-      </a>
-    </li>
-    <li>
-      Smolin, L. (n.d.). The Mystery of Time. Retrieved February 23, 2026, from 
-      <a href="https://sites.google.com/view/ceointellect/themysteryoftime" target="_blank">
-      https://sites.google.com/view/ceointellect/themysteryoftime
-      </a>
-    </li>
-    <li>
-      Benios, T. (2014, September 24). Researcher shows that black holes do not exist. 
-      <em>Phys.org</em>. Retrieved February 23, 2026, from 
-      <a href="https://phys.org/news/2014-09-black-holes.html" target="_blank">
-      https://phys.org/news/2014-09-black-holes.html
-      </a>
-    </li>
-  </ol>
-</section>
-
-  <section class="box">
-
-  <h2>Conclusions</h2>
-
+<div class="info-box content-section">
+  <h3>Conclusion</h3>
   <p>
-    In short, the malice of the stories shown often lies in their framing, presenting far-fetched ideas which may be permissible given current theoretical understanding, but conveniently failing to address countless other less-inspiring possibilities for the sake of viewer engagement.
+    Speculative ideas often become sensational headlines. While theoretical physics explores
+    fascinating possibilities, scientific understanding must remain grounded in evidence.
   </p>
+</div>
 
-  <br>
+</main>
 
-  <p>
-    In doing so, media can subtly reshape the public’s understanding of science. The universe is astonishing in its own right but when wonder takes precedence over truth, it can blur the line between scientific study and science fiction.
-  </p>
+<footer>
+  <p>© 2026 Misuse of Physics Project</p>
+</footer>
 
-  <br>
+<!-- Sliding Definitions Panel -->
 
-  <p>
-    As such, this section aimed to separate the facts from the pseudoscience trying to drown them out. We hope the information, simulation and video were of use to you as we busted those myths!
-  </p> 
-
-</section>
-  
-
-<!-- IN-DEPTH SIDE TAB -->
 <div class="sideTab" onclick="togglePanel()">
   <span>Definitions</span>
 </div>
 
 <div class="inDepthPanel" id="inDepthPanel">
   <h2>Definitions</h2>
-
-  <div class="definitionsContent">
   <dl class="definitionsDL">
-
-    <dt>Black Hole</dt>
-    <dd>A region of space where gravity is so strong that nothing, not even light, can escape.</dd>
-
-    <dt>Collapse</dt>
-    <dd>The process by which a massive star contracts under its own gravity, often forming a neutron star or black hole.</dd>
-
-    <dt>Type Ia Supernova</dt>
-    <dd>An exploding white dwarf in a binary system that reaches a critical mass, producing a standardizable light output used to measure cosmic distances.</dd>
-
-    <dt>CMB (Cosmic Microwave Background)</dt>
-    <dd>The faint, uniform radiation left over from the early universe, about 380,000 years after the Big Bang.</dd>
-
     <dt>Event Horizon</dt>
-    <dd>The boundary around a black hole beyond which nothing can escape to the outside universe.</dd>
-
-    <dt>Schwarzschild Radius</dt>
-    <dd>The radius of a sphere such that, if all the mass of an object were compressed within it, the escape velocity would equal the speed of light.</dd>
-
+    <dd>The boundary beyond which nothing can escape a black hole.</dd>
     <dt>Singularity</dt>
-    <dd>A point at the centre of a black hole where density becomes infinite and classical physics breaks down.</dd>
-
-    <dt>Wormhole</dt>
-    <dd>A hypothetical tunnel connecting two distant regions of spacetime.</dd>
-
-    <dt>Einstein–Rosen Bridge</dt>
-    <dd>The original theoretical model of a wormhole predicted by Einstein and Rosen, connecting two black holes or regions of spacetime.</dd>
-
-    <dt>Space-time Curvature</dt>
-    <dd>The bending of spacetime caused by mass and energy, which we perceive as gravity.</dd>
-
-    <dt>Torsion</dt>
-    <dd>A property of spacetime in certain extensions of general relativity where, in addition to curvature, spacetime can “twist.” In black hole physics, torsion could modify the structure of the singularity or influence the behaviour of matter at extremely high densities.</dd>
-
-    <dt>Information Paradox</dt>
-    <dd>The puzzle of whether information falling into a black hole is lost forever, potentially conflicting with quantum mechanics.</dd>
-
+    <dd>A region where density becomes infinite in classical theory.</dd>
     <dt>Time Dilation</dt>
-    <dd>The slowing of time experienced by an object moving fast relative to an observer or in a strong gravitational field.</dd>
-
-    <dt>Lorentz Factor</dt>
-    <dd>A factor γ = 1 / √(1 − v²/c²) that describes how time, length, and relativistic mass change for an object moving at velocity v relative to an observer.</dd>
-
-    <dt>LIGO</dt>
-    <dd>Laser-Inferometer Gravitational-Wave Observatory. A US-based physics project designed to detect gravitational waves from space.</dd>
-
+    <dd>The slowing of time in strong gravitational fields or high speeds.</dd>
+    <dt>Wormhole</dt>
+    <dd>A hypothetical tunnel connecting distant regions of spacetime.</dd>
   </dl>
-
   <button class="closeBtn" onclick="togglePanel()">Close</button>
 </div>
-  <script>
+
+<script>
 function togglePanel(){
-  const panel = document.getElementById("inDepthPanel");
-  panel.classList.toggle("open");
+  document.getElementById("inDepthPanel").classList.toggle("open");
 }
 </script>
-
-<footer>
-  <p>© 2026 Misuse of Physics Project</p>
-</footer>
 
 </body>
 </html>
