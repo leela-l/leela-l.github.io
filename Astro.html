@@ -2,31 +2,184 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Physics Mythbusters</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sucked In - Pseudoscience in Blackholes</title>
   <link rel="stylesheet" href="style.css">
+
+  <!-- Extra styles for the “Blackholes” hover-button box -->
+  <style>
+    /* Hover-button box layout (matches your navy/purple/turquoise theme) */
+    .bh-box {
+      max-width: 1000px;
+      margin: 40px auto 0 auto;
+      padding: 26px 22px;
+      border-radius: 15px;
+      background: #2a3246;
+      border: 1px solid rgba(255,255,255,0.10);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.30);
+    }
+
+    .bh-box h2{
+      margin: 0 0 10px;
+      color: #38bdf8;
+      font-size: 2em;
+    }
+
+    .bh-box p{
+      margin: 0;
+      color: #e5e7eb;
+      font-size: 1.1em;
+      line-height: 1.6;
+      max-width: 900px;
+    }
+
+    .btnRow{
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+
+    .hoverBtn{
+      position: relative;
+      flex: 1;
+      min-width: 230px;
+    }
+
+    .hoverBtn button{
+      width: 100%;
+      height: 52px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: #3b475c;
+      color: #e5e7eb;
+      cursor: pointer;
+      font-size: 1.0em;
+      font-weight: 600;
+      transition: 0.25s ease;
+    }
+
+    .hoverBtn button:hover{
+      background: rgba(56,217,169,0.12);
+      border-color: rgba(56,217,169,0.35);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.35);
+    }
+
+    .pop{
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: calc(100% + 12px);
+      z-index: 50;
+      display: none;
+
+      padding: 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(79,195,247,0.20);
+      background: #2f3a4f;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.45);
+
+      color: #e0e6ed;
+      font-size: 1.0em;
+      line-height: 1.6;
+    }
+
+    .hoverBtn:hover .pop{
+      display: block;
+    }
+  </style>
 </head>
+
 <body>
 
 <header>
-    <h1>Physics Mythbusters</h1>
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="Climate.html">Climate Change</a>
-      <a href="Nuclear.html">Nuclear Energy</a>
-      <a href="QM.html">The Quantum World</a>
-      <a href="Radiation.html">Cellular Technology</a>
-      <a href="Astro.html">Astronomy</a>
-
-    </nav>
-  </header>
-
+  <h1>Sucked In - Pseudoscience in Blackholes</h1>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="Climate.html">Climate Change</a>
+    <a href="Nuclear.html">Nuclear Energy</a>
+    <a href="QM.html">The Quantum World</a>
+    <a href="Radiation.html">Cellular Technology</a>
+    <a href="Astro.html">Astronomy</a>
+  </nav>
+</header>
 
 <section class="feature">
-  <h2>Astronomy</h2>
-  <img src="images/placeholder.png" alt="Topic image">
+
+  <!-- First Subheading -->
+  <h2>‘The Oldest Science’:</h2>
+
   <p>
-    Replace this text with your content.
+    Often referred to as the oldest science, the study of astronomy has captivated minds throughout history.
+    Archaeological evidence shows that ancient communities like the Egyptians, Babylonians and Maya all had
+    forms of astronomy, aiding in timekeeping and navigation as well as underpinning many of their religious beliefs.
   </p>
+
+  <!-- Image Card -->
+  <div class="card" style="max-width: 350px; margin: 40px auto; text-align: center;">
+
+    <img
+      src="images/senenmut.jpg"
+      alt="Astronomical ceiling of the tomb of Senenmut"
+      style="max-width: 200px; width: 100%; height: auto; display: block; margin: 20px auto;"
+    >
+
+    <p style="font-size: 0.95em; padding: 0 15px 20px 15px; opacity: 0.9;">
+      Astronomical ceiling of the tomb of Senenmut depicting a constellation diagram with discs divided into 24 sections, suggesting a 24-hour time period.
+    </p>
+
+  </div>
+
+  <!-- Second Subheading -->
+  <h2>The Modern Day:</h2>
+
+  <!-- Modern Day Card -->
+  <div class="card" style="margin: 30px auto; padding: 25px; max-width: 800px;">
+
+    <p>
+      The vast mysterious nature of the universe captures the interest of the general public in the modern day too. That wonder however, leaves astronomy and cosmology vulnerable to misleading or exaggerated headlines.
+    </p>
+
+    <br>
+
+    <p>
+      Websites and videos will commonly abuse a highly speculative hypothesis and present it as an established fact with headlines that evoke an awe-inspiring narrative such as black holes being a portal to another universe. The average reader may be convinced of the existence of cosmic gateways when such claims actually stem from theoretical models that are mathematically interesting but lack observational proof.
+    </p>
+
+  </div>
+
+  <!-- BLACKHOLES HOVER-BUTTON BOX -->
+  <div class="bh-box">
+    <h2>Blackholes:</h2>
+    <p>
+      Blackholes are particularly susceptible to pseudoscience that appeals to the mystery of what they are and how they function.
+    </p>
+
+    <div class="btnRow">
+      <div class="hoverBtn">
+        <button type="button">The concept…</button>
+        <div class="pop">
+          The concept of a blackhole was first hypothesised by the philosopher John Mitchell in 1783, with his proposition that there may exist ‘dark stars’ with gravity so strong even light cannot escape.
+        </div>
+      </div>
+
+      <div class="hoverBtn">
+        <button type="button">Complex notion…</button>
+        <div class="pop">
+          The workings of black holes are still a complex notion to articulate to a general audience. Exotic-sounding ideas like a singularity or space-time curvature make it easy for pseudoscientific claims to take root.
+        </div>
+      </div>
+
+      <div class="hoverBtn">
+        <button type="button">The aim…</button>
+        <div class="pop">
+          The aim of this section is to explore examples of the type of media described. There is an ‘in-depth’ section below that expands on some of these ideas.
+        </div>
+      </div>
+    </div>
+  </div>
+
 </section>
 
 <footer>
