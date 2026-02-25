@@ -806,34 +806,40 @@ font-weight: bold;
 }
 
 
-/* Homepage right-side feature card */
+/* Make homepage feature card match article cards */
 .feature-home {
-  max-width: 100%;
-  background: #3b475c;
+  background: #3b475c; /* same as stories cards */
   padding: 20px;
-  border-radius: 14px;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.3);
+  border-radius: 15px;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+  transition: 0.3s;
+  text-align: left; /* match article style */
 }
 
-/* Make the image fit nicely */
+/* Hover effect same as stories */
+.feature-home:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 25px rgba(0,0,0,0.5);
+  cursor: pointer;
+}
+
+/* Image */
 .feature-home img {
   width: 100%;
-  height: auto;
   border-radius: 10px;
   margin-bottom: 10px;
 }
 
-/* Tidy text spacing */
+/* Title styling consistent */
 .feature-home h2 {
-  margin-top: 5px;
-  color: #38bdf8;              /* bright turquoise titles */
-  font-size: 2em;
-  margin-bottom: 15px;
+  color: #38bdf8; /* same turquoise */
+  margin-top: 10px;
 }
 
+/* Paragraph */
 .feature-home p {
+  color: #e5e7eb;
   font-size: 1em;
-  line-height: 1.6;
 }
 
 
