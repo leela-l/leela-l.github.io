@@ -415,15 +415,15 @@
        
     
     
-    <div style="font-family:Arial, sans-serif; max-width:700px; margin:auto; padding:20px; background:#1e293b; color:white; border-radius:12px;">
+<div style="font-family:Arial, sans-serif; max-width:750px; margin:auto; padding:20px; background:#1e293b; color:white; border-radius:12px;">
 
-<h2 style="text-align:center;">Neutron Thermalisation Model</h2>
+<h2 style="text-align:center;">Modulation Density and Power Behaviour</h2>
 
 <label><strong>Modulation Density</strong></label>
 
-<div style="position:relative; width:100%; margin-bottom:10px;">
+<div style="position:relative; width:100%; margin-bottom:15px;">
 
-  <!-- Vertical markers -->
+  <!-- Vertical region markers -->
   <div style="position:absolute; left:0%; top:0; bottom:0; width:2px; background:#22c55e;"></div>
   <div style="position:absolute; left:60%; top:0; bottom:0; width:2px; background:#facc15;"></div>
   <div style="position:absolute; left:100%; top:0; bottom:0; width:2px; background:#ef4444;"></div>
@@ -440,29 +440,31 @@
 
          var power = thermal; // Power plateaus after full thermalisation
 
-         this.parentNode.parentNode.querySelector('#thermalBar').style.width = thermal + '%';
-         this.parentNode.parentNode.querySelector('#powerBar').style.width = power + '%';
+         var parent = this.parentNode.parentNode;
 
-         this.parentNode.parentNode.querySelector('#thermalText').innerHTML =
+         parent.querySelector('#thermalBar').style.width = thermal + '%';
+         parent.querySelector('#powerBar').style.width = power + '%';
+
+         parent.querySelector('#thermalText').innerHTML =
              Math.round(thermal) + '% thermalised';
 
-         this.parentNode.parentNode.querySelector('#powerText').innerHTML =
+         parent.querySelector('#powerText').innerHTML =
              Math.round(power) + '% power output';
 
          if(density < fullPoint){
-             this.parentNode.parentNode.querySelector('#statusText').innerHTML =
-             'Under-modulated region';
-             this.parentNode.parentNode.querySelector('#statusText').style.color = '#22c55e';
+             parent.querySelector('#statusText').innerHTML =
+             'Under-modulated: Negative modulation coefficient (self-regulating behaviour).';
+             parent.querySelector('#statusText').style.color = '#22c55e';
          }
          else if(density == fullPoint){
-             this.parentNode.parentNode.querySelector('#statusText').innerHTML =
-             '100% Thermalisation';
-             this.parentNode.parentNode.querySelector('#statusText').style.color = '#facc15';
+             parent.querySelector('#statusText').innerHTML =
+             '100% Thermalisation: Neutral modulation response.';
+             parent.querySelector('#statusText').style.color = '#facc15';
          }
          else{
-             this.parentNode.parentNode.querySelector('#statusText').innerHTML =
-             'Over-modulated region';
-             this.parentNode.parentNode.querySelector('#statusText').style.color = '#ef4444';
+             parent.querySelector('#statusText').innerHTML =
+             'Over-modulated: Positive modulation coefficient (power excursion can accelerate).';
+             parent.querySelector('#statusText').style.color = '#ef4444';
          }
          ">
 </div>
@@ -480,11 +482,13 @@
 <p id="powerText">50% power output</p>
 
 <p id="statusText" style="font-weight:bold; margin-top:15px; color:#22c55e;">
-Under-modulated region
+Under-modulated: Negative modulation coefficient (self-regulating behaviour).
 </p>
 
 </div>
-    
+
+
+    <br><br>
     
     <p style="font-size:1.2em; line-height:1.7; max-width:900px; margin:auto;">
     The majority of reactors are ‘under-moderated’. This means that if more moderation material is added to the reactor then the neutrons will become closer to the optimal speed for fission reaction, this is called degree of thermalisation of neutrons. So for under-moderated reactors, the degree of thermalisation of neutrons is below 100%. This under-moderation helps to keep a stable equilibrium. For example, if there is a sudden power surge in the core, then the moderator heats up, decreasing the moderator density, reducing the degree of thermalisation. Therefore, neutrons are not slowed down, reducing the probability of nuclear fission, thus decreasing power output. This is a passive action and is why the reactor is determined to be self-regulating. 
