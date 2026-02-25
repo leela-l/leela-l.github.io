@@ -287,31 +287,37 @@ updateSpectrum();
 </script>
 
 <script>
-const slider = document.getElementById("frequencySlider");
-const tickCanvas = document.getElementById("tickCanvas");
-const tickCtx = tickCanvas.getContext("2d");
+document.addEventListener("DOMContentLoaded", () => {
+  const slider = document.getElementById("frequencySlider");
+  const tickCanvas = document.getElementById("tickCanvas");
+  const tickCtx = tickCanvas.getContext("2d");
 
-// Manual pixel positions of ticks
-const tickPositionsPx = [50, 120, 190, 260, 330, 400, 470, 540]; // adjust by eye
+  // Manually set pixel positions for ticks along the canvas
+  const tickPositionsPx = [50, 120, 190, 260, 330, 400, 470, 540]; // edit these by eye
 
-function drawTicks() {
-  tickCanvas.width = slider.offsetWidth;
-  tickCanvas.height = 10;
+  function drawTicks() {
+    // Match canvas width to slider
+    tickCanvas.width = slider.offsetWidth;
+    tickCanvas.height = 10;
 
-  tickCtx.clearRect(0, 0, tickCanvas.width, tickCanvas.height);
-  tickCtx.strokeStyle = "#ffffff";
-  tickCtx.lineWidth = 1;
+    tickCtx.clearRect(0, 0, tickCanvas.width, tickCanvas.height);
+    tickCtx.strokeStyle = "#ffffff"; // white ticks
+    tickCtx.lineWidth = 1;
 
-  tickPositionsPx.forEach(x => {
-    tickCtx.beginPath();
-    tickCtx.moveTo(x, 0);
-    tickCtx.lineTo(x, tickCanvas.height);
-    tickCtx.stroke();
-  });
-}
+    tickPositionsPx.forEach(x => {
+      // Draw vertical tick
+      tickCtx.beginPath();
+      tickCtx.moveTo(x, 0);
+      tickCtx.lineTo(x, tickCanvas.height);
+      tickCtx.stroke();
+    });
+  }
 
-drawTicks();
-window.addEventListener("resize", drawTicks);
+  drawTicks();
+
+  // Redraw ticks if window resizes
+  window.addEventListener("resize", drawTicks);
+});
 </script>
 
 </body>
