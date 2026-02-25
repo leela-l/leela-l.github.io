@@ -195,31 +195,33 @@
   </details>
 </section>
 
-  <section class="quiz">
-  <h2>After debunking the myths, have your views changed?</h2>
+<section class="quiz">
+  <h2>fter debunking the myths, have your views changed?</h2>
 
-  <p>Which of these radiation-related activities do you think is harmful to humans? (Select all that apply)</p>
+  <p>Which of these radiation-related statements are true? (Select all that apply)</p>
   <input type="checkbox" id="q1a" value="a">
-  <label for="q1a">A) Using a mobile device connected to Wi-Fi</label><br>
+  <label for="q1a">A) We use electromagnetic waves to see</label><br>
 
   <input type="checkbox" id="q1b" value="b">
-  <label for="q1b">B) Standing near a 5G cellular tower</label><br>
+  <label for="q1b">B) Very high frequency electromagnetic waves can cause cancer</label><br>
 
   <input type="checkbox" id="q1c" value="c">
-  <label for="q1c">C) Sleeping with your phone under your pillow</label><br>
+  <label for="q1c">C) 5G uses radiation that can harm humans</label><br>
 
   <input type="checkbox" id="q1d" value="d">
-  <label for="q1d">D) Object falls faster than gravity</label><br>
+  <label for="q1d">D) Electromagnetic waves can be used to spread viruses<</label><br>
 
   <br>
   <button onclick="checkQuiz()">Submit Answers</button>
 
   <p id="quiz-result"></p>
+  <br>
+  <p>These questions are based on electromagnetic waves, which are explained in this section.</p>
 </section>
 
 <script>
 function checkQuiz() {
-  const correct = ["a","b","c","d"];
+  const correct = ["a","b"];
   let selected = [];
 
   document.querySelectorAll('input[type="checkbox"]:checked').forEach((checkbox) => {
@@ -237,29 +239,11 @@ function checkQuiz() {
   });
 
   const result = document.getElementById("quiz-result");
-  result.textContent = "You selected " + selected.length + " options. Correct selections: " + score;
+  result.textContent = "You selected " + selected.length + " options. Correct selections: " + score + " of 2";
   result.style.fontWeight = "bold";
   result.style.color = "#1565c0";
 }
 </script>
-
-<section class="content-section">
-  <div class="dropdown-section-small">
-    <details>
-      <summary>Check the answers!</summary>
-      </p>
-      <div class="dropdown-content">
-        <ul>
-          <li><strong>A) Using a mobile device connected to Wi-Fi:</strong> Safe. Wi-Fi radiation is non-ionising and does not cause DNA damage.</li>
-          <li><strong>B) Standing near a 5G cellular tower:</strong> Safe. 5G towers use low-power, non-ionising frequencies.</li>
-          <li><strong>C) Sleeping with your phone under your pillow:</strong> Generally safe from radiation, though keeping devices away from your head is a good habit.</li>
-          <li><strong>D) Object falls faster than gravity:</strong> Not related to radiation; this is just physics!</li>
-        </ul>
-        <p>These answers debunk common myths about radiation.</p>
-      </div>
-    </details>
-  </div>
-</section>
 
 <section class="content-section">
   <!-- Main title -->
