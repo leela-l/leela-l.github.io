@@ -14,84 +14,71 @@
       box-shadow: none;
       padding: 0;
     }
-
-    #qft-container {
-  max-width: 760px;
-  margin: 0 auto;   /* center horizontally */
-  text-align: center;
-  color: #eee;
-}
-
-    /* FIELD (simulation box) */
-    #qft-field {
-      width: 100%;
-      height: 300px;
-      background: #02021a;
-      border-radius: 8px;
-      border: 1px solid #444;
-      position: relative;   /* anchor for absolute elements */
-      overflow: hidden;
-    }
-
-    /* PARTICLES */
-    .particle {
-      position: absolute;
-      width: 6px;
-      height: 6px;
-      background: #4cc9f0;
-      border-radius: 50%;
-      opacity: 0;
-    }
-
-    /* ⭐ ENERGY BAR — INSIDE FIELD */
-    .energy-bar {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      display: flex;
-      gap: 6px;
-      z-index: 20;
-      background: rgba(0,0,0,0.45);
-      padding: 6px;
-      border-radius: 6px;
-    }
-
-    .energy-level {
-      width: 28px;
-      height: 10px;
-      background: #333;
-      border-radius: 3px;
-      transition: background 0.3s;
-    }
-
-    .energy-level.active {
-      background: #4cc9f0;
-    }
-
-    /* ⭐ STATUS TEXT — NOW AT TOP (below instructions) */
-    #explanation {
-      margin: 8px 0 14px 0;
-      font-size: 1rem;
-      text-align: left;
-      color: #eee;
-    }
-
-    button {
-      font-size: 1.2rem;
-      margin: 4px;
-      padding: 6px 10px;
-      border-radius: 4px;
-      border: none;
-      cursor: pointer;
-      background-color: #e68e73;
-      color: white;
-      font-family: inherit;
-    }
-
-    button:hover {
-      background-color: #d65b4f;
-    }
   </style>
+
+ <style>
+  /* FIELD (simulation box) */
+  #qft-field {
+    width: 100%;
+    height: 300px;
+    background: #02021a;
+    border-radius: 8px;
+    border: 1px solid #444;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* PARTICLES */
+  .particle {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    opacity: 0;
+  }
+
+  /* virtual particles */
+  .virtual {
+    background: #4cc9f0;
+  }
+
+  /* real particles */
+  .real {
+    background: #f9c74f;
+  }
+
+  /* ENERGY BAR */
+  .energy-bar {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    display: flex;
+    gap: 6px;
+    z-index: 20;
+    background: rgba(0,0,0,0.45);
+    padding: 6px;
+    border-radius: 6px;
+  }
+
+  .energy-level {
+    width: 28px;
+    height: 10px;
+    background: #333;
+    border-radius: 3px;
+    transition: background 0.3s;
+  }
+
+  .energy-level.active {
+    background: #4cc9f0;
+  }
+
+  #explanation {
+    margin: 8px 0 14px 0;
+    font-size: 1rem;
+    text-align: left;
+    color: #eee;
+  }
+</style>
 
   
 </head>
@@ -134,31 +121,22 @@
   <p style = "margin-top: 20px;">But some particles would naturally arise out of this framework, never having been seen before in experimental settings. For example, the negative energy solutions found by Dirac, predicted the notion of Anti-Electrons or Positrons.</p>
 </section>
 
-<!-- INTERACTIVE SECTION -->
 <section class="feature">
   <div id="qft-container">
     <h2>Interactive Quantum Field</h2>
-    <p>The lowest-energy state of a field, the vacuum, is not empty. Due to Heisenberg's Uncertainty Principle, energy briefly fluctuates, creating short-lived "virtual" particle-antiparticle pairs.</p>
-    
-    <p>Adding energy to the field increases the amplitude of these fluctuations. If sufficient energy is supplied, real particles can be produced, which persist for a measurable time before decaying.</p>
+    <p>Even the vacuum fluctuates at low energy. Increasing energy can create more persistent “real” particles.</p>
 
-    <!-- STATUS TEXT -->
-    <div id="explanation">Vacuum Mode: virtual particles appearing and disappearing.</div>
+    <div id="explanation">Vacuum Mode: animated virtual particles.</div>
 
-    <!-- FIELD -->
     <div id="qft-field">
-
-      <!-- ENERGY BAR INSIDE FIELD -->
       <div class="energy-bar" id="energyBar">
         <div class="energy-level" id="level0"></div>
         <div class="energy-level" id="level1"></div>
         <div class="energy-level" id="level2"></div>
         <div class="energy-level" id="level3"></div>
       </div>
-
     </div>
 
-    <!-- CONTROLS -->
     <div style="margin-top:12px;">
       <button onclick="lowerEnergy()">↓</button>
       <button onclick="raiseEnergy()">↑</button>
@@ -175,28 +153,40 @@
     const particles = [];
     const maxParticles = 30;
 
-    function createParticle() {
+    function createParticle(type) {
       const p = document.createElement('div');
-      p.className = 'particle';
+      p.className = 'particle ' + type;
       p.style.left = Math.random() * field.offsetWidth + 'px';
       p.style.top = Math.random() * field.offsetHeight + 'px';
       field.appendChild(p);
-      particles.push({ el: p, lifetime: 0, decay: 30 + Math.random() * 30 }); // decay after some frames
+
+      // random decay for realism
+      const decay = type === 'virtual' ? 40 + Math.random() * 20 : 80 + Math.random() * 60;
+      particles.push({ el: p, lifetime: 0, decay: decay, type: type });
     }
 
     function updateParticles() {
       particles.forEach((p, idx) => {
-        p.lifetime += 1 + energy * 0.5;
-        p.el.style.opacity = Math.sin(p.lifetime / 5);
+        p.lifetime += 1;
 
-        if (p.lifetime > p.decay) { // particle decays
+        // fade out smoothly
+        const opacity = Math.max(0, 1 - p.lifetime / p.decay);
+        p.el.style.opacity = opacity;
+
+        if (p.lifetime >= p.decay) {
           p.el.remove();
           particles.splice(idx, 1);
         }
       });
 
-      while (particles.length < maxParticles + energy * 5) {
-        createParticle();
+      // always maintain some virtual particles
+      while (particles.filter(p => p.type === 'virtual').length < maxParticles) {
+        createParticle('virtual');
+      }
+
+      // create real particles based on energy level
+      while (particles.filter(p => p.type === 'real').length < energy * 5) {
+        createParticle('real');
       }
 
       requestAnimationFrame(updateParticles);
@@ -216,20 +206,20 @@
     function raiseEnergy() {
       if (energy < levels - 1) energy++;
       updateEnergyBar();
-      explain("Energy raised to level " + energy + ": stronger fluctuations, more real particles.");
+      explain("Energy raised to level " + energy + ": stronger fluctuations, more real particles appear and linger.");
     }
 
     function lowerEnergy() {
       if (energy > 0) energy--;
       updateEnergyBar();
-      explain("Energy lowered to level " + energy + ": weaker fluctuations, fewer particles.");
+      explain("Energy lowered to level " + energy + ": fewer real particles.");
     }
 
     updateEnergyBar();
     updateParticles();
   </script>
 </section>
-
+  
 <section class="feature dropdown-section">
   <details>
     <summary style="color: #e68e73;">Misuse of Quantum Fields</summary>
