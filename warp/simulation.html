@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>2D Spacetime Warp</title>
+  <style>
+    :root { color-scheme: dark; }
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      height:100vh;
+      background:#000;
+      color:#eaf2ff;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      overflow:hidden;
+    }
+    canvas{
+      position:fixed;
+      inset:0;
+      width:100vw;
+      height:100vh;
+      display:block;
+    }
+
+    /* Minimal UI: Mass slider + Star/BH buttons + Reset */
+    .ui{
+      position:fixed;
+      left:50%;
+      bottom:18px;
+      transform:translateX(-50%);
+      width:min(760px, calc(100vw - 28px));
+      z-index:10;
+      pointer-events:auto;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:12px 12px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,0.14);
+      background:rgba(0,0,0,0.30);
+      backdrop-filter: blur(10px);
+    }
+
+    .massWrap{
+      flex:1;
+      min-width:0;
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+      font-size:11px;
+      letter-spacing:0.14em;
+      text-transform:uppercase;
+      opacity:0.86;
+    }
+    input[type="range"]{
+      width:100%;
+      accent-color:#7dc3ff;
+    }
+    .vals{
+      display:flex;
+      justify-content:space-between;
+      font-size:11px;
+      opacity:0.72;
+      letter-spacing:0.08em;
+    }
+
+    .btn{
+      height:52px;
+      padding:0 14px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,0.18);
+      background:rgba(0,0,0,0.25);
+      color:inherit;
+      cursor:pointer;
+      display:grid;
+      place-items:center;
+      font-size:14px;
+      letter-spacing:0.06em;
+      white-space:nowrap;
+      user-select:none;
+    }
+    .btn:hover{ background:rgba(255,255,255,0.06); }
+    .btn.active{
+      background:rgba(125,195,255,0.16);
+      border-color:rgba(125,195,255,0.35);
+    }
+
+    @media (max-width: 720px){
+      .btn{ height:48px; padding:0 12px; }
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="c"></canvas>
+
+<div class="ui" aria-label="Simulation controls">
+  <div class="massWrap">
+    MASS
+    <input id="mass" type="range" min="0.2" max="12" step="0.01" value="2.5" />
+    <div class="vals"><span id="massVal">2.50</span><span>m</span></div>
+  </div>
+
+  <button class="btn" id="starBtn" title="Finite warp (softened)">Star</button>
+  <button class="btn" id="bhBtn" title="Infinite warp (visual singularity)">Black hole</button>
+  <button class="btn" id="reset" title="Reset">Reset</button>
+</div>
+
+<script>
+  const canvas = document.getElementById("c");
+  const ctx = canvas.getContext("2d");
+
+  // Fixed parameters (as requested)
+  const GRID_SPACING = 36;   // px
+  const WARP_STRENGTH = 244; // k
+  const SOFTENING = 25;      // px (star mode)
+
+  function resize(){
+    const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+    const r = canvas.getBoundingClientRect();
+    canvas.width = Math.floor(r.width * dpr);
+    canvas.height = Math.floor(r.height * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  window.addEventListener("resize", resize);
+  resize();
+
+  // UI
+  const massEl = document.getElementById("mass");
+  const massVal = document.getElementById("massVal");
+  const starBtn = document.getElementById("starBtn");
+  const bhBtn = document.getElementById("bhBtn");
+  const resetBtn = document.getElementById("reset");
+
+  function updateMassLabel(){
+    massVal.textContent = (+massEl.value).toFixed(2);
+  }
+  massEl.addEventListener("input", updateMassLabel);
+  updateMassLabel();
+
+  // Mode: "star" uses fixed softening, "bh" ignores softening (visual singularity)
+  let mode = "star";
+  function setMode(newMode){
+    mode = newMode;
+    starBtn.classList.toggle("active", mode === "star");
+    bhBtn.classList.toggle("active", mode === "bh");
+  }
+  setMode("star");
+
+  // One draggable mass
+  const mass = { x: 0, y: 0 };
+  function resetMassPos(){
+    const w = canvas.clientWidth, h = canvas.clientHeight;
+    mass.x = w * 0.42;
+    mass.y = h * 0.46;
+  }
+  resetMassPos();
+
+  resetBtn.addEventListener("click", () => {
+    setMode("star");
+    resetMassPos();
+  });
+
+  starBtn.addEventListener("click", () => setMode("star"));
+  bhBtn.addEventListener("click", () => setMode("bh"));
+
+  // Drag mass
+  let dragging = false;
+  let dragOffset = {x:0,y:0};
+
+  function pos(ev){
+    const r = canvas.getBoundingClientRect();
+    return { x: ev.clientX - r.left, y: ev.clientY - r.top };
+  }
+  function hitMass(p){
+    const r = 16 + 7 * Math.sqrt(+massEl.value);
+    const dx = p.x - mass.x, dy = p.y - mass.y;
+    return (dx*dx + dy*dy) <= r*r;
+  }
+
+  canvas.addEventListener("pointerdown", (ev) => {
+    canvas.setPointerCapture(ev.pointerId);
+    const p = pos(ev);
+    if (hitMass(p)){
+      dragging = true;
+      dragOffset.x = p.x - mass.x;
+      dragOffset.y = p.y - mass.y;
+    }
+  });
+  canvas.addEventListener("pointermove", (ev) => {
+    if (!dragging) return;
+    const p = pos(ev);
+    mass.x = p.x - dragOffset.x;
+    mass.y = p.y - dragOffset.y;
+  });
+  canvas.addEventListener("pointerup", () => dragging = false);
+  canvas.addEventListener("pointercancel", () => dragging = false);
+
+  // Starfield
+  function drawStars(w,h){
+    ctx.fillStyle = "rgba(255,255,255,0.08)";
+    for (let i=0;i<160;i++){
+      const x = (i*137) % w;
+      const y = (i*227) % h;
+      ctx.fillRect(x, y, 1, 1);
+    }
+  }
+
+  // Warp field (2D displacement)
+  function warpPoint(x, y){
+    const k = WARP_STRENGTH;
+    const m = +massEl.value;
+
+    const vx = x - mass.x;
+    const vy = y - mass.y;
+
+    const a = (mode === "bh") ? 0 : SOFTENING; // BH: no softening
+
+    const eps = 1e-6; // prevent division-by-zero
+    const r2 = vx*vx + vy*vy + a*a + eps;
+
+    const f = -(k * m) / r2;
+
+    // Clamp displacement so it remains drawable (BH still behaves "infinite" near center visually)
+    const maxDisp = 2600;
+    let dx = f * vx;
+    let dy = f * vy;
+    const mag = Math.hypot(dx, dy);
+    if (mag > maxDisp){
+      dx *= maxDisp / mag;
+      dy *= maxDisp / mag;
+    }
+
+    return { x: x + dx, y: y + dy };
+  }
+
+  function draw(){
+    const w = canvas.clientWidth, h = canvas.clientHeight;
+    ctx.clearRect(0,0,w,h);
+    ctx.fillStyle = "#000";
+    ctx.fillRect(0,0,w,h);
+    drawStars(w,h);
+
+    const spacing = GRID_SPACING;
+    const step = Math.max(6, Math.min(16, spacing / 3));
+
+    ctx.lineWidth = 1.1;
+
+    // vertical
+    for (let gx = 0; gx <= w; gx += spacing){
+      ctx.beginPath();
+      let first = true;
+      for (let y = 0; y <= h; y += step){
+        const p = warpPoint(gx, y);
+        if (first){ ctx.moveTo(p.x, p.y); first = false; }
+        else ctx.lineTo(p.x, p.y);
+      }
+      ctx.strokeStyle = "rgba(190,190,190,0.45)";
+      ctx.stroke();
+    }
+
+    // horizontal
+    for (let gy = 0; gy <= h; gy += spacing){
+      ctx.beginPath();
+      let first = true;
+      for (let x = 0; x <= w; x += step){
+        const p = warpPoint(x, gy);
+        if (first){ ctx.moveTo(p.x, p.y); first = false; }
+        else ctx.lineTo(p.x, p.y);
+      }
+      ctx.strokeStyle = "rgba(190,190,190,0.45)";
+      ctx.stroke();
+    }
+
+    // Mass marker
+    const M = +massEl.value;
+    const r = 18 + 7 * Math.sqrt(M);
+
+    // glow
+    ctx.beginPath();
+    ctx.arc(mass.x, mass.y, r*2.2, 0, Math.PI*2);
+    ctx.fillStyle = (mode === "bh")
+      ? "rgba(120,190,255,0.10)"
+      : "rgba(255,230,170,0.10)";
+    ctx.fill();
+
+    // core
+    ctx.beginPath();
+    ctx.arc(mass.x, mass.y, r, 0, Math.PI*2);
+    ctx.fillStyle = (mode === "bh")
+      ? "rgba(5,7,12,0.98)"
+      : "rgba(255,230,190,0.95)";
+    ctx.fill();
+
+    // rim
+    ctx.beginPath();
+    ctx.arc(mass.x, mass.y, r, 0, Math.PI*2);
+    ctx.strokeStyle = "rgba(255,255,255,0.32)";
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // extra ring for BH
+    if (mode === "bh"){
+      ctx.beginPath();
+      ctx.arc(mass.x, mass.y, r*1.55, 0, Math.PI*2);
+      ctx.strokeStyle = "rgba(180,230,255,0.22)";
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
+
+    requestAnimationFrame(draw);
+  }
+
+  draw();
+</script>
+</body>
+</html>
