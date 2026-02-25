@@ -17,7 +17,7 @@
   </style>
 
  <style>
-  /* FIELD (simulation box) */
+  /* FIELD */
   #qft-field {
     width: 100%;
     height: 300px;
@@ -31,20 +31,23 @@
   /* PARTICLES */
   .particle {
     position: absolute;
-    width: 6px;
-    height: 6px;
     border-radius: 50%;
     opacity: 0;
   }
 
   /* virtual particles */
   .virtual {
+    width: 6px;
+    height: 6px;
     background: #4cc9f0;
   }
 
-  /* real particles */
+  /* real particles (distinct) */
   .real {
+    width: 10px;
+    height: 10px;
     background: #f9c74f;
+    box-shadow: 0 0 8px #f9c74f;
   }
 
   /* ENERGY BAR */
@@ -77,6 +80,22 @@
     font-size: 1rem;
     text-align: left;
     color: #eee;
+  }
+
+  button {
+    font-size: 1.2rem;
+    margin: 4px;
+    padding: 6px 10px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    background-color: #e68e73;
+    color: white;
+    font-family: inherit;
+  }
+
+  button:hover {
+    background-color: #d65b4f;
   }
 </style>
 
@@ -124,7 +143,7 @@
 <section class="feature">
   <div id="qft-container">
     <h2>Interactive Quantum Field</h2>
-    <p>Even the vacuum fluctuates at low energy. Increasing energy can create more persistent “real” particles.</p>
+    <p>The vacuum fluctuates even at low energy. Adding energy creates stronger fluctuations and persistent real particles.</p>
 
     <div id="explanation">Vacuum Mode: animated virtual particles.</div>
 
@@ -160,8 +179,7 @@
       p.style.top = Math.random() * field.offsetHeight + 'px';
       field.appendChild(p);
 
-      // random decay for realism
-      const decay = type === 'virtual' ? 40 + Math.random() * 20 : 80 + Math.random() * 60;
+      const decay = type === 'virtual' ? 40 + Math.random() * 20 : 100 + Math.random() * 80;
       particles.push({ el: p, lifetime: 0, decay: decay, type: type });
     }
 
@@ -169,7 +187,14 @@
       particles.forEach((p, idx) => {
         p.lifetime += 1;
 
-        // fade out smoothly
+        // move slowly if real particle
+        if (p.type === 'real') {
+          const driftX = (Math.random() - 0.5) * 0.5;
+          const driftY = (Math.random() - 0.5) * 0.5;
+          p.el.style.left = parseFloat(p.el.style.left) + driftX + 'px';
+          p.el.style.top = parseFloat(p.el.style.top) + driftY + 'px';
+        }
+
         const opacity = Math.max(0, 1 - p.lifetime / p.decay);
         p.el.style.opacity = opacity;
 
@@ -179,12 +204,12 @@
         }
       });
 
-      // always maintain some virtual particles
+      // maintain virtual particles
       while (particles.filter(p => p.type === 'virtual').length < maxParticles) {
         createParticle('virtual');
       }
 
-      // create real particles based on energy level
+      // create real particles based on energy
       while (particles.filter(p => p.type === 'real').length < energy * 5) {
         createParticle('real');
       }
@@ -214,6 +239,16 @@
       updateEnergyBar();
       explain("Energy lowered to level " + energy + ": fewer real particles.");
     }
+
+    // automatically decay energy over time
+    setInterval(() => {
+      if (energy > 0) {
+        energy -= 0.01; // smooth decay
+        if (energy < 0) energy = 0;
+        updateEnergyBar();
+        explain("Energy relaxing toward vacuum: " + energy.toFixed(2));
+      }
+    }, 100);
 
     updateEnergyBar();
     updateParticles();
