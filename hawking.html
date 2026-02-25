@@ -1,53 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Hawking Radiation</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Hawking Radiation</title>
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    /* Keep your explanation styling, but let style.css control the overall theme */
+    .hawking-explanation {
+      max-width: 900px;
+      margin: 70px auto 50px auto;
+      padding: 0 25px;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      line-height: 1.7;
+      color: #e8e8f0;
+    }
+
+    /* Make title the same light blue used elsewhere (#38bdf8) */
+    .hawking-explanation h2 {
+      font-size: 2.2rem;
+      margin-bottom: 25px;
+      font-weight: 600;
+      color: #38bdf8;
+    }
+
+    .hawking-explanation p {
+      margin-bottom: 20px;
+      font-size: 1.05rem;
+    }
+
+    .equation-intro {
+      margin-top: 35px;
+    }
+
+    .equation {
+      text-align: center;
+      font-size: 2rem;
+      font-weight: 600;
+      margin: 25px 0;
+      color: #ff8c00; /* orange */
+    }
+
+    .summary {
+      margin-top: 35px;
+      font-size: 1.1rem;
+    }
+  </style>
 </head>
 
 <body>
 
+<header>
+  <h1>Physics Mythbusters</h1>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="Climate.html">Climate Change</a>
+    <a href="Nuclear.html">Nuclear Energy</a>
+    <a href="QM.html">The Quantum World</a>
+    <a href="Radiation.html">Cellular Technology</a>
+    <a href="Astro.html">Astronomy</a>
+  </nav>
+</header>
+
 <!-- ================= HAWKING RADIATION EXPLANATION ================= -->
-
-<style>
-  .hawking-explanation {
-    max-width: 900px;
-    margin: 70px auto 50px auto;
-    padding: 0 25px;
-    font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-    line-height: 1.7;
-    color: #e8e8f0;
-  }
-
-  .hawking-explanation h2 {
-    font-size: 2.2rem;
-    margin-bottom: 25px;
-    font-weight: 600;
-  }
-
-  .hawking-explanation p {
-    margin-bottom: 20px;
-    font-size: 1.05rem;
-  }
-
-  .equation-intro {
-    margin-top: 35px;
-  }
-
-  .equation {
-    text-align: center;
-    font-size: 2rem;
-    font-weight: 600;
-    margin: 25px 0;
-    color: #ff8c00; /* orange */
-  }
-
-  .summary {
-    margin-top: 35px;
-    font-size: 1.1rem;
-  }
-</style>
 
 <section class="hawking-explanation">
 
@@ -94,7 +110,11 @@
 
 </section>
 
-<!-- ================= END HAWKING RADIATION EXPLANATION ================= --> 
+<!-- ================= END HAWKING RADIATION EXPLANATION ================= -->
+
+<footer>
+  <p>© 2026 Misuse of Physics Project</p>
+</footer>
 
 </body>
 </html>
