@@ -28,7 +28,7 @@
   <div style="text-align: center; margin: 20px 0;">
   <img src="images/image5G.jpg" alt="5G photo" style="max-width: 80%; height: auto; border-radius:10px;">
   </div>
-  
+
   <!-- Introduction text -->
   <p style="font-size:1.2em; line-height:1.7; max-width:900px; margin:auto;">
    You may have heard the term radiation when talking about sunrays, microwaves, X-rays, or wireless networks, but what is actually radiation?
@@ -135,7 +135,7 @@ function checkQuiz() {
   <h3>Explore the Electromagnetic Spectrum</h3>
 
   <canvas id="waveCanvas" width="600" height="200"></canvas>
-  <canvas id="tickCanvas" width="600" height="10" style="display:block; margin:auto;"></canvas>
+  <canvas id="tickCanvas" width="600" height="20" style="display:block; margin:auto;"></canvas>
 
   <input type="range" id="frequencySlider" min="3" max="20" step="0.1" value="6">
 
@@ -225,7 +225,7 @@ const freqValue = document.getElementById("freqValue");
 const waveType = document.getElementById("waveType");
 const ionisingStatus = document.getElementById("ionisingStatus");
 const waveUse = document.getElementById("waveUse");
-  
+
 // EM regions (frequency in Hz)
 function getRegion(freq) {
   if (freq < 3e9) return {type:"Radio Waves", ion:false, use:"Radio, TV, 5G"};
@@ -317,38 +317,40 @@ updateSpectrum();
 const tickCanvas = document.getElementById("tickCanvas");
 const tickCtx = tickCanvas.getContext("2d");
 
-const tickCanvas = document.getElementById("tickCanvas");
-const tickCtx = tickCanvas.getContext("2d");
-
-// EM region start frequencies (in Hz)
 const emRegions = [
-  3e9,     // Radio
-  3e11,    // Microwave
-  4e14,    // Infrared
-  7.5e14,  // Visible
-  3e16,    // Ultraviolet
-  3e19,    // X-Ray
-  1e21     // Gamma
+  {name:"Radio", freq:3e9},
+  {name:"Microwave", freq:3e11},
+  {name:"Infrared", freq:4e14},
+  {name:"Visible", freq:7.5e14},
+  {name:"Ultraviolet", freq:3e16},
+  {name:"X-Ray", freq:3e19},
+  {name:"Gamma", freq:1e21} // optional upper limit
 ];
 
 function drawTicks() {
   tickCtx.clearRect(0, 0, tickCanvas.width, tickCanvas.height);
-  tickCtx.strokeStyle = "#ffffff"; // white
+  
+  tickCtx.strokeStyle = "#ffffff"; // white ticks
+  tickCtx.fillStyle = "#ffffff";
   tickCtx.lineWidth = 1;
+  tickCtx.font = "10px Arial";
+  tickCtx.textAlign = "center";
 
-  emRegions.forEach(freq => {
-    // Convert frequency to log10 scale (slider scale: 3–20)
-    let logFreq = Math.log10(freq);
-    
-    // Map logFreq to canvas width exactly like your slider mapping
-    let minLog = 3, maxLog = 20;
-    let x = ((logFreq - minLog) / (maxLog - minLog)) * tickCanvas.width;
+  emRegions.forEach(region => {
+    // Convert freq to log scale (slider scale)
+    let logFreq = Math.log10(region.freq);
 
-    // Draw small vertical line (tick)
+    // Map logFreq (3–20) → canvas.width
+    let x = ((logFreq - 3) / (20 - 3)) * tickCanvas.width;
+
+    // Draw line
     tickCtx.beginPath();
     tickCtx.moveTo(x, 0);
-    tickCtx.lineTo(x, tickCanvas.height); 
+    tickCtx.lineTo(x, 10);
     tickCtx.stroke();
+
+    // Draw label
+    tickCtx.fillText(region.name, x, 20);
   });
 }
 
@@ -356,10 +358,6 @@ drawTicks();
 </script>
 
 
-  
+
 </body>
 </html>
-
-  
-
-
