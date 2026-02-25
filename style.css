@@ -116,10 +116,6 @@ header nav a:hover::after {
   color: #4fc3f7;
 }
 
-header nav .dropdown-menu a {
-  color: #ffffff;        /* default white */
-}
-
 .dropdown-menu a::after {
   content: "";
   position: absolute;
