@@ -160,65 +160,37 @@ header nav a:hover::after {
 }
 
 /* --- STORIES GRID --- */
-/* --- STORIES GRID (updated layout, same style) --- */
 .stories {
-  max-width: 1100px;
-  margin: 40px auto;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
   padding: 20px;
 }
 
-/* Individual cards (keep same visual style) */
 .stories article {
-  background: #3b475c;  /* same colour as before */
+  background: #3b475c;          /* lighter than body but darker than feature */
   padding: 20px;
+  margin: 15px;
+  width: 260px;
   border-radius: 15px;
   box-shadow: 0 6px 15px rgba(0,0,0,0.4);
   transition: 0.3s;
 }
 
-/* Hover effect stays the same */
 .stories article:hover {
   transform: translateY(-5px);
   box-shadow: 0 12px 25px rgba(0,0,0,0.5);
 }
 
-/* Images */
 .stories img {
   width: 100%;
   height: auto;
   border-radius: 10px;
-  margin-bottom: 10px;
 }
 
-/* Titles */
-.stories h3,
-.stories h2 {
-  color: #38bdf8;  /* same turquoise */
+.stories h3 {
+  color: #38bdf8;              /* turquoise for titles */
   margin-top: 10px;
-}
-
-/* --- BIG climate card --- */
-.stories article:first-child {
-  grid-column: span 2;   /* makes it big */
-}
-
-/* Slightly larger title for big card */
-.stories article:first-child h2 {
-  font-size: 1.8em;
-}
-
-/* Responsive */
-@media (max-width: 900px) {
-  .stories {
-    grid-template-columns: 1fr;
-  }
-
-  .stories article:first-child {
-    grid-column: span 1;
-  }
 }
 
 /* --- BUTTONS --- */
@@ -806,42 +778,98 @@ font-weight: bold;
 }
 
 
-/* Make homepage feature card match article cards */
+/* --- FEATURE SECTION HOME --- */
 .feature-home {
-  background: #3b475c; /* same as stories cards */
+  text-align: center;
+  padding: 50px 20px;
+  background: #2a3246; /* lighter than body */
+  border-radius: 15px;
+  margin: 20px auto;
+  max-width: 1000px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+
+.feature-home h2 {
+  color: #38bdf8; /* bright turquoise titles */
+  font-size: 2em;
+  margin-bottom: 15px;
+}
+
+.feature-home p {
+  color: #e5e7eb; /* soft body text */
+  max-width: 700px;
+  margin: 0 auto;
+  font-size: 1.1em;
+}
+
+/* Feature image */
+.feature-home img {
+  width: 80%;
+  max-width: 600px;
+  border-radius: 10px;
+  margin-top: 20px;
+}
+
+/* --- STORIES GRID HOME --- */
+.stories-home {
+  max-width: 1100px;
+  margin: 40px auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  padding: 20px;
+}
+
+/* Individual cards (keep same visual style) */
+.stories-home article {
+  background: #3b475c; /* same colour as before */
   padding: 20px;
   border-radius: 15px;
   box-shadow: 0 6px 15px rgba(0,0,0,0.4);
   transition: 0.3s;
-  text-align: left; /* match article style */
 }
 
-/* Hover effect same as stories */
-.feature-home:hover {
+/* Hover effect stays the same */
+.stories-home article:hover {
   transform: translateY(-5px);
   box-shadow: 0 12px 25px rgba(0,0,0,0.5);
-  cursor: pointer;
 }
 
-/* Image */
-.feature-home img {
+/* Images */
+.stories-home img {
   width: 100%;
+  height: auto;
   border-radius: 10px;
   margin-bottom: 10px;
 }
 
-/* Title styling consistent */
-.feature-home h2 {
+/* Titles */
+.stories-home h3,
+.stories-home h2 {
   color: #38bdf8; /* same turquoise */
   margin-top: 10px;
 }
 
-/* Paragraph */
-.feature-home p {
-  color: #e5e7eb;
-  font-size: 1em;
+/* --- BIG climate card --- */
+.stories-home article:first-child {
+  grid-column: span 2; /* makes it big */
 }
 
+/* Slightly larger title for big card */
+.stories-home article:first-child h2 {
+  font-size: 1.8em;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .stories-home {
+    grid-template-columns: 1fr;
+  }
+
+  .stories-home article:first-child {
+    grid-column: span 1;
+  }
+}
 
 /* Make slider container positioned */
 .em-container {
