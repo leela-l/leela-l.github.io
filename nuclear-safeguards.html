@@ -56,93 +56,73 @@
       <br><br>
       </p>
     
-<div style="font-family:Arial, sans-serif; max-width:700px; margin:auto; padding:20px; background:#1e293b; color:white; border-radius:12px;">
+<div style="font-family:Arial, sans-serif; max-width:700px; margin:auto; padding:20px; background:#0f172a; color:white; border-radius:12px;">
 
-<h2 style="text-align:center;">Moderator Density and Power Output</h2>
+<h2 style="text-align:center;">Neutron Thermalisation and Power Simulation</h2>
 
-<label><strong>Moderator Density</strong></label>
-<input type="range" min="0" max="100" value="30" id="moderatorSlider" style="width:100%;">
+<input type="range" min="0" max="100" value="30"
+       style="width:100%;"
+       oninput="
+       var density = this.value;
+       var fullPoint = 60;
 
-<p>Degree of Thermalisation</p>
+       var thermal = density <= fullPoint
+           ? (density / fullPoint) * 100
+           : 100;
+
+       var power = density <= fullPoint
+           ? thermal
+           : 100 - (density - fullPoint) * 1.5;
+
+       if(power < 0) power = 0;
+       if(power > 100) power = 100;
+
+       this.parentNode.querySelector('#thermalBar').style.width = thermal + '%';
+       this.parentNode.querySelector('#powerBar').style.width = power + '%';
+
+       this.parentNode.querySelector('#thermalText').innerHTML =
+           Math.round(thermal) + '% of neutrons thermalised';
+
+       this.parentNode.querySelector('#powerText').innerHTML =
+           Math.round(power) + '% power output';
+
+       if(density < fullPoint){
+           this.parentNode.querySelector('#statusText').innerHTML =
+           'Under-moderated core: Increasing moderator increases thermalisation and power.';
+           this.parentNode.querySelector('#statusText').style.color = '#22c55e';
+       }
+       else if(density == fullPoint){
+           this.parentNode.querySelector('#statusText').innerHTML =
+           'Fully thermalised: Maximum efficient power.';
+           this.parentNode.querySelector('#statusText').style.color = '#facc15';
+       }
+       else{
+           this.parentNode.querySelector('#statusText').innerHTML =
+           'Over-moderated core: Extra moderator reduces power.';
+           this.parentNode.querySelector('#statusText').style.color = '#ef4444';
+       }
+       ">
+
+<p style="margin-top:20px;"><strong>Degree of Thermalisation</strong></p>
 <div style="background:#334155; height:20px; border-radius:6px;">
-  <div id="thermalBar" style="height:100%; width:0%; background:#22c55e; border-radius:6px;"></div>
+  <div id="thermalBar" style="height:100%; width:50%; background:#22c55e; border-radius:6px;"></div>
 </div>
-<p id="thermalText"></p>
+<p id="thermalText">50% of neutrons thermalised</p>
 
-<p>Power Output</p>
+<p style="margin-top:20px;"><strong>Power Output</strong></p>
 <div style="background:#334155; height:20px; border-radius:6px;">
-  <div id="powerBar" style="height:100%; width:0%; background:#38bdf8; border-radius:6px;"></div>
+  <div id="powerBar" style="height:100%; width:50%; background:#38bdf8; border-radius:6px;"></div>
 </div>
-<p id="powerText"></p>
+<p id="powerText">50% power output</p>
 
-<p id="statusText" style="font-weight:bold; margin-top:15px;"></p>
+<p id="statusText" style="font-weight:bold; margin-top:15px; color:#22c55e;">
+Under-moderated core: Increasing moderator increases thermalisation and power.
+</p>
 
 </div>
-
-<script>
-(function(){
-
-  const slider = document.getElementById("moderatorSlider");
-  const thermalBar = document.getElementById("thermalBar");
-  const powerBar = document.getElementById("powerBar");
-  const thermalText = document.getElementById("thermalText");
-  const powerText = document.getElementById("powerText");
-  const statusText = document.getElementById("statusText");
-
-  const fullThermalisationPoint = 60;
-
-  function update(){
-
-    const density = parseInt(slider.value);
-
-    // Thermalisation increases then saturates
-    let thermalFraction;
-    if(density <= fullThermalisationPoint){
-      thermalFraction = (density / fullThermalisationPoint) * 100;
-    } else {
-      thermalFraction = 100;
-    }
-
-    // Power increases with thermalisation in under-moderated region
-    // After full thermalisation, additional moderator reduces power
-    let power;
-    if(density <= fullThermalisationPoint){
-      power = thermalFraction;
-    } else {
-      power = 100 - (density - fullThermalisationPoint) * 1.5;
-    }
-
-    power = Math.max(0, Math.min(100, power));
-
-    thermalBar.style.width = thermalFraction + "%";
-    powerBar.style.width = power + "%";
-
-    thermalText.textContent = thermalFraction.toFixed(0) + "% of neutrons thermalised";
-    powerText.textContent = power.toFixed(0) + "% power output";
-
-    if(density < fullThermalisationPoint){
-      statusText.textContent = "Under-moderated core: Increasing moderator increases thermalisation and power.";
-      statusText.style.color = "#22c55e";
-    }
-    else if(density == fullThermalisationPoint){
-      statusText.textContent = "Fully thermalised: Maximum efficient power.";
-      statusText.style.color = "#facc15";
-    }
-    else{
-      statusText.textContent = "Over-moderated core: Extra moderator reduces power.";
-      statusText.style.color = "#ef4444";
-    }
-
-  }
-
-  slider.addEventListener("input", update);
-  update();
-
-})();
-</script>
     
     
-    </div>
+  
    </details>
   </section>
   <br><br>
