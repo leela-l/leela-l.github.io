@@ -321,9 +321,9 @@ const tickCtx = tickCanvas.getContext("2d");
 const emRegions = [3e9, 3e11, 4e14, 7.5e14, 3e16, 3e19, 1e21];
 
 function drawTicks() {
-  // Match canvas width to slider width
+  // Match canvas width and height to slider
   tickCanvas.width = slider.offsetWidth;
-  tickCanvas.height = 10;
+  tickCanvas.height = 10; // height for ticks
 
   tickCtx.clearRect(0, 0, tickCanvas.width, tickCanvas.height);
   tickCtx.strokeStyle = "#ffffff";
@@ -338,7 +338,7 @@ function drawTicks() {
     // Map logFreq to canvas width
     let x = ((logFreq - minLog) / (maxLog - minLog)) * tickCanvas.width;
 
-    // Draw tick
+    // Draw vertical tick
     tickCtx.beginPath();
     tickCtx.moveTo(x, 0);
     tickCtx.lineTo(x, tickCanvas.height);
@@ -346,11 +346,11 @@ function drawTicks() {
   });
 }
 
-// Draw ticks on load and when window resizes
+// Draw ticks on load
 drawTicks();
+
+// Redraw ticks if window resizes (optional)
 window.addEventListener("resize", drawTicks);
-
-
 
 </body>
 </html>
