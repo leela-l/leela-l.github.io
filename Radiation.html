@@ -282,19 +282,17 @@ function updateSpectrum() {
   drawWave(freq);
 }
 
-slider.addEventListener("input", updateSpectrum);
-updateSpectrum();
+</script>
 
-
+<script>
 const slider = document.getElementById("frequencySlider");
 const tickCanvas = document.getElementById("tickCanvas");
 const tickCtx = tickCanvas.getContext("2d");
 
-// Manual pixel positions of ticks (from left edge of slider/canvas)
-const tickPositionsPx = [20, 80, 140, 200, 260, 320, 380, 440, 500, 560]; // edit these numbers by eye
+// Manual pixel positions of ticks
+const tickPositionsPx = [50, 120, 190, 260, 330, 400, 470, 540]; // adjust by eye
 
 function drawTicks() {
-  // Match canvas width to slider
   tickCanvas.width = slider.offsetWidth;
   tickCanvas.height = 10;
 
@@ -303,7 +301,6 @@ function drawTicks() {
   tickCtx.lineWidth = 1;
 
   tickPositionsPx.forEach(x => {
-    // Draw tick
     tickCtx.beginPath();
     tickCtx.moveTo(x, 0);
     tickCtx.lineTo(x, tickCanvas.height);
@@ -311,10 +308,7 @@ function drawTicks() {
   });
 }
 
-// Draw ticks on load
 drawTicks();
-
-// Redraw ticks if window resizes
 window.addEventListener("resize", drawTicks);
 </script>
 
