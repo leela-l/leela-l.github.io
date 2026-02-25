@@ -56,210 +56,315 @@
       <br><br>
       </p>
     
-<div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #1e293b; color: white; padding: 20px; border-radius: 12px; width: 100%; max-width: 950px; margin: auto; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);">
-    <div style="display: flex; gap: 40px; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #475569;">
-        <div style="display: flex; flex-direction: column; gap: 8px;">
-            <label style="font-weight: bold; color: #94a3b8; font-size: 13px; letter-spacing: 0.05em;">CONTROL ROD INSERTION (0-100%)</label>
-            <input type="range" min="0" max="100" value="50" id="rodSlider" style="width: 250px; cursor: pointer;">
-        </div>
-        <div style="display: flex; flex-direction: column; gap: 4px;">
-            <label style="font-weight: bold; color: #94a3b8; font-size: 13px; letter-spacing: 0.05em;">REACTOR POWER</label>
-            <div><span id="pwr" style="font-size: 28px; color: #fbbf24; font-family: 'Courier New', monospace; font-weight: bold;">50</span><span style="color: #fbbf24; font-size: 18px;"> %</span></div>
-        </div>
-    </div>
+<div class="fission-sim-container">
 
-    <canvas id="reactorCanvas" style="width: 100%; height: 720px; background: #0f172a; border-radius: 8px;"></canvas>
+<style>
+.fission-sim-container{
+    position:relative;
+    width:100%;
+    max-width:950px;
+    height:550px;
+    background:#0b0f1a;
+    font-family:Arial, sans-serif;
+    color:white;
+    overflow:hidden;
+    border:2px solid #555;
+}
+
+.fission-sim-container canvas{
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:#111827;
+}
+
+.fission-legend{
+    position:absolute;
+    top:10px;
+    left:10px;
+    background:rgba(31, 41, 55, 0.8);
+    padding:10px;
+    border-radius:8px;
+    font-size:13px;
+    pointer-events: none;
+}
+
+.color-box{
+    width:12px;
+    height:12px;
+    display:inline-block;
+    margin-right:6px;
+    border: 1px solid #fff;
+}
+
+.fission-controls{
+    position:absolute;
+    bottom:10px;
+    right:10px;
+    background:#1f2937;
+    padding:10px;
+    border-radius:8px;
+    font-size:12px;
+    width:200px;
+}
+
+.fission-controls label{
+    display:block;
+    margin-bottom:6px;
+}
+.fission-controls input, .fission-controls button{
+    width:100%;
+    margin-top:3px;
+}
+.slider-value{
+    font-weight:bold;
+    margin-left:6px;
+    color: #60a5fa;
+}
+
+/* Specific styling for the Control Rod Slider */
+#rodSlider {
+    accent-color: #9ca3af;
+}
+</style>
+
+<canvas id="fissionCanvas"></canvas>
+
+<div class="fission-legend">
+<strong>Legend</strong><br>
+<div><span class="color-box" style="background:#22c55e"></span>Uranium-235 (Fissile)</div>
+<div><span class="color-box" style="background:#a855f7"></span>Uranium-238 (Stable)</div>
+<div><span class="color-box" style="background:#3b82f6"></span>Neutron</div>
+<div><span class="color-box" style="background:#ef4444"></span>Fission Fragment</div>
+<div><span class="color-box" style="background:#4b5563"></span>Control Rod (Absorber)</div>
+</div>
+
+<div class="fission-controls">
+<label>Control Rod Insertion
+<span id="rodVal" class="slider-value">0</span>%
+<input type="range" id="rodSlider" min="0" max="100" value="0">
+</label>
+
+<hr style="border:0; border-top:1px solid #374151; margin:10px 0;">
+
+<label>Total Uranium
+<span id="uraniumVal" class="slider-value">120</span>
+<input type="range" id="uraniumSlider" min="20" max="300" value="120">
+</label>
+
+<label>U-238 %
+<span id="u238Val" class="slider-value">95</span>% 
+<input type="range" id="u238Slider" min="0" max="100" value="95">
+</label>
+
+<label>Initial Neutrons
+<span id="neutronVal" class="slider-value">2</span>
+<input type="range" id="neutronSlider" min="1" max="50" value="2">
+</label>
+
+<button onclick="startSimulation()" style="background:#059669; color:white; border:none; padding:5px; border-radius:4px; cursor:pointer;">Start Reactor</button>
+<button onclick="resetSimulation()" style="margin-top:5px; background:#4b5563; color:white; border:none; padding:5px; border-radius:4px; cursor:pointer;">Scram (Reset)</button>
 </div>
 
 <script>
-(function(){
-    const canvas = document.getElementById("reactorCanvas");
-    const ctx = canvas.getContext("2d");
-    const slider = document.getElementById("rodSlider");
-    const pwrDisplay = document.getElementById("pwr");
+const container=document.querySelector(".fission-sim-container");
+const canvas=document.getElementById("fissionCanvas");
+const ctx=canvas.getContext("2d");
 
-    let rodLevel = 50;
-    let turbineRot = 0;
+let particles=[];
+let animationId;
+let temperature=1;
+let rodInsertion = 0; // 0 to 100
+const speedFactor = 0.25;
 
-    slider.oninput = function() {
-        rodLevel = parseInt(this.value);
-        pwrDisplay.innerText = 100 - rodLevel;
-    };
+const MAX_PARTICLES=800;
+const MAX_NEUTRONS=300;
 
-    function resize(){
-        const dpr = window.devicePixelRatio || 1;
-        canvas.width = canvas.offsetWidth * dpr;
-        canvas.height = canvas.offsetHeight * dpr;
-        ctx.scale(dpr, dpr);
-    }
-    window.addEventListener("resize", resize);
-    resize();
+// Selectors
+const uraniumSlider=document.getElementById("uraniumSlider");
+const neutronSlider=document.getElementById("neutronSlider");
+const u238Slider=document.getElementById("u238Slider");
+const rodSlider=document.getElementById("rodSlider");
 
-    function getCoolantColors(power) {
-        const r = Math.floor(251 + (power * 0.04)); 
-        const g = Math.floor(191 - (power * 1.5));
-        const b = Math.floor(36 - (power * 0.3));
-        return {
-            solid: `rgb(${r}, ${g}, ${b})`,
-            faint: `rgba(${r}, ${g}, ${b}, 0.12)`
-        };
-    }
+const uraniumVal=document.getElementById("uraniumVal");
+const neutronVal=document.getElementById("neutronVal");
+const u238Val=document.getElementById("u238Val");
+const rodVal=document.getElementById("rodVal");
 
-    function drawLeader(label, lx, ly, tx, ty) {
-        ctx.strokeStyle = "#94a3b8";
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.moveTo(lx, ly);
-        ctx.lineTo(tx, ty);
-        ctx.stroke();
+// Input Listeners
+uraniumSlider.oninput=()=>uraniumVal.innerText=uraniumSlider.value;
+neutronSlider.oninput=()=>neutronVal.innerText=neutronSlider.value;
+u238Slider.oninput=()=>u238Val.innerText=u238Slider.value;
+rodSlider.oninput=()=> {
+    rodInsertion = parseInt(rodSlider.value);
+    rodVal.innerText = rodSlider.value;
+};
+
+function resizeCanvas(){
+    canvas.width=container.clientWidth;
+    canvas.height=container.clientHeight;
+}
+resizeCanvas();
+window.addEventListener("resize",resizeCanvas);
+
+class Particle{
+    constructor(x,y,radius,type){
+        this.x=x;
+        this.y=y;
+        this.radius=radius;
+        this.type=type;
+        this.active=true;
         
-        // Arrow head
-        const angle = Math.atan2(ty - ly, tx - lx);
-        ctx.fillStyle = "#94a3b8";
-        ctx.save();
-        ctx.translate(tx, ty);
-        ctx.rotate(angle);
+        if(type==="u235") this.mass=235;
+        else if(type==="u238") this.mass=238;
+        else if(type==="fragment") this.mass=100;
+        else if(type==="neutron") this.mass=1;
+
+        this.vx=(Math.random()-0.5)*2*speedFactor;
+        this.vy=(Math.random()-0.5)*2*speedFactor;
+    }
+
+    move(){
+        this.x+=this.vx;
+        this.y+=this.vy;
+
+        // Bounce off walls
+        if(this.x<this.radius||this.x>canvas.width-this.radius) this.vx*=-1;
+        if(this.y<this.radius||this.y>canvas.height-this.radius) this.vy*=-1;
+        
+        // Control Rod Logic (Absorption)
+        if(this.type === "neutron" && rodInsertion > 0) {
+            const rodWidth = 40;
+            const numRods = 3;
+            const spacing = canvas.width / (numRods + 1);
+            const rodLength = (canvas.height * 0.8) * (rodInsertion / 100);
+
+            for(let i=1; i<=numRods; i++) {
+                let rodX = i * spacing - rodWidth/2;
+                if(this.x > rodX && this.x < rodX + rodWidth && this.y < rodLength) {
+                    this.active = false; // Absorbed!
+                }
+            }
+        }
+    }
+
+    draw(){
+        const colors={"u235":"#22c55e","u238":"#a855f7","neutron":"#3b82f6","fragment":"#ef4444"};
+        ctx.fillStyle=colors[this.type];
         ctx.beginPath();
-        ctx.moveTo(0,0); ctx.lineTo(-6, -3); ctx.lineTo(-6, 3);
+        ctx.arc(this.x,this.y,this.radius,0,Math.PI*2);
         ctx.fill();
-        ctx.restore();
-        
-        ctx.fillStyle = "#f8fafc";
-        ctx.font = "bold 12px sans-serif";
-        ctx.fillText(label, lx - (lx > tx ? ctx.measureText(label).width + 5 : -5), ly + 4);
     }
+}
 
-    function animate() {
-        const w = canvas.width / (window.devicePixelRatio || 1);
-        const h = canvas.height / (window.devicePixelRatio || 1);
-        ctx.clearRect(0, 0, w, h);
+function resolveCollision(p1,p2){
+    if(!p1.active || !p2.active) return;
+    const dx=p2.x-p1.x;
+    const dy=p2.y-p1.y;
+    const dist=Math.sqrt(dx*dx+dy*dy);
 
-        let power = 100 - rodLevel;
-        // Tuned turbine speed: slow enough to see blades clearly even at high power
-        turbineRot += power * 0.04; 
+    if(dist < p1.radius + p2.radius){
+        if(p1.type==="neutron" && p2.type==="u235"){ fission(p2); p1.active=false; return; }
+        if(p2.type==="neutron" && p1.type==="u235"){ fission(p1); p2.active=false; return; }
 
-        const colors = getCoolantColors(power);
+        // Standard elastic collision for others
+        const angle=Math.atan2(dy,dx);
+        const m1=p1.mass; const m2=p2.mass;
+        const v1x=p1.vx; const v1y=p1.vy;
+        const v2x=p2.vx; const v2y=p2.vy;
 
-        // --- Layout ---
-        const coreX = w * 0.1, coreY = h * 0.42, coreW = 140, coreH = 260;
-        const genX = w * 0.52, genY = h * 0.22, genW = 140, genH = 420;
-        const turbX = w * 0.85, turbY = h * 0.25, turbW = 110, turbH = 90;
-        const condX = w * 0.65, condY = h * 0.78, condW = 260, condH = 130;
-
-        // --- 1. Vessel Backgrounds ---
-        ctx.fillStyle = colors.faint;
-        ctx.beginPath(); ctx.roundRect(coreX, coreY, coreW, coreH, 8); ctx.fill();
-        ctx.beginPath(); ctx.roundRect(genX, genY, genW, genH, 20); ctx.fill();
-
-        // --- 2. Primary Coolant Loop (Up -> Left -> Down Path) ---
-        ctx.strokeStyle = colors.solid;
-        ctx.lineWidth = 26;
-        ctx.lineJoin = "round";
+        p1.vx = (v1x*(m1-m2) + 2*m2*v2x)/(m1+m2);
+        p1.vy = (v1y*(m1-m2) + 2*m2*v2y)/(m1+m2);
+        p2.vx = (v2x*(m2-m1) + 2*m1*v1x)/(m1+m2);
+        p2.vy = (v2y*(m2-m1) + 2*m1*v1y)/(m1+m2);
         
-        // Top Pipe
-        ctx.beginPath();
-        ctx.moveTo(genX + genW/2, genY);
-        ctx.lineTo(genX + genW/2, genY - 70);
-        ctx.lineTo(coreX + coreW/2, genY - 70);
-        ctx.lineTo(coreX + coreW/2, coreY);
-        ctx.stroke();
-
-        // Bottom Pipe
-        ctx.beginPath();
-        ctx.moveTo(genX + genW/2, genY + genH);
-        ctx.lineTo(genX + genW/2, genY + genH + 70);
-        ctx.lineTo(coreX + coreW/2, genY + genH + 70);
-        ctx.lineTo(coreX + coreW/2, coreY + coreH);
-        ctx.stroke();
-
-        // --- 3. Steam Generator Internals ---
-        const sgGradient = ctx.createLinearGradient(0, genY + 40, 0, genY + genH - 40);
-        sgGradient.addColorStop(0, "#f87171"); 
-        sgGradient.addColorStop(1, "#3b82f6"); 
-        
-        ctx.lineWidth = 8;
-        ctx.strokeStyle = sgGradient;
-        ctx.beginPath();
-        ctx.moveTo(genX + genW, genY + genH - 60);
-        for(let i=0; i<16; i++) {
-            let py = (genY + genH - 60) - (i * 19);
-            let offset = (i % 2 === 0) ? 25 : genW - 25;
-            ctx.lineTo(genX + offset, py);
-        }
-        ctx.lineTo(genX + genW, genY + 60);
-        ctx.stroke();
-
-        // --- 4. Secondary Loop ---
-        ctx.lineWidth = 14;
-        ctx.strokeStyle = "#f87171"; // Steam
-        ctx.beginPath(); ctx.moveTo(genX + genW, genY + 60); ctx.lineTo(turbX - turbW/2, genY + 60); ctx.lineTo(turbX - turbW/2, turbY); ctx.stroke();
-        
-        ctx.strokeStyle = "#64748b"; // Exhaust
-        ctx.beginPath(); ctx.moveTo(turbX, turbY + turbH/2); ctx.lineTo(turbX, condY); ctx.stroke();
-        
-        ctx.strokeStyle = "#3b82f6"; // Feedwater
-        ctx.beginPath(); ctx.moveTo(condX, condY + condH - 30); ctx.lineTo(genX + genW + 40, condY + condH - 30); ctx.lineTo(genX + genW, genY + genH - 60); ctx.stroke();
-
-        // --- 5. Core: Fuel & Control Rods ---
-        // Fuel Rods (Stay Fixed)
-        ctx.fillStyle = "#f59e0b";
-        for(let i=0; i<3; i++) ctx.fillRect(coreX + 35 + (i*35), coreY + 70, 12, coreH - 120);
-
-        // Control Rods (Dynamic - now descend fully into the core)
-        ctx.fillStyle = "#64748b";
-        let insertionY = (rodLevel / 100) * (coreH - 80); 
-        for(let i=0; i<2; i++) {
-            let rx = coreX + 53 + (i*35);
-            // Rod Shaft
-            ctx.fillRect(rx, coreY - 140 + insertionY, 8, coreH - 100);
-            // Heavy Rod Cap
-            ctx.fillStyle = "#475569";
-            ctx.fillRect(rx - 8, coreY - 145 + insertionY, 24, 8);
-            ctx.fillStyle = "#64748b";
-        }
-
-        // --- 6. Turbine & Condenser ---
-        ctx.strokeStyle = "#475569"; ctx.lineWidth = 2;
-        ctx.strokeRect(turbX - turbW/2, turbY - turbH/2, turbW, turbH);
-        ctx.save(); ctx.translate(turbX, turbY); ctx.rotate(turbineRot);
-        ctx.fillStyle = "#94a3b8";
-        for(let i=0; i<6; i++) { ctx.rotate(Math.PI/3); ctx.fillRect(-2, -30, 4, 60); }
-        ctx.restore();
-
-        // Condenser (Light Blue)
-        ctx.fillStyle = "rgba(186, 230, 253, 0.25)";
-        ctx.fillRect(condX, condY, condW, condH);
-        ctx.strokeRect(condX, condY, condW, condH);
-        
-        const uTop = condY + 35, uBot = condY + 95, uX = condX + 40;
-        const uGrad = ctx.createLinearGradient(0, uTop, 0, uBot);
-        uGrad.addColorStop(0, "#3b82f6"); uGrad.addColorStop(1, "#ef4444");
-
-        ctx.lineWidth = 14;
-        ctx.strokeStyle = "#3b82f6"; ctx.beginPath(); ctx.moveTo(condX + condW + 40, uTop); ctx.lineTo(uX, uTop); ctx.stroke();
-        ctx.strokeStyle = uGrad; ctx.beginPath(); ctx.arc(uX, uTop + 30, 30, -Math.PI/2, Math.PI/2, true); ctx.stroke();
-        ctx.strokeStyle = "#ef4444"; ctx.beginPath(); ctx.moveTo(uX, uBot); ctx.lineTo(condX + condW + 40, uBot); ctx.stroke();
-
-        // --- 7. Precision Labeling with Arrows ---
-        drawLeader("CONTROL RODS", coreX - 80, coreY - 40, coreX + 60, coreY - 60 + insertionY);
-        drawLeader("FUEL RODS", coreX - 80, coreY + coreH - 40, coreX + 40, coreY + 150);
-        drawLeader("PRIMARY COOLANT PIPE", coreX + coreW + 20, genY - 70, coreX + coreW/2 + 30, genY - 70);
-        
-        ctx.fillStyle = "#f8fafc"; ctx.font = "bold 13px sans-serif";
-        ctx.fillText("REACTOR CORE", coreX, coreY - 160);
-        ctx.fillText("STEAM GENERATOR", genX, genY - 20);
-        ctx.fillText("TURBINE UNIT", turbX - 45, turbY - 60);
-        ctx.fillText("CONDENSER UNIT", condX, condY - 15);
-
-        ctx.font = "11px sans-serif";
-        ctx.fillStyle = "#7dd3fc"; ctx.fillText("COLD WATER IN", condX + condW - 90, uTop - 12);
-        ctx.fillStyle = "#fca5a5"; ctx.fillText("HOT WATER OUT", condX + condW - 90, uBot + 25);
-
-        requestAnimationFrame(animate);
+        // Anti-overlap nudge
+        const overlap = (p1.radius + p2.radius - dist) / 2;
+        p1.x -= overlap * Math.cos(angle); p1.y -= overlap * Math.sin(angle);
+        p2.x += overlap * Math.cos(angle); p2.y += overlap * Math.sin(angle);
     }
+}
+
+function fission(uAtom){
+    uAtom.active=false;
+    // Release 2-3 neutrons (standard for U-235)
+    for(let i=0; i<3; i++){
+        let n=new Particle(uAtom.x,uAtom.y,3,"neutron");
+        n.vx=(Math.random()-0.5)*5*speedFactor;
+        n.vy=(Math.random()-0.5)*5*speedFactor;
+        particles.push(n);
+    }
+    // Fragments
+    for(let i=0; i<2; i++){
+        let f=new Particle(uAtom.x,uAtom.y,7,"fragment");
+        f.vx=(Math.random()-0.5)*2*speedFactor;
+        particles.push(f);
+    }
+}
+
+function drawRods() {
+    const rodWidth = 40;
+    const numRods = 3;
+    const spacing = canvas.width / (numRods + 1);
+    const rodLength = (canvas.height * 0.8) * (rodInsertion / 100);
+
+    ctx.fillStyle = "#4b5563";
+    ctx.strokeStyle = "#9ca3af";
+    ctx.lineWidth = 2;
+
+    for(let i=1; i<=numRods; i++) {
+        let rodX = i * spacing - rodWidth/2;
+        ctx.fillRect(rodX, 0, rodWidth, rodLength);
+        ctx.strokeRect(rodX, 0, rodWidth, rodLength);
+        
+        // Draw "cap"
+        ctx.fillStyle = "#374151";
+        ctx.fillRect(rodX - 5, rodLength - 5, rodWidth + 10, 10);
+        ctx.fillStyle = "#4b5563";
+    }
+}
+
+function startSimulation(){
+    resetSimulation();
+    let total=parseInt(uraniumSlider.value);
+    let u238Percent=parseInt(u238Slider.value);
+    let u235Count=Math.round(total*(100-u238Percent)/100);
+    let u238Count=total-u235Count;
+
+    for(let i=0;i<u235Count;i++) particles.push(new Particle(Math.random()*canvas.width,Math.random()*canvas.height,10,"u235"));
+    for(let i=0;i<u238Count;i++) particles.push(new Particle(Math.random()*canvas.width,Math.random()*canvas.height,10,"u238"));
+    for(let i=0;i<parseInt(neutronSlider.value);i++) particles.push(new Particle(Math.random()*canvas.width,Math.random()*canvas.height,3,"neutron"));
+
     animate();
-})();
+}
+
+function resetSimulation(){
+    cancelAnimationFrame(animationId);
+    particles=[];
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+}
+
+function animate(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    
+    drawRods(); // Draw rods behind particles
+
+    particles = particles.filter(p=>p.active).slice(0, MAX_PARTICLES);
+
+    for(let i=0;i<particles.length;i++){
+        for(let j=i+1;j<particles.length;j++){
+            resolveCollision(particles[i],particles[j]);
+        }
+        particles[i].move();
+        particles[i].draw();
+    }
+
+    animationId=requestAnimationFrame(animate);
+}
 </script>
+</div>
     
     
     </div>
