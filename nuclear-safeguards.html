@@ -417,7 +417,7 @@
     
 <div style="font-family:Arial, sans-serif; max-width:750px; margin:auto; padding:20px; background:#1e293b; color:white; border-radius:12px;">
 
-<h2 style="text-align:center;">Power Excursion and Modulation Behaviour</h2>
+<h2 style="text-align:center;">Proportional Power Excursion Model</h2>
 
 <label><strong>Modulation Density</strong></label>
 
@@ -439,15 +439,9 @@
              ? (density/fullPoint)*100
              : 100;
 
-         var power = thermal;
-
          container.querySelector('#thermalBar').style.width = thermal + '%';
-         container.querySelector('#powerBar').style.width = power + '%';
          container.querySelector('#thermalText').innerHTML =
              Math.round(thermal) + '% thermalised';
-         container.querySelector('#powerText').innerHTML =
-             Math.round(power) + '% power output';
-         container.querySelector('#powerBar').setAttribute('data-power', power);
 
          if(density < fullPoint){
            container.querySelector('#statusText').innerHTML =
@@ -473,34 +467,63 @@
 
 <p style="margin-top:20px;"><strong>Power Output</strong></p>
 <div style="background:#334155; height:20px; border-radius:6px;">
-  <div id="powerBar" data-power="50" style="height:100%; width:50%; background:#38bdf8; border-radius:6px;"></div>
+  <div id="powerBar" style="height:100%; width:60%; background:#38bdf8; border-radius:6px;"></div>
 </div>
-<p id="powerText">50% power output</p>
+<p id="powerText">60% power</p>
 
 <button style="margin-top:20px; padding:8px 15px; border:none; border-radius:6px; cursor:pointer;"
 onclick="
 var container = this.parentNode;
 var slider = container.querySelector('input');
 var fullPoint = 60;
-var density = slider.value;
+var density = parseFloat(slider.value);
 var powerBar = container.querySelector('#powerBar');
 var powerText = container.querySelector('#powerText');
-var currentPower = parseFloat(powerBar.getAttribute('data-power'));
 
-if(density < fullPoint){
-  // Negative coefficient → stabilises
-  currentPower = Math.min(currentPower + 5, 100);
-  powerText.innerHTML = Math.round(currentPower) + '% power (stabilising)';
-} else {
-  // Positive coefficient → excursion continues
-  currentPower = Math.min(currentPower + 15, 200);
-  powerText.innerHTML = Math.round(currentPower) + '% power (excursion increasing)';
-}
+var steadyPower = (density <= fullPoint)
+  ? (density/fullPoint)*100
+  : 100;
 
-powerBar.style.width = Math.min(currentPower,100) + '%';
-powerBar.setAttribute('data-power', currentPower);
+var power = steadyPower + 40; // Start excursion above steady state
+
+powerBar.style.width = Math.min(power,100) + '%';
+powerText.innerHTML = Math.round(power) + '% power (excursion started)';
+
+clearInterval(window.excursionInterval);
+
+window.excursionInterval = setInterval(function(){
+
+  var distance = density - fullPoint;
+
+  if(density < fullPoint){
+    // Negative coefficient
+    var rate = Math.abs(distance) * 0.15;  // proportional correction strength
+    power -= rate;
+
+    if(power <= steadyPower){
+      power = steadyPower;
+      clearInterval(window.excursionInterval);
+      powerText.innerHTML = Math.round(power) + '% power (stabilised)';
+    } else {
+      powerText.innerHTML = Math.round(power) + '% power (decreasing)';
+    }
+
+  } else if(density == fullPoint){
+    clearInterval(window.excursionInterval);
+    powerText.innerHTML = Math.round(power) + '% power (unchanged)';
+
+  } else {
+    // Positive coefficient
+    var rate = Math.abs(distance) * 0.15;  // proportional runaway strength
+    power += rate;
+    powerText.innerHTML = Math.round(power) + '% power (increasing)';
+  }
+
+  powerBar.style.width = Math.min(power,100) + '%';
+
+}, 200);
 ">
-Simulate Power Excursion
+Start Power Excursion
 </button>
 
 <p id="statusText" style="font-weight:bold; margin-top:15px; color:#22c55e;">
