@@ -1,6 +1,6 @@
 <head>
   <meta charset="UTF-8">
-  <title style = "color: #FFFFFF;">Physics Mythbusters | The Quantum World</title>
+  <title>Physics Mythbusters | The Quantum World</title>
   <link rel="stylesheet" href="style.css">
 
   <style>
@@ -24,16 +24,18 @@
       text-align: center;
     }
 
+    /* FIELD — now acts as positioning anchor */
     #qft-field {
       width: 100%;
       height: 300px;
       background: #0a0a1a;
       border-radius: 8px;
       border: 1px solid #444;
-      position: relative;
+      position: relative;   /* IMPORTANT */
       overflow: hidden;
     }
 
+    /* Particle styling */
     .particle {
       position: absolute;
       width: 6px;
@@ -43,16 +45,25 @@
       opacity: 0;
     }
 
+    /* ⭐ ENERGY BAR — positioned INSIDE field (top-left) */
     .energy-bar {
+      position: absolute;
+      top: 12px;
+      left: 12px;
       display: flex;
-      justify-content: space-between;
-      max-width: 200px;
-      margin: 12px auto;
+      gap: 8px;
+      z-index: 10;
+
+      /* Optional readability panel */
+      background: rgba(0, 0, 0, 0.45);
+      padding: 6px;
+      border-radius: 6px;
     }
 
+    /* Energy blocks */
     .energy-level {
-      width: 40px;
-      height: 15px;
+      width: 32px;
+      height: 12px;
       background: #333;
       border-radius: 3px;
       transition: background 0.3s;
@@ -62,6 +73,7 @@
       background: #4cc9f0;
     }
 
+    /* Buttons */
     button {
       font-size: 1.2rem;
       margin: 4px;
@@ -78,6 +90,7 @@
       background-color: #d65b4f;
     }
 
+    /* Explanation text */
     #explanation {
       color: #eee;
       margin-top: 12px;
@@ -161,12 +174,14 @@
   <div id="qft-container">
     <div id="qft-field"></div>
 
-    <div class="energy-bar" id="energyBar">
-      <div class="energy-level" id="level0"></div>
-      <div class="energy-level" id="level1"></div>
-      <div class="energy-level" id="level2"></div>
-      <div class="energy-level" id="level3"></div>
-    </div>
+  <div class="energy-bar" id="energyBar">
+    <div class="energy-level" id="level0"></div>
+    <div class="energy-level" id="level1"></div>
+    <div class="energy-level" id="level2"></div>
+    <div class="energy-level" id="level3"></div>
+  </div>
+
+</div>
 
     <div>
       <button onclick="lowerEnergy()">↓</button>
