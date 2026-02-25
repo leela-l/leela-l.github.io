@@ -55,8 +55,6 @@ header nav a {
 }
 
 
-
-
 header nav a:hover::after {
   width: 100%;
 }
@@ -76,9 +74,14 @@ header nav a:hover::after {
   transition: 0.3s;
 }
 
-/* Move both text and arrow */
-.nav-item:hover a,
-.nav-item:hover .nav-arrow {
+
+.nav-item > a,
+.nav-item > .nav-arrow {
+  transition: all 0.3s ease;
+}
+
+.nav-item:hover > a,
+.nav-item:hover > .nav-arrow {
   color: #38d9a9;
   transform: translateY(-2px);
 }
