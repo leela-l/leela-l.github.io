@@ -417,13 +417,13 @@
     
 <div style="font-family:Arial, sans-serif; max-width:750px; margin:auto; padding:20px; background:#1e293b; color:white; border-radius:12px;">
 
-<h2 style="text-align:center;">Modulation Density and Power Behaviour</h2>
+<h2 style="text-align:center;">Power Excursion and Modulation Behaviour</h2>
 
 <label><strong>Modulation Density</strong></label>
 
 <div style="position:relative; width:100%; margin-bottom:15px;">
 
-  <!-- Vertical region markers -->
+  <!-- Region markers -->
   <div style="position:absolute; left:0%; top:0; bottom:0; width:2px; background:#22c55e;"></div>
   <div style="position:absolute; left:60%; top:0; bottom:0; width:2px; background:#facc15;"></div>
   <div style="position:absolute; left:100%; top:0; bottom:0; width:2px; background:#ef4444;"></div>
@@ -431,40 +431,36 @@
   <input type="range" min="0" max="100" value="30"
          style="width:100%;"
          oninput="
-         var density = this.value;
          var fullPoint = 60;
+         var density = this.value;
+         var container = this.closest('div').parentNode;
 
          var thermal = density <= fullPoint
-             ? (density / fullPoint) * 100
+             ? (density/fullPoint)*100
              : 100;
 
-         var power = thermal; // Power plateaus after full thermalisation
+         var power = thermal;
 
-         var parent = this.parentNode.parentNode;
-
-         parent.querySelector('#thermalBar').style.width = thermal + '%';
-         parent.querySelector('#powerBar').style.width = power + '%';
-
-         parent.querySelector('#thermalText').innerHTML =
+         container.querySelector('#thermalBar').style.width = thermal + '%';
+         container.querySelector('#powerBar').style.width = power + '%';
+         container.querySelector('#thermalText').innerHTML =
              Math.round(thermal) + '% thermalised';
-
-         parent.querySelector('#powerText').innerHTML =
+         container.querySelector('#powerText').innerHTML =
              Math.round(power) + '% power output';
+         container.querySelector('#powerBar').setAttribute('data-power', power);
 
          if(density < fullPoint){
-             parent.querySelector('#statusText').innerHTML =
-             'Under-modulated: Negative modulation coefficient (self-regulating behaviour).';
-             parent.querySelector('#statusText').style.color = '#22c55e';
-         }
-         else if(density == fullPoint){
-             parent.querySelector('#statusText').innerHTML =
-             '100% Thermalisation: Neutral modulation response.';
-             parent.querySelector('#statusText').style.color = '#facc15';
-         }
-         else{
-             parent.querySelector('#statusText').innerHTML =
-             'Over-modulated: Positive modulation coefficient (power excursion can accelerate).';
-             parent.querySelector('#statusText').style.color = '#ef4444';
+           container.querySelector('#statusText').innerHTML =
+           'Under-modulated: Negative modulation coefficient.';
+           container.querySelector('#statusText').style.color = '#22c55e';
+         } else if(density == fullPoint){
+           container.querySelector('#statusText').innerHTML =
+           '100% Thermalisation: Neutral response.';
+           container.querySelector('#statusText').style.color = '#facc15';
+         } else {
+           container.querySelector('#statusText').innerHTML =
+           'Over-modulated: Positive modulation coefficient.';
+           container.querySelector('#statusText').style.color = '#ef4444';
          }
          ">
 </div>
@@ -477,12 +473,38 @@
 
 <p style="margin-top:20px;"><strong>Power Output</strong></p>
 <div style="background:#334155; height:20px; border-radius:6px;">
-  <div id="powerBar" style="height:100%; width:50%; background:#38bdf8; border-radius:6px;"></div>
+  <div id="powerBar" data-power="50" style="height:100%; width:50%; background:#38bdf8; border-radius:6px;"></div>
 </div>
 <p id="powerText">50% power output</p>
 
+<button style="margin-top:20px; padding:8px 15px; border:none; border-radius:6px; cursor:pointer;"
+onclick="
+var container = this.parentNode;
+var slider = container.querySelector('input');
+var fullPoint = 60;
+var density = slider.value;
+var powerBar = container.querySelector('#powerBar');
+var powerText = container.querySelector('#powerText');
+var currentPower = parseFloat(powerBar.getAttribute('data-power'));
+
+if(density < fullPoint){
+  // Negative coefficient → stabilises
+  currentPower = Math.min(currentPower + 5, 100);
+  powerText.innerHTML = Math.round(currentPower) + '% power (stabilising)';
+} else {
+  // Positive coefficient → excursion continues
+  currentPower = Math.min(currentPower + 15, 200);
+  powerText.innerHTML = Math.round(currentPower) + '% power (excursion increasing)';
+}
+
+powerBar.style.width = Math.min(currentPower,100) + '%';
+powerBar.setAttribute('data-power', currentPower);
+">
+Simulate Power Excursion
+</button>
+
 <p id="statusText" style="font-weight:bold; margin-top:15px; color:#22c55e;">
-Under-modulated: Negative modulation coefficient (self-regulating behaviour).
+Under-modulated: Negative modulation coefficient.
 </p>
 
 </div>
