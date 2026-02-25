@@ -102,18 +102,33 @@ header nav a:hover::after {
 }
 
 
-
 .dropdown-menu a {
   display: block;
   padding: 8px 16px;
   color: #e0e6ed;
   text-decoration: none;
   font-size: 0.95em;
+  position: relative;
 }
 
 .dropdown-menu a:hover {
   background: rgba(79, 195, 247, 0.15);
   color: #4fc3f7;
+}
+
+.dropdown-menu a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 4px;        /* adjust to sit nicely under text */
+  width: 0;
+  height: 2px;
+  background: #4fc3f7;
+  transition: width 0.3s ease;
+}
+
+.dropdown-menu a:hover::after {
+  width: 100%;
 }
 
 
