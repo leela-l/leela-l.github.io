@@ -241,7 +241,7 @@
     // automatically decay energy over time
     setInterval(() => {
       if (energy > 0) {
-        energy -= 0.01; // smooth decay
+        energy -= 0.1; // smooth decay
         if (energy < 0) energy = 0;
         updateEnergyBar();
         explain("Energy relaxing toward vacuum: " + energy.toFixed(2));
