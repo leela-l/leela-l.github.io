@@ -16,9 +16,8 @@
       <a href="QM.html">The Quantum World</a>
       <a href="Radiation.html">Cellular Technology</a>
       <a href="Astro.html">Astronomy</a>
-
     </nav>
-  </header>
+</header>
 
 <section class="content-section">
   <!-- Main title -->
@@ -28,7 +27,7 @@
   <div style="text-align: center; margin: 20px 0;">
   <img src="images/image5G.jpg" alt="5G photo" style="max-width: 80%; height: auto; border-radius:10px;">
   </div>
-
+  
   <!-- Introduction text -->
   <p style="font-size:1.2em; line-height:1.7; max-width:900px; margin:auto;">
    You may have heard the term radiation when talking about sunrays, microwaves, X-rays, or wireless networks, but what is actually radiation?
@@ -42,7 +41,6 @@ The reason for the controversy is a large misspread of information about the har
     See here for examples and debunking of this fake news.
 <br><br>
 Here, we are going to mythbust the rumours about radiation, but first let's test your knowledge. 
-
   </p>
 </section>
 
@@ -69,7 +67,6 @@ Here, we are going to mythbust the rumours about radiation, but first let's test
   <br>
   <p>These questions are based on electromagnetic waves, which are explained in this section.</p>
 </section>
-
 
 <script>
 function checkQuiz() {
@@ -99,14 +96,11 @@ function checkQuiz() {
 
 <p style="font-size:1.2em; line-height:1.7; max-width:900px; margin:auto;">
   By the end of this section, see if you have changed your mind on any of these answers. The answers and explanations are shown here.</p>
-</p>
 
-<!-- Answers / Explanation Dropdown (after quiz) -->
 <section class="content-section">
   <div class="dropdown-section-small">
     <details>
       <summary>Check the answers!</summary>
-      </p>
       <div class="dropdown-content">
         <ul>
           <li><strong>A) True</strong> Visable light is a type of electromagnetic wave, with frequencies of 400 THz to 790 THz</li>
@@ -120,9 +114,7 @@ function checkQuiz() {
   </div>
 </section>
 
-
 <section class="feature dropdown-section">
-  <!-- Visible explanation -->
   <h2 style="color:#63bdf9; font-size:2em; font-weight:600; margin-bottom:10px;">
     What is radiation?
   </h2>
@@ -135,8 +127,9 @@ function checkQuiz() {
   <h3>Explore the Electromagnetic Spectrum</h3>
 
   <canvas id="waveCanvas" width="600" height="200"></canvas>
-  <input type="range" id="frequencySlider" min="3" max="20" step="0.1" value="6" style="width:600px;">
-  <canvas id="tickCanvas" style="display:block; margin:auto;"></canvas>
+
+  <input type="range" id="frequencySlider" min="3" max="20" step="0.1" value="6">
+
   <div class="em-info">
     <p><strong>Frequency:</strong> <span id="freqValue">1 MHz</span></p>
     <p><strong>Type:</strong> <span id="waveType">Radio Waves</span></p>
@@ -146,7 +139,6 @@ function checkQuiz() {
 
 </div>
 
-  <!-- Dropdown for detailed content -->
   <details>
     <summary style="color:#ffb86c; font-weight:600; cursor:pointer; font-size:1.2em;">
       Learn more about radiation →
@@ -163,26 +155,20 @@ function checkQuiz() {
         <br><br>
         Very high frequency and short wavelength (upper end of ultraviolet radiation) waves can be ionising, meaning they can cause harm 
           to life by damaging cells and even mutating DNA. In extreme cases, this can lead to cancer, or radiation poisoning.
-
          </p>
       </div>
     </div>
   </details>
 </section>
 
-
 <section class="content-section">
-  <!-- Main title -->
   <h1 style="color:#bea8e0; text-align:center; margin-bottom:20px; font-size:2.5em;">
     Explore the 5G Debate
   </h1>
-
-  <!-- Introduction text -->
   <p style="font-size:1.2em; line-height:1.7; max-width:900px; margin:auto;">
     Lets analyse and break down the facts from the fiction in some of these headlines and posts about radiation.
   </p>
 </section>
-
 
 <div class="stories">
   <article>
@@ -223,8 +209,7 @@ const freqValue = document.getElementById("freqValue");
 const waveType = document.getElementById("waveType");
 const ionisingStatus = document.getElementById("ionisingStatus");
 const waveUse = document.getElementById("waveUse");
-
-// EM regions (frequency in Hz)
+  
 function getRegion(freq) {
   if (freq < 3e9) return {type:"Radio Waves", ion:false, use:"Radio, TV, 5G"};
   if (freq < 3e11) return {type:"Microwaves", ion:false, use:"5G, microwave ovens"};
@@ -247,29 +232,18 @@ function formatFreq(freq) {
 function drawWave(freq) {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // Convert frequency (log scale) into number of cycles on screen
-  // Low freq → ~1 cycle
-  // High freq → many cycles
-
   let logFreq = Math.log10(freq);
 
-  // Map log frequency range (3–20) to cycles (1–40)
   let minLog = 3;
   let maxLog = 20;
   let minCycles = 1;
   let maxCycles = 40;
 
-  // Normalise 0 → 1
   let t = (logFreq - minLog) / (maxLog - minLog);
-
-// Clamp just in case
   t = Math.max(0, Math.min(1, t));
-
-// Ease the growth (slower at first, faster later)
-  t = Math.pow(t, 1.6);   // increase number = slower early growth
+  t = Math.pow(t, 1.6);
 
   let cycles = minCycles + t * (maxCycles - minCycles);
-
 
   ctx.beginPath();
   ctx.strokeStyle = "#4fc3f7";
@@ -287,7 +261,6 @@ function drawWave(freq) {
 }
 
 function updateSpectrum() {
-  // Slider value is log10(frequency)
   let logFreq = slider.value;
   let freq = Math.pow(10, logFreq);
 
@@ -309,48 +282,8 @@ function updateSpectrum() {
 }
 
 slider.addEventListener("input", updateSpectrum);
-
 updateSpectrum();
-
-
-const slider = document.getElementById("frequencySlider");
-const tickCanvas = document.getElementById("tickCanvas");
-const tickCtx = tickCanvas.getContext("2d");
-
-// EM region start frequencies (Hz)
-const emRegions = [3e9, 3e11, 4e14, 7.5e14, 3e16, 3e19, 1e21];
-
-function drawTicks() {
-  // Match canvas width and height to slider
-  tickCanvas.width = slider.offsetWidth;
-  tickCanvas.height = 10; // height for ticks
-
-  tickCtx.clearRect(0, 0, tickCanvas.width, tickCanvas.height);
-  tickCtx.strokeStyle = "#ffffff";
-  tickCtx.lineWidth = 1;
-
-  const minLog = parseFloat(slider.min);
-  const maxLog = parseFloat(slider.max);
-
-  emRegions.forEach(freq => {
-    let logFreq = Math.log10(freq);
-
-    // Map logFreq to canvas width
-    let x = ((logFreq - minLog) / (maxLog - minLog)) * tickCanvas.width;
-
-    // Draw vertical tick
-    tickCtx.beginPath();
-    tickCtx.moveTo(x, 0);
-    tickCtx.lineTo(x, tickCanvas.height);
-    tickCtx.stroke();
-  });
-}
-
-// Draw ticks on load
-drawTicks();
-
-// Redraw ticks if window resizes (optional)
-window.addEventListener("resize", drawTicks);
+</script>
 
 </body>
 </html>
