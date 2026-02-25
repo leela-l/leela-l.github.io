@@ -54,20 +54,17 @@ header nav a {
   transition: all 0.3s ease;
 }
 
-/* Animated underline */
-header nav a::after {
+nav a::after {
   content: "";
   position: absolute;
   left: 0;
   bottom: -4px;
   width: 0;
   height: 2px;
-  color: #38d9a9;
-  background: #38d9a9;
-  transition: width 0.3s ease;
+  background: #4fc3f7;
 }
 
-/* Hover effect */
+
 header nav a:hover {
   color: #38d9a9;
   transform: translateY(-2px);
@@ -108,8 +105,7 @@ header nav a:hover::after {
   z-index: 200;
 }
 
-.nav-arrow:hover + .dropdown-menu,
-.dropdown-menu:hover {
+.nav-dropdown:hover .nav-dropdown-content {
   display: block;
 }
 
