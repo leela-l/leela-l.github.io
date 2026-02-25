@@ -160,37 +160,65 @@ header nav a:hover::after {
 }
 
 /* --- STORIES GRID --- */
+/* --- STORIES GRID (updated layout, same style) --- */
 .stories {
-  display: flex;
-  justify-content: space-around;
-  flex-wrap: wrap;
+  max-width: 1100px;
+  margin: 40px auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
   padding: 20px;
 }
 
+/* Individual cards (keep same visual style) */
 .stories article {
-  background: #3b475c;          /* lighter than body but darker than feature */
+  background: #3b475c;  /* same colour as before */
   padding: 20px;
-  margin: 15px;
-  width: 260px;
   border-radius: 15px;
   box-shadow: 0 6px 15px rgba(0,0,0,0.4);
   transition: 0.3s;
 }
 
+/* Hover effect stays the same */
 .stories article:hover {
   transform: translateY(-5px);
   box-shadow: 0 12px 25px rgba(0,0,0,0.5);
 }
 
+/* Images */
 .stories img {
   width: 100%;
   height: auto;
   border-radius: 10px;
+  margin-bottom: 10px;
 }
 
-.stories h3 {
-  color: #38bdf8;              /* turquoise for titles */
+/* Titles */
+.stories h3,
+.stories h2 {
+  color: #38bdf8;  /* same turquoise */
   margin-top: 10px;
+}
+
+/* --- BIG climate card --- */
+.stories article:first-child {
+  grid-column: span 2;   /* makes it big */
+}
+
+/* Slightly larger title for big card */
+.stories article:first-child h2 {
+  font-size: 1.8em;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .stories {
+    grid-template-columns: 1fr;
+  }
+
+  .stories article:first-child {
+    grid-column: span 1;
+  }
 }
 
 /* --- BUTTONS --- */
