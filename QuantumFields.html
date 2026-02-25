@@ -4,12 +4,10 @@
   <link rel="stylesheet" href="style.css">
 
   <style>
-    /* Title color */
     header h1 {
       color: #5a3fa3;
     }
 
-    /* Remove box styling from selected sections */
     .no-box {
       background: none;
       border: none;
@@ -17,25 +15,26 @@
       padding: 0;
     }
 
-    /* QFT section styling */
     #qft-container {
       max-width: 760px;
       margin: 30px auto;
       text-align: center;
+      color: #eee;
+      font-family: inherit;
     }
 
-    /* FIELD — now acts as positioning anchor */
+    /* FIELD (simulation box) */
     #qft-field {
       width: 100%;
       height: 300px;
-      background: #0a0a1a;
+      background: #02021a;
       border-radius: 8px;
       border: 1px solid #444;
-      position: relative;   /* IMPORTANT */
+      position: relative;   /* anchor for absolute elements */
       overflow: hidden;
     }
 
-    /* Particle styling */
+    /* PARTICLES */
     .particle {
       position: absolute;
       width: 6px;
@@ -45,25 +44,22 @@
       opacity: 0;
     }
 
-    /* ⭐ ENERGY BAR — positioned INSIDE field (top-left) */
+    /* ⭐ ENERGY BAR — INSIDE FIELD */
     .energy-bar {
       position: absolute;
-      top: 12px;
-      left: 12px;
+      top: 10px;
+      left: 10px;
       display: flex;
-      gap: 8px;
-      z-index: 10;
-
-      /* Optional readability panel */
-      background: rgba(0, 0, 0, 0.45);
+      gap: 6px;
+      z-index: 20;
+      background: rgba(0,0,0,0.45);
       padding: 6px;
       border-radius: 6px;
     }
 
-    /* Energy blocks */
     .energy-level {
-      width: 32px;
-      height: 12px;
+      width: 28px;
+      height: 10px;
       background: #333;
       border-radius: 3px;
       transition: background 0.3s;
@@ -73,7 +69,14 @@
       background: #4cc9f0;
     }
 
-    /* Buttons */
+    /* ⭐ STATUS TEXT — NOW AT TOP (below instructions) */
+    #explanation {
+      margin: 8px 0 14px 0;
+      font-size: 1rem;
+      text-align: left;
+      color: #eee;
+    }
+
     button {
       font-size: 1.2rem;
       margin: 4px;
@@ -88,42 +91,6 @@
 
     button:hover {
       background-color: #d65b4f;
-    }
-
-    /* Explanation text */
-    #explanation {
-      color: #eee;
-      margin-top: 12px;
-      text-align: left;
-      max-width: 760px;
-      margin-left: auto;
-      margin-right: auto;
-      font-family: inherit;
-      font-size: 1rem;
-    }
-
-    /* References section */
-    .references {
-      max-width: 760px;
-      margin: 40px auto;
-      padding: 20px;
-      background: #f4f1fb;
-      border-left: 6px solid #5a3fa3;
-      border-radius: 6px;
-      font-size: 0.95rem;
-    }
-
-    .references h2 {
-      margin-top: 0;
-      color: #5a3fa3;
-    }
-
-    .references ul {
-      padding-left: 20px;
-    }
-
-    .references li {
-      margin-bottom: 8px;
     }
   </style>
 </head>
@@ -172,24 +139,33 @@
   <p>Adjust the energy level to see more intense vacuum fluctuations.</p>
 
   <div id="qft-container">
-    <div id="qft-field"></div>
 
-  <div class="energy-bar" id="energyBar">
-    <div class="energy-level" id="level0"></div>
-    <div class="energy-level" id="level1"></div>
-    <div class="energy-level" id="level2"></div>
-    <div class="energy-level" id="level3"></div>
+  <h2>Interactive Quantum Field</h2>
+  <p>Adjust the energy level to see more intense vacuum fluctuations.</p>
+
+  <!-- ⭐ STATUS TEXT NOW AT TOP -->
+  <div id="explanation">Energy lowered to level 0.</div>
+
+  <!-- FIELD -->
+  <div id="qft-field">
+
+    <!-- ⭐ ENERGY BAR INSIDE FIELD -->
+    <div class="energy-bar" id="energyBar">
+      <div class="energy-level" id="level0"></div>
+      <div class="energy-level" id="level1"></div>
+      <div class="energy-level" id="level2"></div>
+      <div class="energy-level" id="level3"></div>
+    </div>
+
+  </div>
+
+  <!-- CONTROLS -->
+  <div>
+    <button onclick="decreaseEnergy()">↓</button>
+    <button onclick="increaseEnergy()">↑</button>
   </div>
 
 </div>
-
-    <div>
-      <button onclick="lowerEnergy()">↓</button>
-      <button onclick="raiseEnergy()">↑</button>
-    </div>
-
-    <div id="explanation"></div>
-  </div>
 
   <script>
     const levels = 4;
