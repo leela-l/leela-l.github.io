@@ -412,88 +412,78 @@
       <p style="font-size:1.2em; line-height:1.7; max-width:900px; margin:auto;">
     In a nuclear reactor core, a moderator is used to slow down the neutrons within the core, not to slow down the reactor, but to speed up the reaction. This happens because when the neutrons are slowed down by the moderator, they spend more time close to the U-235 nuclei, making it more likely to be absorbed. Examples of some moderators are graphite, water and heavy water (D2O). 
   <br><br>
-       <div style="font-family:Arial, sans-serif; max-width:700px; margin:auto; padding:20px; background:#1e293b; color:white; border-radius:12px;">
+       
+    
+    
+    <div style="font-family:Arial, sans-serif; max-width:700px; margin:auto; padding:20px; background:#1e293b; color:white; border-radius:12px;">
 
-<h2 style="text-align:center;">Under vs Over Moderated Reactor</h2>
+<h2 style="text-align:center;">Neutron Thermalisation Model</h2>
 
-<label><strong>Moderator Amount</strong></label>
-<input type="range" min="0" max="100" value="30" id="moderatorSlider" style="width:100%;">
+<label><strong>Modulation Density</strong></label>
 
-<p>Thermalised Neutrons</p>
+<div style="position:relative; width:100%; margin-bottom:10px;">
+
+  <!-- Vertical markers -->
+  <div style="position:absolute; left:0%; top:0; bottom:0; width:2px; background:#22c55e;"></div>
+  <div style="position:absolute; left:60%; top:0; bottom:0; width:2px; background:#facc15;"></div>
+  <div style="position:absolute; left:100%; top:0; bottom:0; width:2px; background:#ef4444;"></div>
+
+  <input type="range" min="0" max="100" value="30"
+         style="width:100%;"
+         oninput="
+         var density = this.value;
+         var fullPoint = 60;
+
+         var thermal = density <= fullPoint
+             ? (density / fullPoint) * 100
+             : 100;
+
+         var power = thermal; // Power plateaus after full thermalisation
+
+         this.parentNode.parentNode.querySelector('#thermalBar').style.width = thermal + '%';
+         this.parentNode.parentNode.querySelector('#powerBar').style.width = power + '%';
+
+         this.parentNode.parentNode.querySelector('#thermalText').innerHTML =
+             Math.round(thermal) + '% thermalised';
+
+         this.parentNode.parentNode.querySelector('#powerText').innerHTML =
+             Math.round(power) + '% power output';
+
+         if(density < fullPoint){
+             this.parentNode.parentNode.querySelector('#statusText').innerHTML =
+             'Under-modulated region';
+             this.parentNode.parentNode.querySelector('#statusText').style.color = '#22c55e';
+         }
+         else if(density == fullPoint){
+             this.parentNode.parentNode.querySelector('#statusText').innerHTML =
+             '100% Thermalisation';
+             this.parentNode.parentNode.querySelector('#statusText').style.color = '#facc15';
+         }
+         else{
+             this.parentNode.parentNode.querySelector('#statusText').innerHTML =
+             'Over-modulated region';
+             this.parentNode.parentNode.querySelector('#statusText').style.color = '#ef4444';
+         }
+         ">
+</div>
+
+<p><strong>Degree of Thermalisation</strong></p>
 <div style="background:#334155; height:20px; border-radius:6px;">
-  <div id="thermalBar" style="height:100%; width:0%; background:#22c55e; border-radius:6px;"></div>
+  <div id="thermalBar" style="height:100%; width:50%; background:#22c55e; border-radius:6px;"></div>
 </div>
+<p id="thermalText">50% thermalised</p>
 
-<p>Neutron Absorption by Moderator</p>
+<p style="margin-top:20px;"><strong>Power Output</strong></p>
 <div style="background:#334155; height:20px; border-radius:6px;">
-  <div id="absorptionBar" style="height:100%; width:0%; background:#f97316; border-radius:6px;"></div>
+  <div id="powerBar" style="height:100%; width:50%; background:#38bdf8; border-radius:6px;"></div>
 </div>
+<p id="powerText">50% power output</p>
 
-<p>Net Reactivity</p>
-<div style="background:#334155; height:20px; border-radius:6px;">
-  <div id="reactivityBar" style="height:100%; width:0%; background:#38bdf8; border-radius:6px;"></div>
-</div>
-
-<p>Moderator Temperature Coefficient:</p>
-<p id="mtcText" style="font-weight:bold;"></p>
+<p id="statusText" style="font-weight:bold; margin-top:15px; color:#22c55e;">
+Under-modulated region
+</p>
 
 </div>
-
-<script>
-(function(){
-
-  const slider = document.getElementById("moderatorSlider");
-  const thermalBar = document.getElementById("thermalBar");
-  const absorptionBar = document.getElementById("absorptionBar");
-  const reactivityBar = document.getElementById("reactivityBar");
-  const mtcText = document.getElementById("mtcText");
-
-  const fullThermalisationPoint = 60; // point where all neutrons are thermalised
-
-  function update(){
-
-    const moderator = parseInt(slider.value);
-
-    // Thermalisation increases until saturation
-    let thermalFraction;
-    if(moderator <= fullThermalisationPoint){
-      thermalFraction = (moderator / fullThermalisationPoint) * 100;
-    } else {
-      thermalFraction = 100;
-    }
-
-    // Absorption increases continuously with moderator
-    const absorption = moderator * 0.8;
-
-    // Reactivity = benefit from thermalisation - absorption penalty
-    const reactivity = thermalFraction - absorption + 40; 
-    const boundedReactivity = Math.max(0, Math.min(100, reactivity));
-
-    thermalBar.style.width = thermalFraction + "%";
-    absorptionBar.style.width = absorption + "%";
-    reactivityBar.style.width = boundedReactivity + "%";
-
-    if(moderator < fullThermalisationPoint){
-      mtcText.textContent = "Under-moderated: Negative Moderator Temperature Coefficient (self-regulating).";
-      mtcText.style.color = "#22c55e";
-    } 
-    else if(moderator == fullThermalisationPoint){
-      mtcText.textContent = "Fully thermalised: Maximum moderation efficiency.";
-      mtcText.style.color = "#facc15";
-    }
-    else{
-      mtcText.textContent = "Over-moderated: Positive Moderator Temperature Coefficient (power excursion accelerates).";
-      mtcText.style.color = "#ef4444";
-    }
-
-  }
-
-  slider.addEventListener("input", update);
-  update();
-
-})();
-</script>
-      
     
     
     <p style="font-size:1.2em; line-height:1.7; max-width:900px; margin:auto;">
