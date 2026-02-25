@@ -807,3 +807,48 @@ font-weight: bold;
   font-size: 1em;
   line-height: 1.6;
 }
+
+
+/* Make slider container positioned */
+.em-container {
+  position: relative;
+  width: 600px; /* match canvas width */
+}
+
+/* Ensure slider fills container */
+#frequencySlider {
+  width: 100%;
+}
+
+/* Style tick marks (Chrome/Edge) */
+#frequencySlider::-webkit-slider-runnable-track {
+  background: #333;
+}
+
+#frequencySlider::-webkit-slider-thumb {
+  position: relative;
+  z-index: 2;
+}
+
+/* Make datalist ticks visible and aligned */
+datalist {
+  display: flex;
+  justify-content: space-between;
+  position: absolute;
+  width: 100%;
+  top: 35px; /* adjust to sit just under slider */
+  pointer-events: none;
+}
+
+datalist option {
+  position: relative;
+}
+
+datalist option::after {
+  content: "";
+  position: absolute;
+  top: -18px;
+  width: 2px;
+  height: 12px;
+  background: white;
+}
