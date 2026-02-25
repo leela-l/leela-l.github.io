@@ -914,3 +914,41 @@ datalist option::after {
   height: 12px;
   background: white;
 }
+.slider-container {
+  position: relative;
+  width: 600px; /* match your canvas width */
+  margin: 40px auto;
+}
+
+#frequencySlider {
+  width: 100%;
+  display: block;
+}
+
+/* Dividers container */
+.dividers {
+  display: flex;
+  justify-content: space-between; /* spreads dividers evenly */
+  margin-top: 10px; /* space below slider */
+  position: relative;
+}
+
+/* Individual dividers */
+.divider {
+  position: relative;
+  width: 2px;
+  height: 15px;
+  background: #38bdf8; /* blue color for visibility */
+}
+
+/* Labels below dividers */
+.divider::after {
+  content: attr(data-label);
+  position: absolute;
+  top: 20px; /* below the divider */
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.8em;
+  color: #e5e7eb;
+  white-space: nowrap;
+}
