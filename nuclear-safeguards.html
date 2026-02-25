@@ -80,7 +80,6 @@
             background: #111827;
         }
 
-        /* Stats Overlay */
         .fission-stats {
             position: absolute;
             top: 15px;
@@ -133,34 +132,10 @@
             font-weight: bold;
         }
 
-        /* Slider with Ticks */
-        .slider-container {
-            position: relative;
-            margin-bottom: 20px;
-        }
-
         .fission-controls input {
             width: 100%;
             margin-top: 4px;
             cursor: pointer;
-        }
-
-        .tick-wrapper {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 2px;
-            font-size: 9px;
-            color: #9ca3af;
-            position: relative;
-            padding: 0 5px;
-        }
-
-        .tick-mark {
-            position: absolute;
-            top: -5px;
-            width: 1px;
-            height: 5px;
-            background: #4b5563;
         }
 
         .slider-value {
@@ -191,11 +166,11 @@
     <canvas id="fissionCanvas"></canvas>
 
     <div class="fission-stats">
-        Neutron Flux: <span id="fluxVal">0</span>
+        Total Neutrons: <span id="fluxVal">0</span>
     </div>
 
     <div class="fission-legend">
-        <strong style="display:block; margin-bottom:5px; color:#9ca3af;">Reactor Core</strong>
+        <strong style="display:block; margin-bottom:5px; color:#9ca3af;">Core Components</strong>
         <div><span class="color-box" style="background:#22c55e"></span>U-235 (Fissile)</div>
         <div><span class="color-box" style="background:#a855f7"></span>U-238 (Stable)</div>
         <div><span class="color-box" style="background:#3b82f6"></span>Neutron</div>
@@ -209,24 +184,19 @@
         
         <hr>
 
-        <label>Modulation Density <span id="uraniumVal" class="slider-value">150</span></label>
-        <div class="slider-container">
+        <label>Total Uranium Atoms <span id="uraniumVal" class="slider-value">150</span>
             <input type="range" id="uraniumSlider" min="20" max="400" value="150">
-            <div class="tick-wrapper">
-                <span style="left: 0%;">Under</span>
-                <span style="left: 45%;">Optimal</span>
-                <span style="left: 90%;">Over</span>
-                <div class="tick-mark" style="left: 5%;"></div>
-                <div class="tick-mark" style="left: 50%;"></div>
-                <div class="tick-mark" style="left: 95%;"></div>
-            </div>
-        </div>
+        </label>
 
         <label>U-238 Ratio <span id="u238Val" class="slider-value">95%</span>
             <input type="range" id="u238Slider" min="0" max="100" value="95">
         </label>
 
-        <label>Startup Neutrons <span id="neutronVal" class="slider-value">2</span>
+        <label>Relative Temperature <span id="tempVal" class="slider-value">1.0x</span>
+            <input type="range" id="tempSlider" min="0.5" max="4" step="0.1" value="1">
+        </label>
+
+        <label>Initial Neutrons <span id="neutronVal" class="slider-value">2</span>
             <input type="range" id="neutronSlider" min="1" max="50" value="2">
         </label>
 
@@ -245,6 +215,7 @@
         let particles = [];
         let animationId;
         let rodInsertion = 0;
+        let relTemp = 1.0;
         const speedFactor = 0.25;
         const MAX_PARTICLES = 1200;
         const rodWidth = 45;
@@ -254,16 +225,19 @@
         const nSlider = document.getElementById("neutronSlider");
         const u238Slider = document.getElementById("u238Slider");
         const rSlider = document.getElementById("rodSlider");
+        const tSlider = document.getElementById("tempSlider");
 
         const uVal = document.getElementById("uraniumVal");
         const nVal = document.getElementById("neutronVal");
         const u28Val = document.getElementById("u238Val");
         const rVal = document.getElementById("rodVal");
+        const tVal = document.getElementById("tempVal");
 
         rSlider.oninput = () => { rodInsertion = rSlider.value; rVal.innerText = rSlider.value + "%"; };
         uSlider.oninput = () => uVal.innerText = uSlider.value;
         nSlider.oninput = () => nVal.innerText = nSlider.value;
         u238Slider.oninput = () => u28Val.innerText = u238Slider.value + "%";
+        tSlider.oninput = () => { relTemp = parseFloat(tSlider.value); tVal.innerText = relTemp.toFixed(1) + "x"; };
 
         function resizeCanvas() {
             canvas.width = container.clientWidth;
@@ -284,8 +258,9 @@
             }
 
             move() {
-                this.x += this.vx;
-                this.y += this.vy;
+                // Apply relative temperature to velocity
+                this.x += this.vx * relTemp;
+                this.y += this.vy * relTemp;
 
                 if (this.x < this.radius || this.x > canvas.width - this.radius) this.vx *= -1;
                 if (this.y < this.radius || this.y > canvas.height - this.radius) this.vy *= -1;
@@ -303,7 +278,7 @@
                             if (this.type === "neutron") {
                                 this.active = false; 
                             } else {
-                                if (this.y - this.vy > rB) { 
+                                if (this.y - (this.vy * relTemp) > rB) { 
                                     this.vy = Math.abs(this.vy);
                                     this.y = rB + this.radius;
                                 } else { 
