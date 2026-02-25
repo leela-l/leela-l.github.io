@@ -127,11 +127,8 @@ function checkQuiz() {
   <h3>Explore the Electromagnetic Spectrum</h3>
 
   <canvas id="waveCanvas" width="600" height="200"></canvas>
-
-  <div style="position: relative; width: 600px; margin: auto;">
-  <canvas id="tickCanvas"></canvas>
-  <input type="range" id="frequencySlider" min="3" max="20" step="0.1" value="6" style="width:100%;">
-</div>
+<input type="range" id="frequencySlider" min="3" max="20" step="0.1" value="6" style="width:600px;">
+  <canvas id="tickCanvas" height="10" style="display:block; margin:auto;"></canvas>
   
   <div class="em-info">
     <p><strong>Frequency:</strong> <span id="freqValue">1 MHz</span></p>
