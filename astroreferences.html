@@ -1,377 +1,40 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Sucked In - Pseudoscience in Blackholes</title>
+  <meta charset="UTF-8">
+  <title>Physics Mythbusters | The Quantum World</title>
+  <link rel="stylesheet" href="style.css">
 
-<style>
+  <style>
+    .references {
+      max-width: 760px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #bea8e0;
+      border-left: 6px solid #5a3fa3;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      color: white;
+    }
 
-/* Purple centered page title */
-.intro-center {
-  text-align: center;
-  max-width: 1000px;
-  margin: 40px auto 20px auto;
-}
+    .references h2 {
+      margin-top: 0;
+      color: #5a3fa3;
+    }
 
-.main-title {
-  color: #BEA8E0;      /* template purple */
-  font-size: 3em;
-  font-weight: 700;
-  margin: 0;
-}
+    .references ul {
+      padding-left: 20px;
+    }
 
-  /* --- BUTTONS --- */
-.button {
-  display: inline-block;
-  background: #38d9a9;          /* accent green */
-  color: #1c2230;               /* dark text for contrast */
-  padding: 12px 24px;
-  border-radius: 10px;
-  text-decoration: none;
-  font-weight: 600;
-  transition: 0.3s;
-}
-
-.button:hover {
-  background: #2fb58b;
-  transform: translateY(-2px);
-}
-
-/* --- FOOTER --- */
-footer {
-  background: #5a3fa3;          /* same as header */
-  text-align: center;
-  padding: 10px 20px;
-  color: #e5e7eb;
-  margin-top: 15px;}
-
-/* =========================
-   BODY
-========================= */
-body {
-  font-family: 'Inter', Arial, sans-serif;
-  margin: 0;
-  background-color: #1c2230;
-  color: #e5e7eb;
-  line-height: 1.6;
-}
-
-/* =========================
-   HEADER
-========================= */
-header {
-  background: #5a3fa3;
-  padding: 10px;
-  text-align: center;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-
-header h1 {
-  font-family: 'Poppins', sans-serif;
-  color: #ffffff;
-  font-size: 2.5em;
-  margin: 10px 0;
-}
-
-/* NAV */
-header nav {
-  margin-top: 15px;
-  display: flex;
-  justify-content: center;
-  gap: 25px;
-  flex-wrap: wrap;
-}
-
-header nav a {
-  position: relative;
-  color: #e5e7eb;
-  text-decoration: none;
-  font-weight: 600;
-  padding: 6px 4px;
-  transition: all 0.3s ease;
-}
-
-header nav a::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: -4px;
-  width: 0;
-  height: 2px;
-  background: #38d9a9;
-  transition: width 0.3s ease;
-}
-
-header nav a:hover {
-  color: #38d9a9;
-  transform: translateY(-2px);
-}
-
-header nav a:hover::after {
-  width: 100%;
-}
-
-/* =========================
-   FEATURE SECTION
-========================= */
-.feature {
-  padding: 50px 40px;
-  background: #2a3246;
-  border-radius: 15px;
-  margin: 20px auto;
-  max-width: 1200px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-}
-
-.feature h2 {
-  color: #38bdf8;
-  font-size: 2em;
-  margin-bottom: 15px;
-}
-
-.feature p {
-  font-size: 1.1em;
-}
-
-/* =========================
-   CARD
-========================= */
-.card {
-  background: #3b475c;
-  padding: 25px;
-  margin: 25px auto;
-  border-radius: 15px;
-  box-shadow: 0 6px 15px rgba(0,0,0,0.4);
-  max-width: 1000px;
-  transition: 0.3s;
-}
-
-.card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 25px rgba(0,0,0,0.5);
-}
-
-/* Image card */
-.imgCard {
-  max-width: 420px;
-  text-align: center;
-}
-
-.imgCard img {
-  max-width: 200px;
-  width: 100%;
-  height: auto;
-  margin: 10px auto;
-  display: block;
-  border-radius: 10px;
-}
-
-.caption {
-  font-size: 0.95em;
-  margin-top: 10px;
-  opacity: 0.9;
-}
-
-/* =========================
-   BLACKHOLES BUTTON BOX
-========================= */
-.bh-box {
-  margin: 40px auto 0;
-  max-width: 1200px;
-  padding: 30px;
-  border-radius: 15px;
-  background: #2a3246;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-}
-
-.btnRow {
-  display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
-  margin-top: 20px;
-}
-
-.hoverBtn {
-  position: relative;
-  flex: 1;
-  min-width: 260px;
-}
-
-.hoverBtn button {
-  width: 100%;
-  height: 55px;
-  border-radius: 12px;
-  border: 1px solid rgba(255,255,255,0.18);
-  background: #3b475c;
-  color: #e5e7eb;
-  font-size: 1.05em;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.25s ease;
-}
-
-.hoverBtn button:hover {
-  background: rgba(56,217,169,0.12);
-  border-color: rgba(56,217,169,0.35);
-  transform: translateY(-2px);
-}
-
-.pop {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: calc(100% + 12px);
-  display: none;
-  padding: 16px;
-  border-radius: 12px;
-  background: #2f3a4f;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.45);
-  font-size: 1.05em;
-}
-
-.hoverBtn:hover .pop {
-  display: block;
-}
-
-/* =========================
-   EXAMPLE DROPDOWNS
-========================= */
-.exampleSection {
-  margin: 40px auto;
-  max-width: 1200px;
-}
-
-details {
-  margin-bottom: 18px;
-  border-radius: 12px;
-  background: #2f3a4f;
-  box-shadow: 0 6px 15px rgba(0,0,0,0.3);
-  overflow: hidden;
-}
-
-summary {
-  cursor: pointer;
-  padding: 16px;
-  font-size: 1.2em;
-  font-weight: 700;
-  color: #4fc3f7;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-summary::-webkit-details-marker {
-  display: none;
-}
-
-.summaryArrow {
-  transition: transform 0.25s ease;
-}
-
-details[open] .summaryArrow {
-  transform: rotate(180deg);
-}
-
-.exampleContent {
-  padding: 18px;
-  border-top: 1px solid rgba(255,255,255,0.1);
-  font-size: 1.05em;
-}
-
-.articleLink {
-  color: #38d9a9;
-  font-weight: bold;
-  text-decoration: none;
-}
-
-.articleLink:hover {
-  text-decoration: underline;
-}
-
-.sim iframe {
-  width: 100%;
-  height: 600px;   /* adjust as you like */
-  border: none;
-  border-radius: 12px;
-}
-
-/* CARD GRID LAYOUT */
-.cardGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 40px;
-  margin-top: 30px;
-}
-
-/* INDIVIDUAL CARD */
-.infoCard {
-  background: #3b475c;
-  padding: 40px 30px;
-  border-radius: 20px;
-  text-align: center;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-  transition: 0.3s ease;
-}
-
-.infoCard:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 18px 35px rgba(0,0,0,0.5);
-}
-
-/* CARD TITLE */
-.infoCard h3 {
-  color: #38bdf8;
-  font-size: 1.6em;
-  margin-bottom: 20px;
-}
-
-/* CARD TEXT */
-.infoCard p {
-  font-size: 1.1em;
-  margin-bottom: 30px;
-  line-height: 1.6;
-}
-
-/* GREEN BUTTON */
-.cardBtn {
-  display: inline-block;
-  background: #38d9a9;
-  color: #1c2230;
-  padding: 14px 30px;
-  border-radius: 14px;
-  font-weight: 600;
-  text-decoration: none;
-  transition: 0.3s ease;
-}
-
-.cardBtn:hover {
-  background: #2fb58b;
-  transform: translateY(-2px);
-}
-
-
-/* =========================
-   FOOTER
-========================= */
-footer {
-  background: #5a3fa3;
-  text-align: center;
-  padding: 10px 20px;
-  color: #e5e7eb;
-  margin-top: 20px;
-}
-
-</style>
+    .references li {
+      margin-bottom: 8px;
+    }
+  </style>
 </head>
 
 <body>
 
 <header>
-  <h1>Physics Myth Busters</h1>
+  <h1 style="color: #FFFFFF;">Physics Mythbusters</h1>
   <nav>
     <a href="index.html">Home</a>
     <a href="Climate.html">Climate Change</a>
@@ -380,7 +43,7 @@ footer {
     <a href="Radiation.html">Cellular Technology</a>
     <a href="Astro.html">Astronomy</a>
   </nav>
-</header>
+</header> 
 
 <!-- PAGE TITLE -->
 <section class="intro-center">
