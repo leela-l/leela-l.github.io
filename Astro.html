@@ -7,6 +7,169 @@
 
 <style>
 
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;  /* full viewport height */
+}
+
+/* --- NAVIGATION --- */
+header nav {
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
+  justify-content: center;
+  gap: 25px;
+}
+
+/* Links */
+header nav a {
+  position: relative;
+  color: #e5e7eb;
+  text-decoration: none;
+  font-weight: 600;
+  padding: 6px 4px;
+  transition: all 0.3s ease;
+}
+
+
+header nav a:hover::after {
+  width: 100%;
+}
+
+.nav-item {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.nav-arrow {
+  cursor: pointer;
+  color: #e5e7eb;
+  font-size: 1.1;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+
+.nav-item > a,
+.nav-item > .nav-arrow {
+  transition: all 0.3s ease;
+}
+
+.nav-item:hover > .nav-arrow {
+  transform: rotate(180deg);
+  color: #38d9a9; /* optional: match main text hover color */
+}
+
+.nav-item:hover > a,
+.nav-item:hover > .nav-arrow {
+  color: #38d9a9;
+  transform: translateY(-2px);
+}
+
+/* Show dropdown */
+.nav-item:hover .dropdown-menu {
+  display: block;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: #2f3a4f;
+  border-radius: 8px;
+  padding: 10px 0;
+  min-width: 180px;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+  display: none;
+  z-index: 200;
+}
+
+
+.dropdown-menu a {
+  display: block;
+  padding: 8px 16px;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 0.95em;
+  position: relative;
+}
+
+.dropdown-menu a:hover {
+  background: rgba(79, 195, 247, 0.15);
+  color: #4fc3f7;
+}
+
+.dropdown-menu a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;        /* adjust to sit nicely under text */
+  width: 0;
+  height: 2px;
+  background: #38d9a9;
+  transition: width 0.3s ease;
+}
+
+.dropdown-menu a:hover::after {
+  width: 100%;
+}
+
+/* Astronomy dropdown overrides */
+.astro-dropdown-menu {
+  background-color: #2f2d6a; /* Purple-ish background like screenshot */
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+  padding: 10px 0;
+  min-width: 180px;
+}
+
+.astro-dropdown-menu a {
+  color: #3affd1; /* Bright teal text */
+  font-weight: 700;
+  padding: 12px 24px;
+  display: block;
+  font-size: 1.1em;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+
+.astro-dropdown-menu a:hover {
+  background-color: rgba(58, 255, 209, 0.15);
+  color: #38d9a9; /* Slightly darker teal on hover */
+}
+
+.nav-arrow {
+  cursor: pointer;
+  color: #3affd1;
+  font-size: 0.8em;
+  margin-left: 4px;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.nav-item:hover > .nav-arrow,
+.nav-item:hover > a.nav-link {
+  color: #3affd1;
+  transform: translateY(-2px);
+}
+
+.nav-item:hover > .nav-arrow {
+  transform: translateY(-2px) rotate(180deg);
+}
+
+/* Keep dropdown hidden by default and shown on hover */
+.nav-item:hover .astro-dropdown-menu {
+  display: block;
+}
+
 /* Purple centered page title */
 .intro-center {
   text-align: center;
@@ -38,6 +201,16 @@
   transform: translateY(-2px);
 }
 
+/* =========================
+   BODY
+========================= */
+body {
+  font-family: 'Inter', Arial, sans-serif;
+  margin: 0;
+  background-color: #1c2230;
+  color: #e5e7eb;
+  line-height: 1.6;
+}
 
 /* =========================
    HEADER
@@ -59,7 +232,43 @@ header h1 {
   margin: 10px 0;
 }
 
+/* NAV */
+header nav {
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
+  gap: 25px;
+  flex-wrap: wrap;
+}
 
+header nav a {
+  position: relative;
+  color: #e5e7eb;
+  text-decoration: none;
+  font-weight: 600;
+  padding: 6px 4px;
+  transition: all 0.3s ease;
+}
+
+header nav a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 0;
+  height: 2px;
+  background: #38d9a9;
+  transition: width 0.3s ease;
+}
+
+header nav a:hover {
+  color: #38d9a9;
+  transform: translateY(-2px);
+}
+
+header nav a:hover::after {
+  width: 100%;
+}
 
 /* =========================
    FEATURE SECTION
@@ -299,6 +508,26 @@ details[open] .summaryArrow {
   transform: translateY(-2px);
 }
 
+/* --- BODY --- */
+body {
+  font-family: 'Inter', Arial, sans-serif;
+  margin: 0;
+  background-color: #1c2230;   /* lighter dark navy */
+  color: #e5e7eb;              /* soft white */
+  line-height: 1.6;
+}
+
+/* --- HEADER --- */
+header {
+  background: #5a3fa3;         /* slightly darker purple */
+  padding: 10px 10px;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
 
 /* Header title */
 header h1 {
@@ -316,6 +545,132 @@ header p {
   margin: 0;
 }
 
+/* --- NAVIGATION --- */
+header nav {
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
+  justify-content: center;
+  gap: 25px;
+}
+
+/* Links */
+header nav a {
+  position: relative;
+  color: #e5e7eb;
+  text-decoration: none;
+  font-weight: 600;
+  padding: 6px 4px;
+  transition: all 0.3s ease;
+}
+
+
+header nav a:hover::after {
+  width: 100%;
+}
+
+.nav-item {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.nav-arrow {
+  cursor: pointer;
+  color: #e5e7eb;
+  font-size: 1.1;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+
+.nav-item > a,
+.nav-item > .nav-arrow {
+  transition: all 0.3s ease;
+}
+
+.nav-item:hover > .nav-arrow {
+  transform: rotate(180deg);
+  color: #38d9a9; /* optional: match main text hover color */
+}
+
+.nav-item:hover > a,
+.nav-item:hover > .nav-arrow {
+  color: #38d9a9;
+  transform: translateY(-2px);
+}
+
+/* Show dropdown */
+.nav-item:hover .dropdown-menu {
+  display: block;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: #2f3a4f;
+  border-radius: 8px;
+  padding: 10px 0;
+  min-width: 180px;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+  display: none;
+  z-index: 200;
+}
+
+
+.dropdown-menu a {
+  display: block;
+  padding: 8px 16px;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 0.95em;
+  position: relative;
+}
+
+.dropdown-menu a:hover {
+  background: rgba(79, 195, 247, 0.15);
+  color: #4fc3f7;
+}
+
+.dropdown-menu a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;        /* adjust to sit nicely under text */
+  width: 0;
+  height: 2px;
+  background: #38d9a9;
+  transition: width 0.3s ease;
+}
+
+.dropdown-menu a:hover::after {
+  width: 100%;
+}
+
+body {
+  font-family: 'Inter', Arial, sans-serif;
+  margin: 0;
+  background-color: #1c2230;
+  color: #e5e7eb;
+  line-height: 1.6;
+
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;   /* makes page at least full screen height */
+}
+
+footer {
+  background: #5a3fa3;
+  text-align: center;
+  padding: 15px 20px;
+  color: #e5e7eb;
+  margin-top: auto;   /* pushes footer to bottom */
+  width: 100%;
+}
+
+</style>
 
   
 </style>
